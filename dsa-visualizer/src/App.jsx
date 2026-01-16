@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import ArrayVisualizer from './pages/ArrayVisualizer';
+import StackVisualizer from './pages/StackVisualizer';
+import QueueVisualizer from './pages/QueueVisualizer';
+import SortingVisualizer from './pages/SortingVisualizer';
+import { styles } from './styles/styles';
 
+/**
+ * Main App Component
+ * Handles routing between different pages using state
+ */
 function App() {
-  const [count, setCount] = useState(0)
+  // State: tracks which page is currently active
+  const [currentPage, setCurrentPage] = useState('Home');
+
+  /**
+   * Render the appropriate page component based on currentPage
+   */
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'Home':
+        return <Home onNavigate={setCurrentPage} />;
+      case 'Array':
+        return <ArrayVisualizer />;
+      case 'Stack':
+        return <StackVisualizer />;
+      case 'Queue':
+        return <QueueVisualizer />;
+      case 'Sorting':
+        return <SortingVisualizer />;
+      default:
+        return <Home onNavigate={setCurrentPage} />;
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div style={styles.app}>
+      {/* Navigation bar - always visible */}
+      <Navbar currentPage={currentPage} onNavigate={setCurrentPage} />
+      
+      {/* Main content area - changes based on current page */}
+      <div style={styles.content}>
+        {renderPage()}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
