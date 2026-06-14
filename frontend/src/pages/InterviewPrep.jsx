@@ -1,0 +1,549 @@
+import React, { useState, useEffect, useRef } from "react";
+import Editor from "@monaco-editor/react";
+import VoicePanel from "../components/VoicePanel";
+import ProctoringPanel from "../components/ProctoringPanel";
+import API_BASE from "../config/api";
+import {
+  Play,
+  Send,
+  CheckCircle,
+  Code,
+  MessageSquare,
+  Zap,
+  Activity,
+  ShieldAlert,
+  Cpu,
+  Award,
+  Shield,
+  AlertTriangle,
+} from "lucide-react";
+
+const QUESTIONS = {
+  "Binary Search": {
+    title: "Binary Search",
+    description:
+      "Given an array of integers `nums` which is sorted in ascending order, and an integer `target`, write a function to search `target` in `nums`. If `target` exists, then return its index. Otherwise, return `-1`.",
+    exampleInput: "nums = [-1,0,3,5,9,12], target = 9",
+    exampleOutput: "4",
+    constraints: [
+      "1 <= nums.length <= 10^4",
+      "All the integers in `nums` are unique.",
+    ],
+  },
+  "Bubble Sort": {
+    title: "Bubble Sort",
+    description:
+      "Write a function that takes an array of integers and returns a sorted array using the Bubble Sort algorithm.",
+    exampleInput: "nums = [5, 2, 9, 1, 5, 6]",
+    exampleOutput: "[1, 2, 5, 5, 6, 9]",
+    constraints: ["1 <= nums.length <= 10^4"],
+  },
+  "Merge Sort": {
+    title: "Merge Sort",
+    description:
+      "Implement the Merge Sort algorithm to sort an array of integers in ascending order. You must solve it in O(n log n) time.",
+    exampleInput: "nums = [12, 11, 13, 5, 6, 7]",
+    exampleOutput: "[5, 6, 7, 11, 12, 13]",
+    constraints: ["1 <= nums.length <= 5*10^4"],
+  },
+  "Quick Sort": {
+    title: "Quick Sort",
+    description:
+      "Implement the Quick Sort algorithm. Pick an element as a pivot and partition the given array around the picked pivot.",
+    exampleInput: "nums = [10, 7, 8, 9, 1, 5]",
+    exampleOutput: "[1, 5, 7, 8, 9, 10]",
+    constraints: ["1 <= nums.length <= 5*10^4"],
+  },
+  BFS: {
+    title: "Breadth-First Search",
+    description:
+      "Implement BFS to traverse a graph. Given an adjacency list and a starting node, return the sequence of visited nodes.",
+    exampleInput: "graph = {0: [1,2], 1: [2], 2: [0,3], 3: [3]}, start = 2",
+    exampleOutput: "[2, 0, 3, 1]",
+    constraints: ["0 <= V <= 100", "0 <= E <= 10^4"],
+  },
+  DFS: {
+    title: "Depth-First Search",
+    description:
+      "Implement DFS to traverse a graph. Given an adjacency list and a starting node, return the sequence of visited nodes.",
+    exampleInput: "graph = {0: [1,2], 1: [2], 2: [0,3], 3: [3]}, start = 2",
+    exampleOutput: "[2, 0, 1, 3] (Depends on edge traversal order)",
+    constraints: ["0 <= V <= 100", "0 <= E <= 10^4"],
+  },
+  "Hash Map": {
+    title: "Two Sum (Hash Map)",
+    description:
+      "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`. You must solve it using a Hash Map.",
+    exampleInput: "nums = [2,7,11,15], target = 9",
+    exampleOutput: "[0, 1]",
+    constraints: ["2 <= nums.length <= 10^4", "Only one valid answer exists."],
+  },
+  "Two Pointers": {
+    title: "Valid Palindrome",
+    description:
+      "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.",
+    exampleInput: 's = "A man, a plan, a canal: Panama"',
+    exampleOutput: "true",
+    constraints: ["1 <= s.length <= 2 * 10^5"],
+  },
+};
+
+export default function InterviewPrep() {
+  const [topic, setTopic] = useState("Binary Search");
+  const [language, setLanguage] = useState("javascript");
+  const [code, setCode] = useState("// Write your solution here\n");
+  const [transcript, setTranscript] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+  const [runResult, setRunResult] = useState(null);
+  const [result, setResult] = useState(null);
+  const [proctorActive, setProctorActive] = useState(true);
+  const [integrityScore, setIntegrityScore] = useState(100);
+  const [violationLog, setViolationLog] = useState([]);
+  const [tabSwitchWarning, setTabSwitchWarning] = useState(false);
+  const [tabSwitchCount, setTabSwitchCount] = useState(0);
+
+  // Timer logic
+  const [thinkingTime, setThinkingTime] = useState(0);
+  const [isThinking, setIsThinking] = useState(true);
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      if (isThinking) {
+        setThinkingTime((prev) => prev + 1000);
+      }
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, [isThinking]);
+
+  // Tab switch blocking
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.hidden) {
+        setTabSwitchCount((prev) => prev + 1);
+        setTabSwitchWarning(true);
+      }
+    };
+
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue =
+        "You are in an active interview session. Are you sure you want to leave?";
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  const handleEditorChange = (value) => {
+    setCode(value);
+    if (isThinking) setIsThinking(false);
+  };
+
+  const currentProblem = QUESTIONS[topic];
+
+
+  const handleRunCode = async () => {
+    setIsRunning(true);
+    setRunResult(null);
+    setResult(null);
+    try {
+      // Create a mock test case from the example so they can run it
+      const testCase = { input: currentProblem.exampleInput, expected: currentProblem.exampleOutput };
+      const funcName = currentProblem.title.replace(/\s/g, ""); // basic camelcase approx
+
+      const resp = await fetch(`${API_BASE}/api/code/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code,
+          language: language === "cpp" ? "cpp" : language,
+          testCase,
+          funcName
+        }),
+      });
+      const data = await resp.json();
+      setRunResult(data);
+    } catch (err) {
+      console.error(err);
+      setRunResult({ status: "error", output: "Network or Server Error" });
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  const handleAnalyze = async () => {
+    setIsAnalyzing(true);
+    setIsThinking(false);
+    try {
+      const funcName = currentProblem.title.replace(/\s/g, "");
+      
+      // Run both AI analysis and actual code execution in parallel
+      const [aiResp, codeResp] = await Promise.all([
+        fetch(`${API_BASE}/api/interview/analyze`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ transcript, topic, code, thinkingTime, language }),
+        }),
+        fetch(`${API_BASE}/api/code/submit`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code,
+            language: language === "cpp" ? "cpp" : language,
+            testCases: [{ input: currentProblem.exampleInput, expected: currentProblem.exampleOutput }],
+            funcName
+          }),
+        }).catch(() => null)
+      ]);
+
+      const data = await aiResp.json();
+      const codeData = codeResp ? await codeResp.json() : null;
+
+      const adjustedData = {
+        ...data,
+        executionResults: codeData,
+        integrityScore,
+        tabSwitches: tabSwitchCount,
+        violationCount: violationLog.length,
+        adjustedFinalScore: Math.max(0, Math.round(data.finalScore * (integrityScore / 100))),
+      };
+      setResult(adjustedData);
+      setRunResult(null);
+
+      const history = JSON.parse(localStorage.getItem("interview_history") || "[]");
+      history.push({
+        topic,
+        finalScore: adjustedData.adjustedFinalScore,
+        rawScore: data.finalScore,
+        integrityScore,
+        tabSwitches: tabSwitchCount,
+        violations: violationLog.length,
+        thinkingTime,
+        date: new Date().toISOString(),
+      });
+      localStorage.setItem("interview_history", JSON.stringify(history));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleViolation = (violation) => {
+    setViolationLog((prev) => [...prev, violation]);
+  };
+
+  const getColor = (score) => {
+    if (score < 40) return "text-danger";
+    if (score < 70) return "text-warning";
+    return "text-success";
+  };
+  const getBgColor = (score) => {
+    if (score < 40) return "bg-danger text-surface";
+    if (score < 70) return "bg-warning text-text";
+    return "bg-success text-surface";
+  };
+
+  return (
+    <div className="h-[calc(100vh-4rem)] flex flex-col gap-4 text-text p-4 pb-12 relative overflow-hidden">
+      {/* Tab Switch Warning Overlay */}
+      {tabSwitchWarning && (
+        <div
+          className="fixed inset-0 z-50 bg-text/90 flex items-center justify-center p-4"
+          onClick={() => setTabSwitchWarning(false)}
+        >
+          <div
+            className="brutal-card bg-surface border-8 border-danger p-8 max-w-lg text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <AlertTriangle size={80} className="mx-auto text-danger mb-6" />
+            <h2 className="text-4xl font-geist font-black text-danger mb-4 uppercase">
+              TAB SWITCH DETECTED
+            </h2>
+            <p className="font-bold mb-2 text-lg">
+              Switching tabs during an interview is a{" "}
+              <strong className="bg-danger text-surface px-2 border-2 border-text uppercase">serious violation</strong>.
+            </p>
+            <p className="font-medium mb-6">
+              This has been logged. Total tab switches:{" "}
+              <span className="text-danger font-black text-xl">{tabSwitchCount}</span>
+            </p>
+            <div className="bg-background border-4 border-text rounded p-4 mb-6 shadow-brutal-sm">
+              <p className="font-black text-lg uppercase tracking-wider">
+                Integrity Impact:{" "}
+                <span className="text-danger">-5 points per switch</span>
+              </p>
+            </div>
+            <button
+              onClick={() => setTabSwitchWarning(false)}
+              className="brutal-btn w-full bg-danger text-surface uppercase"
+            >
+              RETURN TO INTERVIEW
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Header */}
+      <div className="flex flex-wrap justify-between items-center gap-4 bg-surface p-4 border-4 border-text shadow-brutal-sm rounded-lg">
+        <div className="flex flex-wrap items-center gap-4">
+          <h2 className="text-2xl font-geist font-black uppercase tracking-tight">
+            Interview Sim
+          </h2>
+          <select
+            value={topic}
+            onChange={(e) => {
+              setTopic(e.target.value);
+              setResult(null);
+              setCode("// Write your solution here\n");
+              setThinkingTime(0);
+              setIsThinking(true);
+            }}
+            className="bg-background border-2 border-text px-4 py-2 text-sm font-bold uppercase tracking-wider focus:outline-none focus:ring-4 focus:ring-primary shadow-[2px_2px_0px_#111] cursor-pointer"
+          >
+            {Object.keys(QUESTIONS).map((q) => (
+              <option key={q} value={q}>
+                {q}
+              </option>
+            ))}
+          </select>
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="bg-background border-2 border-text px-4 py-2 text-sm font-bold uppercase tracking-wider focus:outline-none focus:ring-4 focus:ring-primary shadow-[2px_2px_0px_#111] cursor-pointer"
+          >
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="cpp">C++</option>
+          </select>
+        </div>
+        <div className="flex flex-wrap gap-4 items-center">
+          <div className={`flex items-center gap-2 px-3 py-1.5 border-2 border-text rounded font-black uppercase shadow-[2px_2px_0px_#111] ${getBgColor(integrityScore)}`}>
+            <Shield size={16} />
+            <span>{integrityScore}% Integrity</span>
+          </div>
+          {tabSwitchCount > 0 && (
+            <span className="text-sm font-black text-danger uppercase tracking-wider bg-surface px-2 py-1 border-2 border-danger flex items-center gap-1 shadow-[2px_2px_0px_#ef4444]">
+              <AlertTriangle size={14} /> {tabSwitchCount} switch{tabSwitchCount !== 1 ? "es" : ""}
+            </span>
+          )}
+          <span className="text-sm font-black uppercase tracking-wider bg-background px-3 py-1.5 border-2 border-text shadow-[2px_2px_0px_#111]">
+            Time: {(thinkingTime / 1000).toFixed(0)}s
+          </span>
+        </div>
+      </div>
+
+      {/* Main Grid — 4 columns: Problem | Editor | Voice | Proctor */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-4 min-h-0">
+        {/* Left Panel: Problem Statement */}
+        <div className="brutal-card bg-surface p-6 flex flex-col overflow-y-auto">
+          <h3 className="text-xl font-black font-geist uppercase border-b-4 border-text pb-2 mb-4">
+            {QUESTIONS[topic].title}
+          </h3>
+          <p className="font-medium text-sm mb-6 leading-relaxed">
+            {QUESTIONS[topic].description}
+          </p>
+          <div className="bg-background border-4 border-text p-4 rounded mb-4 shadow-brutal-sm">
+            <p className="text-xs font-black uppercase tracking-wider mb-2">Example</p>
+            <p className="font-mono text-sm mb-1">
+              <strong className="bg-primary px-1">Input:</strong> {QUESTIONS[topic].exampleInput}
+            </p>
+            <p className="font-mono text-sm">
+              <strong className="bg-primary px-1">Output:</strong> {QUESTIONS[topic].exampleOutput}
+            </p>
+          </div>
+          <div className="bg-background border-4 border-text p-4 rounded shadow-brutal-sm">
+            <p className="text-xs font-black uppercase tracking-wider mb-2">Constraints</p>
+            <ul className="text-sm font-medium list-disc pl-5">
+              {QUESTIONS[topic].constraints.map((c, i) => (
+                <li key={i}>{c}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Center Panel: Editor + Console Stack */}
+        <div className="flex flex-col gap-4 lg:col-span-2 min-h-0">
+          <div className="brutal-card bg-surface flex flex-col flex-1 relative overflow-hidden group min-h-0">
+            <div className="flex justify-between items-center p-3 bg-background border-b-4 border-text">
+              <span className="text-sm font-black font-geist uppercase flex items-center gap-2">
+                <Code size={18} /> IDE
+              </span>
+              <div className="flex gap-3">
+                <button
+                  className="brutal-btn-secondary px-3 py-1.5 text-sm flex items-center gap-1"
+                  onClick={handleRunCode}
+                  disabled={isRunning || isAnalyzing}
+                >
+                  <Play size={16} /> {isRunning ? "Running..." : "Run"}
+                </button>
+                <button
+                  className="brutal-btn bg-success px-4 py-1.5 text-sm flex items-center gap-2"
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing}
+                >
+                  <Send size={16} /> Submit & Analyze
+                </button>
+              </div>
+            </div>
+
+            <div
+              className="flex-1 w-full bg-white min-h-0"
+              onPaste={(e) => {
+                e.preventDefault();
+                alert("Pasting strictly restricted in Interview Mode.");
+              }}
+              onCopy={(e) => {
+                e.preventDefault();
+                alert("Copying strictly restricted in Interview Mode.");
+              }}
+            >
+              <Editor
+                height="100%"
+                language={language === "cpp" ? "cpp" : language}
+                value={code}
+                theme="vs-light"
+                onChange={handleEditorChange}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  fontFamily: "Geist, Fira Code, monospace",
+                  padding: { top: 16 },
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Dedicated Output Terminal */}
+          <div className="brutal-card bg-surface flex flex-col h-[250px] flex-shrink-0 relative overflow-hidden">
+             <div className="bg-background border-b-4 border-text px-4 py-2 font-black uppercase text-sm flex items-center gap-2">
+                <Terminal size={16} /> Output Console
+             </div>
+             <div className="flex-1 overflow-y-auto p-4 bg-text text-surface font-mono text-sm">
+                {!runResult && !result && (
+                  <div className="opacity-50 flex items-center justify-center h-full">
+                     Awaiting execution... Click Run or Submit to see output.
+                  </div>
+                )}
+                
+                {/* Console Output for Run */}
+                {runResult && !result && (
+                  <div className="animate-fade-in">
+                    <div className="flex items-center gap-3 mb-2 pb-2 border-b-2 border-surface/30">
+                      <span className={`px-2 py-0.5 font-bold uppercase rounded ${runResult.status === 'passed' ? 'bg-success text-surface' : runResult.status === 'error' ? 'bg-danger text-surface' : 'bg-warning text-text'}`}>
+                         {runResult.status === 'passed' ? 'ACCEPTED' : runResult.status === 'error' ? 'ERROR' : 'WRONG ANSWER'}
+                      </span>
+                      {runResult.runtime > 0 && <span className="opacity-70">{runResult.runtime}ms</span>}
+                    </div>
+                    {runResult.expected && (
+                       <div className="mb-2">
+                          <strong>Expected:</strong> {runResult.expected}
+                       </div>
+                    )}
+                    <pre className="whitespace-pre-wrap">{runResult.output || "Program finished with no output."}</pre>
+                  </div>
+                )}
+
+                {/* Evaluation Results */}
+                {result && (
+                  <div className="animate-fade-in text-text bg-surface p-4 rounded -m-4 min-h-full">
+                    <div className="flex flex-wrap justify-between items-center mb-4 pb-2 border-b-4 border-text">
+                      <h3 className="font-geist font-black text-xl uppercase">Evaluation Report</h3>
+                      <div className="flex flex-wrap gap-2">
+                        <div className={`px-3 py-1 border-2 border-text rounded font-black uppercase text-sm shadow-[2px_2px_0px_#111] ${getBgColor(result.adjustedFinalScore)}`}>
+                          Adjusted: {result.adjustedFinalScore}
+                        </div>
+                        <div className={`px-3 py-1 border-2 border-text rounded font-black uppercase text-sm shadow-[2px_2px_0px_#111] ${getBgColor(result.finalScore)}`}>
+                          Raw: {result.finalScore}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Show actual execution tests if available */}
+                    {result.executionResults && (
+                       <div className="mb-4 border-4 border-text rounded shadow-brutal-sm bg-background p-3">
+                          <strong className="text-sm font-black uppercase tracking-wider block mb-2">Test Execution:</strong>
+                          <div className="flex items-center gap-2">
+                             <span className={`px-2 py-0.5 font-bold uppercase rounded text-sm ${result.executionResults.status === 'accepted' ? 'bg-success text-surface border-2 border-text' : 'bg-danger text-surface border-2 border-text'}`}>
+                                {result.executionResults.status === 'accepted' ? 'ALL TESTS PASSED' : 'TESTS FAILED'}
+                             </span>
+                             <span className="font-bold">{result.executionResults.passed}/{result.executionResults.total} Passed</span>
+                          </div>
+                       </div>
+                    )}
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                      {[
+                        { label: "Code", val: result.codeScore, icon: Code },
+                        { label: "Logic", val: result.logicScore, icon: Activity },
+                        { label: "Comm.", val: result.communicationScore, icon: MessageSquare },
+                        { label: "Speed", val: result.speedScore, icon: Zap },
+                        { label: "Edge", val: result.edgeScore, icon: ShieldAlert },
+                        { label: "Pattern", val: result.patternScore, icon: Cpu },
+                        { label: "Confidence", val: result.confidenceScore, icon: Award },
+                        { label: "DSA", val: result.dsaScore, icon: Activity },
+                      ].map(({ label, val, icon: Icon }, idx) => (
+                        <div
+                          key={idx}
+                          className={`p-2 rounded border-2 border-text text-center shadow-[2px_2px_0px_#111] ${getBgColor(val)}`}
+                        >
+                          <Icon size={16} className="mx-auto mb-1" />
+                          <p className="text-[10px] font-black uppercase tracking-wider mb-1">
+                            {label}
+                          </p>
+                          <p className="font-black text-lg">
+                            {val}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="bg-background border-4 border-text p-4 rounded text-sm font-medium mb-3 shadow-brutal-sm">
+                      <strong className="text-primary font-black uppercase tracking-wider block mb-2 border-b-2 border-text pb-1">
+                        AI VERDICT:
+                      </strong>
+                      {result.feedback}
+                    </div>
+
+                    {result.followUpQuestion && (
+                      <div className="bg-primary text-surface border-4 border-text p-4 rounded text-sm font-medium shadow-brutal-sm">
+                        <strong className="block mb-2 font-black uppercase tracking-wider">💬 Follow-Up Question:</strong>
+                        {result.followUpQuestion}
+                      </div>
+                    )}
+                  </div>
+                )}
+             </div>
+          </div>
+        </div>
+
+        {/* Right Panel: Voice + Proctoring stacked */}
+        <div className="flex flex-col gap-4 min-h-0 overflow-hidden">
+          <div className="flex-shrink-0 min-h-[220px]">
+            <VoicePanel
+              transcript={transcript}
+              setTranscript={setTranscript}
+              onAnalyze={handleAnalyze}
+              isAnalyzing={isAnalyzing}
+            />
+          </div>
+          <div className="flex-1 min-h-0 overflow-hidden brutal-card bg-surface">
+            <ProctoringPanel
+              isActive={proctorActive}
+              onViolation={handleViolation}
+              onScoreUpdate={setIntegrityScore}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

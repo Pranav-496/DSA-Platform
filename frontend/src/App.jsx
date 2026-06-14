@@ -1,0 +1,240 @@
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+} from "react-router-dom";
+import {
+  Terminal,
+  Code,
+  BookOpen,
+  Mic,
+  LayoutDashboard,
+  BarChart3,
+  Search,
+  X,
+  Trophy,
+  User,
+} from "lucide-react";
+import { AuthContext } from "./context/AuthContext";
+import Dashboard from "./pages/Dashboard";
+import Visualizer from "./pages/Visualizer";
+import Practice from "./pages/Practice";
+import Learn from "./pages/Learn";
+import Quiz from "./pages/Quiz";
+import InterviewPrep from "./pages/InterviewPrep";
+import AuthPage from "./pages/AuthPage";
+import LandingPage from "./pages/LandingPage";
+import Profile from "./pages/Profile";
+import Leaderboard from "./pages/Leaderboard";
+import { AuthProvider } from "./context/AuthContext";
+
+function MainLayout() {
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const location = useLocation();
+
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+        setSearchQuery("");
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const searchResults = [
+    { title: "Two Sum", type: "Problem", path: "/practice", icon: Code },
+    { title: "Binary Search", type: "Algorithm", path: "/visualize", icon: BarChart3 },
+    { title: "Bubble Sort", type: "Algorithm", path: "/visualize", icon: BarChart3 },
+    { title: "Arrays Quiz", type: "Quiz", path: "/quiz/arrays", icon: BookOpen },
+    { title: "Interview Prep", type: "Practice", path: "/interview", icon: Mic },
+  ].filter(
+    (item) =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.type.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+  const hideSidebarRoutes = ["/", "/login"];
+  const shouldShowSidebar = !hideSidebarRoutes.includes(location.pathname);
+
+  return (
+    <div className="flex bg-background min-h-screen text-text font-geist">
+      {shouldShowSidebar && <Sidebar setSearchOpen={setSearchOpen} />}
+
+      {/* Search Overlay */}
+      {searchOpen && (
+        <div className="fixed inset-0 bg-text/80 backdrop-blur-sm z-50 flex items-start justify-center pt-20 p-4">
+          <div className="w-full max-w-2xl mx-auto brutal-card bg-surface p-6 shadow-brutal-lg">
+            <div className="flex items-center gap-4 mb-6 border-b-4 border-text pb-4">
+              <Search className="text-text" size={28} />
+              <input
+                type="text"
+                placeholder="Search algorithms, problems, quizzes... (Ctrl+K)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 bg-transparent text-xl font-bold placeholder-text/50 outline-none"
+                autoFocus
+              />
+              <button onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="text-text hover:bg-danger hover:text-surface border-2 border-transparent hover:border-text p-1 transition-all">
+                <X size={28} />
+              </button>
+            </div>
+            <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+              {searchResults.map((result, i) => (
+                <Link
+                  key={i}
+                  to={result.path}
+                  onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-primary border-4 border-transparent hover:border-text transition-all group shadow-sm hover:shadow-brutal-sm"
+                >
+                  <result.icon size={24} className="text-text" />
+                  <div>
+                    <p className="font-black text-lg uppercase tracking-tight">{result.title}</p>
+                    <p className="font-bold text-sm opacity-80">{result.type}</p>
+                  </div>
+                </Link>
+              ))}
+              {searchQuery && searchResults.length === 0 && (
+                <p className="text-center py-8 font-bold text-lg border-4 border-dashed border-text bg-background">No results found for "{searchQuery}"</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content Pane */}
+      <main className="flex-1 p-4 md:p-8 relative overflow-y-auto h-screen w-full">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/learn" element={<Learn />} />
+          <Route path="/visualize" element={<Visualizer />} />
+          <Route path="/practice" element={<Practice />} />
+          <Route path="/interview" element={<InterviewPrep />} />
+          <Route path="/quiz/:topic" element={<Quiz />} />
+          <Route path="/quiz" element={<Quiz />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <MainLayout />
+      </Router>
+    </AuthProvider>
+  );
+}
+
+function Sidebar({ setSearchOpen }) {
+  const location = useLocation();
+  const { user } = React.useContext(AuthContext);
+
+  const navItems = [
+    { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard", matchExact: true },
+    { to: "/profile", icon: Code, label: "My Profile" },
+    { to: "/leaderboard", icon: Trophy, label: "Global Arena" },
+    { to: "/learn", icon: BookOpen, label: "Learn Path" },
+    { to: "/visualize", icon: BarChart3, label: "Visualizer" },
+    { to: "/practice", icon: Terminal, label: "Practice HQ" },
+    { to: "/interview", icon: Mic, label: "Interview Prep" },
+  ];
+
+  const handleSearchClick = () => {
+    setSearchOpen(true);
+  };
+
+  return (
+    <aside className="w-64 bg-surface border-r-8 border-text flex flex-col items-center py-6 z-10 flex-shrink-0 shadow-[4px_0_0_#111]">
+      <div className="flex items-center gap-3 mb-10 px-6 w-full">
+        <img src="/favicon.svg" alt="AlgoNova Logo" className="w-10 h-10" />
+        <h1 className="text-2xl font-black uppercase tracking-tighter">
+          AlgoNova
+        </h1>
+      </div>
+
+      <nav className="w-full flex-1 px-4 space-y-2">
+        {/* Search Button */}
+        <button
+          onClick={handleSearchClick}
+          className="w-full text-left px-4 py-3 rounded-lg border-4 border-text bg-background hover:bg-primary transition-all shadow-brutal-sm hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#111] mb-6"
+        >
+          <div className="flex items-center gap-3">
+            <Search size={20} className="text-text" />
+            <span className="font-bold text-sm tracking-wide">
+              Search (Ctrl+K)
+            </span>
+          </div>
+        </button>
+
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = item.matchExact
+            ? location.pathname === item.to
+            : location.pathname.startsWith(item.to);
+
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg border-4 transition-all group relative
+                ${
+                  isActive
+                    ? "bg-primary border-text shadow-[4px_4px_0px_#111] -translate-y-1"
+                    : "bg-transparent border-transparent hover:border-text hover:bg-background"
+                }`}
+            >
+              <Icon size={20} className="text-text" />
+              <span className="font-bold text-sm uppercase tracking-wide">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Bottom section */}
+      <div className="px-4 w-full mt-auto">
+        {user && (
+          <Link to="/profile" className="mb-6 flex items-center gap-3 p-3 bg-surface border-4 border-text rounded-lg shadow-brutal-sm hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111] transition-all cursor-pointer block">
+            <div className="w-10 h-10 rounded-full bg-warning border-4 border-text flex items-center justify-center flex-shrink-0">
+              <User size={20} className="text-text" />
+            </div>
+            <div className="min-w-0">
+               <p className="text-sm font-black truncate uppercase">{user.name || "Operator"}</p>
+               <p className="text-xs font-bold opacity-70 truncate">{user.email}</p>
+            </div>
+          </Link>
+        )}
+        
+        <div className="border-t-4 border-text pt-6">
+          <div className="bg-background border-4 border-text rounded-lg p-4 text-center shadow-[4px_4px_0px_#111]">
+            <p className="text-xs font-bold uppercase tracking-wider mb-1">
+              Built For
+            </p>
+            <p className="text-sm font-black uppercase">
+              DSA Enthusiasts
+            </p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+export default App;

@@ -1,0 +1,74 @@
+[
+  {
+    "topic": "Binary Search",
+    "keywords": ["divide", "conquer", "sorted", "middle", "half", "left", "right", "logarithmic", "target", "index"],
+    "core_steps": ["sorted", "middle", "compare", "halve"],
+    "feedback": {
+      "positive": "Excellent explanation. You clearly understand the divide & conquer approach and how binary search halves the search space each iteration.",
+      "improvement": "Make sure to mention that the array MUST be sorted, explain how the search space is halved, and state the O(log n) time complexity."
+    }
+  },
+  {
+    "topic": "Bubble Sort",
+    "keywords": ["adjacent", "swap", "compare", "passes", "largest", "end", "o(n^2)", "squared", "stable", "in-place"],
+    "core_steps": ["compare adjacent", "swap", "bubble up"],
+    "feedback": {
+      "positive": "Great job. You explained the basic swapping mechanism and the bubble-up behavior well.",
+      "improvement": "Don't forget to mention that the largest element 'bubbles' to the end in each pass. State the O(n²) worst-case complexity."
+    }
+  },
+  {
+    "topic": "Merge Sort",
+    "keywords": ["divide", "conquer", "merge", "split", "half", "sorted", "subarrays", "recursive", "stable", "n log n"],
+    "core_steps": ["divide", "recursively sort", "merge"],
+    "feedback": {
+      "positive": "You've clearly articulated the divide-and-conquer strategy and merge step. Good understanding of O(n log n) complexity.",
+      "improvement": "Make sure to explain that the array is divided in half recursively, and that the merge step combines two sorted halves. Mention O(n) space complexity."
+    }
+  },
+  {
+    "topic": "Quick Sort",
+    "keywords": ["pivot", "partition", "divide", "conquer", "in-place", "recursive", "n log n", "n squared", "worst case"],
+    "core_steps": ["choose pivot", "partition", "recursively sort"],
+    "feedback": {
+      "positive": "Excellent breakdown of the QuickSort algorithm. Your pivot selection and partitioning explanation was clear.",
+      "improvement": "Mention how pivot choice affects performance. Explain that worst case O(n²) occurs with already sorted arrays and bad pivot selection."
+    }
+  },
+  {
+    "topic": "BFS",
+    "keywords": ["breadth", "first", "queue", "level", "order", "visited", "shortest", "path", "fifo", "neighbors", "graph", "traversal"],
+    "core_steps": ["use queue", "visit neighbors", "level by level"],
+    "feedback": {
+      "positive": "You demonstrated a solid understanding of BFS and its level-order exploration using a queue.",
+      "improvement": "Remember to mention that BFS uses a Queue (FIFO), explores level by level, and can find shortest paths in unweighted graphs. Time: O(V+E)."
+    }
+  },
+  {
+    "topic": "DFS",
+    "keywords": ["depth", "first", "stack", "recursion", "backtrack", "visited", "explore", "deep", "graph", "traversal", "cycle"],
+    "core_steps": ["use stack or recursion", "explore as deep as possible", "backtrack"],
+    "feedback": {
+      "positive": "Great explanation of DFS! You correctly identified the backtracking nature and stack/recursion usage.",
+      "improvement": "Mention that DFS uses a Stack (or recursion), explores as deep as possible before backtracking. Useful for cycle detection and topological sorting."
+    }
+  },
+  {
+    "topic": "Hash Map",
+    "keywords": ["hash", "function", "key", "value", "collision", "chaining", "bucket", "lookup", "constant", "o(1)", "table"],
+    "core_steps": ["hash function", "map key to index", "handle collisions"],
+    "feedback": {
+      "positive": "Well explained! You covered the hash function, key-value mapping, and collision handling clearly.",
+      "improvement": "Explain how the hash function maps keys to indices, mention O(1) average lookup, and describe collision resolution (chaining vs open addressing)."
+    }
+  },
+  {
+    "topic": "Two Pointers",
+    "keywords": ["two", "pointers", "sorted", "left", "right", "converge", "sum", "pair", "opposite", "direction", "O(n)"],
+    "core_steps": ["initialize two pointers", "move based on condition", "converge"],
+    "feedback": {
+      "positive": "You clearly explained the two-pointer technique and when to apply it. Good understanding of its O(n) efficiency.",
+      "improvement": "Make sure to mention that two pointers works best on sorted arrays, with pointers moving from opposite ends toward each other based on comparison with target."
+    }
+  }
+]
