@@ -204,7 +204,7 @@ export default function Practice() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col md:flex-row gap-4 text-text p-4 pb-12">
+    <div className="h-full flex flex-col md:flex-row gap-4 text-text p-4">
       {/* Problem List Sidebar */}
       <div className="w-full md:w-64 flex-shrink-0 flex flex-col gap-2 overflow-y-auto brutal-card bg-surface p-4">
         <h3 className="text-sm font-black uppercase tracking-wider mb-2 font-geist">

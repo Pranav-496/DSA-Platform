@@ -8,14 +8,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#FFD600',
-        background: '#FAFAFA',
-        surface: '#FFFFFF',
-        text: '#111111',
-        success: '#22C55E',
-        warning: '#F59E0B',
-        danger: '#EF4444',
-        border: '#111111',
+        primary: 'var(--primary)',
+        background: 'var(--bg-color)',
+        surface: 'var(--surface-color)',
+        text: {
+          DEFAULT: 'var(--text-color)',
+          muted: 'var(--text-muted)'
+        },
+        success: 'var(--success)',
+        warning: 'var(--warning)',
+        danger: 'var(--danger)',
+        border: 'var(--border-color)',
       },
       fontFamily: {
         geist: ['Geist', 'sans-serif'],

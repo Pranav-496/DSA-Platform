@@ -204,7 +204,7 @@ export default function Learn() {
   const [expandedIdx, setExpandedIdx] = useState(-1);
 
   return (
-    <div className="space-y-8 max-w-4xl pb-12">
+    <div className="space-y-8 w-full pb-12">
       <div className="flex items-center justify-between">
         <h2 className="text-4xl font-geist font-black uppercase tracking-tight">
           Learning Paths

@@ -16,76 +16,154 @@ import {
   Award,
   Shield,
   AlertTriangle,
+  Terminal,
 } from "lucide-react";
 
 const QUESTIONS = {
   "Binary Search": {
     title: "Binary Search",
-    description:
-      "Given an array of integers `nums` which is sorted in ascending order, and an integer `target`, write a function to search `target` in `nums`. If `target` exists, then return its index. Otherwise, return `-1`.",
+    funcName: "search",
+    description: "Given an array of integers `nums` which is sorted in ascending order, and an integer `target`, write a function to search `target` in `nums`. If `target` exists, then return its index. Otherwise, return `-1`.",
     exampleInput: "nums = [-1,0,3,5,9,12], target = 9",
     exampleOutput: "4",
-    constraints: [
-      "1 <= nums.length <= 10^4",
-      "All the integers in `nums` are unique.",
-    ],
+    constraints: ["1 <= nums.length <= 10^4", "All the integers in `nums` are unique."],
+    starterCode: {
+      javascript: "function search(nums, target) {\n  // Write your solution here\n  return -1;\n}",
+      python: "def search(nums, target):\n    # Write your solution here\n    return -1",
+      java: "class Solution {\n    public int search(int[] nums, int target) {\n        // Write your solution here\n        return -1;\n    }\n}",
+      cpp: "int search(vector<int>& nums, int target) {\n    // Write your solution here\n    return -1;\n}"
+    },
+    testCases: [
+      { input: "[-1,0,3,5,9,12], 9", expected: "4" },
+      { input: "[-1,0,3,5,9,12], 2", expected: "-1" }
+    ]
   },
   "Bubble Sort": {
     title: "Bubble Sort",
-    description:
-      "Write a function that takes an array of integers and returns a sorted array using the Bubble Sort algorithm.",
+    funcName: "bubbleSort",
+    description: "Write a function that takes an array of integers and returns a sorted array using the Bubble Sort algorithm.",
     exampleInput: "nums = [5, 2, 9, 1, 5, 6]",
     exampleOutput: "[1, 2, 5, 5, 6, 9]",
     constraints: ["1 <= nums.length <= 10^4"],
+    starterCode: {
+      javascript: "function bubbleSort(nums) {\n  // Write your solution here\n  return nums;\n}",
+      python: "def bubble_sort(nums):\n    # Write your solution here\n    return nums",
+      java: "class Solution {\n    public int[] bubbleSort(int[] nums) {\n        // Write your solution here\n        return nums;\n    }\n}",
+      cpp: "vector<int> bubbleSort(vector<int>& nums) {\n    // Write your solution here\n    return nums;\n}"
+    },
+    testCases: [
+      { input: "[5,2,9,1,5,6]", expected: "[1,2,5,5,6,9]" },
+      { input: "[3,1,2]", expected: "[1,2,3]" }
+    ]
   },
   "Merge Sort": {
     title: "Merge Sort",
-    description:
-      "Implement the Merge Sort algorithm to sort an array of integers in ascending order. You must solve it in O(n log n) time.",
+    funcName: "mergeSort",
+    description: "Implement the Merge Sort algorithm to sort an array of integers in ascending order. You must solve it in O(n log n) time.",
     exampleInput: "nums = [12, 11, 13, 5, 6, 7]",
     exampleOutput: "[5, 6, 7, 11, 12, 13]",
     constraints: ["1 <= nums.length <= 5*10^4"],
+    starterCode: {
+      javascript: "function mergeSort(nums) {\n  // Write your solution here\n  return nums;\n}",
+      python: "def merge_sort(nums):\n    # Write your solution here\n    return nums",
+      java: "class Solution {\n    public int[] mergeSort(int[] nums) {\n        // Write your solution here\n        return nums;\n    }\n}",
+      cpp: "vector<int> mergeSort(vector<int>& nums) {\n    // Write your solution here\n    return nums;\n}"
+    },
+    testCases: [
+      { input: "[12,11,13,5,6,7]", expected: "[5,6,7,11,12,13]" },
+      { input: "[5,1,4,2,8]", expected: "[1,2,4,5,8]" }
+    ]
   },
   "Quick Sort": {
     title: "Quick Sort",
-    description:
-      "Implement the Quick Sort algorithm. Pick an element as a pivot and partition the given array around the picked pivot.",
+    funcName: "quickSort",
+    description: "Implement the Quick Sort algorithm. Pick an element as a pivot and partition the given array around the picked pivot.",
     exampleInput: "nums = [10, 7, 8, 9, 1, 5]",
     exampleOutput: "[1, 5, 7, 8, 9, 10]",
     constraints: ["1 <= nums.length <= 5*10^4"],
+    starterCode: {
+      javascript: "function quickSort(nums) {\n  // Write your solution here\n  return nums;\n}",
+      python: "def quick_sort(nums):\n    # Write your solution here\n    return nums",
+      java: "class Solution {\n    public int[] quickSort(int[] nums) {\n        // Write your solution here\n        return nums;\n    }\n}",
+      cpp: "vector<int> quickSort(vector<int>& nums) {\n    // Write your solution here\n    return nums;\n}"
+    },
+    testCases: [
+      { input: "[10,7,8,9,1,5]", expected: "[1,5,7,8,9,10]" },
+      { input: "[3,6,2,8,1]", expected: "[1,2,3,6,8]" }
+    ]
   },
   BFS: {
-    title: "Breadth-First Search",
-    description:
-      "Implement BFS to traverse a graph. Given an adjacency list and a starting node, return the sequence of visited nodes.",
-    exampleInput: "graph = {0: [1,2], 1: [2], 2: [0,3], 3: [3]}, start = 2",
-    exampleOutput: "[2, 0, 3, 1]",
-    constraints: ["0 <= V <= 100", "0 <= E <= 10^4"],
+    title: "Number of Islands (BFS)",
+    funcName: "numIslands",
+    description: "Given an m x n 2D binary grid which represents a map of '1's (land) and '0's (water), return the number of islands using BFS.",
+    exampleInput: "grid = [['1','1','0'],['1','1','0'],['0','0','1']]",
+    exampleOutput: "2",
+    constraints: ["m == grid.length", "n == grid[i].length", "grid[i][j] is '0' or '1'"],
+    starterCode: {
+      javascript: "function numIslands(grid) {\n  // Write your BFS solution here\n  return 0;\n}",
+      python: "def num_islands(grid):\n    # Write your BFS solution here\n    return 0",
+      java: "class Solution {\n    public int numIslands(char[][] grid) {\n        // Write your BFS solution here\n        return 0;\n    }\n}",
+      cpp: "int numIslands(vector<vector<char>>& grid) {\n    // Write your BFS solution here\n    return 0;\n}"
+    },
+    testCases: [
+      { input: "[['1','1','0'],['1','1','0'],['0','0','1']]", expected: "2" },
+      { input: "[['1','0'],['0','1']]", expected: "2" }
+    ]
   },
   DFS: {
-    title: "Depth-First Search",
-    description:
-      "Implement DFS to traverse a graph. Given an adjacency list and a starting node, return the sequence of visited nodes.",
-    exampleInput: "graph = {0: [1,2], 1: [2], 2: [0,3], 3: [3]}, start = 2",
-    exampleOutput: "[2, 0, 1, 3] (Depends on edge traversal order)",
-    constraints: ["0 <= V <= 100", "0 <= E <= 10^4"],
+    title: "Max Depth of Binary Tree (DFS)",
+    funcName: "maxDepth",
+    description: "Given an array representation of a binary tree, return its maximum depth. A binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.",
+    exampleInput: "[3,9,20,null,null,15,7]",
+    exampleOutput: "3",
+    constraints: ["The number of nodes in the tree is in the range [0, 10^4]"],
+    starterCode: {
+      javascript: "function maxDepth(root) {\n  // Write your DFS solution here\n  // root is an array representation: [3,9,20,null,null,15,7]\n  if (!root || root.length === 0) return 0;\n  return 0;\n}",
+      python: "def max_depth(root):\n    # Write your DFS solution here\n    # root is an array representation: [3,9,20,None,None,15,7]\n    if not root: return 0\n    return 0",
+      java: "class Solution {\n    public int maxDepth(int[] root) {\n        // Write your DFS solution here\n        return 0;\n    }\n}",
+      cpp: "int maxDepth(vector<int>& root) {\n    // Write your DFS solution here\n    return 0;\n}"
+    },
+    testCases: [
+      { input: "[3,9,20,null,null,15,7]", expected: "3" },
+      { input: "[1,null,2]", expected: "2" }
+    ]
   },
   "Hash Map": {
     title: "Two Sum (Hash Map)",
-    description:
-      "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`. You must solve it using a Hash Map.",
+    funcName: "twoSum",
+    description: "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`. You must solve it using a Hash Map.",
     exampleInput: "nums = [2,7,11,15], target = 9",
     exampleOutput: "[0, 1]",
     constraints: ["2 <= nums.length <= 10^4", "Only one valid answer exists."],
+    starterCode: {
+      javascript: "function twoSum(nums, target) {\n  // Write your solution using a Hash Map\n  return [];\n}",
+      python: "def two_sum(nums, target):\n    # Write your solution using a Hash Map\n    return []",
+      java: "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        // Write your solution using a Hash Map\n        return new int[]{};\n    }\n}",
+      cpp: "vector<int> twoSum(vector<int>& nums, int target) {\n    // Write your solution using a Hash Map\n    return {};\n}"
+    },
+    testCases: [
+      { input: "[2,7,11,15], 9", expected: "[0,1]" },
+      { input: "[3,2,4], 6", expected: "[1,2]" }
+    ]
   },
   "Two Pointers": {
     title: "Valid Palindrome",
-    description:
-      "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.",
+    funcName: "isPalindrome",
+    description: "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.",
     exampleInput: 's = "A man, a plan, a canal: Panama"',
     exampleOutput: "true",
     constraints: ["1 <= s.length <= 2 * 10^5"],
-  },
+    starterCode: {
+      javascript: "function isPalindrome(s) {\n  // Write your Two Pointers solution here\n  return false;\n}",
+      python: "def is_palindrome(s):\n    # Write your Two Pointers solution here\n    return False",
+      java: "class Solution {\n    public boolean isPalindrome(String s) {\n        // Write your Two Pointers solution here\n        return false;\n    }\n}",
+      cpp: "bool isPalindrome(string s) {\n    // Write your Two Pointers solution here\n    return false;\n}"
+    },
+    testCases: [
+      { input: "'A man, a plan, a canal: Panama'", expected: "true" },
+      { input: "'race a car'", expected: "false" }
+    ]
+  }
 };
 
 export default function InterviewPrep() {
@@ -102,6 +180,8 @@ export default function InterviewPrep() {
   const [violationLog, setViolationLog] = useState([]);
   const [tabSwitchWarning, setTabSwitchWarning] = useState(false);
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [activeTab, setActiveTab] = useState("code");
 
   // Timer logic
   const [thinkingTime, setThinkingTime] = useState(0);
@@ -110,15 +190,17 @@ export default function InterviewPrep() {
 
   useEffect(() => {
     timerRef.current = setInterval(() => {
-      if (isThinking) {
+      if (isThinking && hasStarted) {
         setThinkingTime((prev) => prev + 1000);
       }
     }, 1000);
     return () => clearInterval(timerRef.current);
-  }, [isThinking]);
+  }, [isThinking, hasStarted]);
 
   // Tab switch blocking
   useEffect(() => {
+    if (!hasStarted) return;
+
     const handleVisibility = () => {
       if (document.hidden) {
         setTabSwitchCount((prev) => prev + 1);
@@ -139,7 +221,7 @@ export default function InterviewPrep() {
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [hasStarted]);
 
   const handleEditorChange = (value) => {
     setCode(value);
@@ -148,15 +230,31 @@ export default function InterviewPrep() {
 
   const currentProblem = QUESTIONS[topic];
 
+  useEffect(() => {
+    const q = QUESTIONS[topic];
+    if (q && q.starterCode && q.starterCode[language]) {
+      setCode(q.starterCode[language]);
+    } else {
+      setCode("// Write your solution here\n");
+    }
+    setResult(null);
+    setRunResult(null);
+    setTranscript("");
+    setThinkingTime(0);
+    setIsThinking(true);
+  }, [topic, language]);
+
 
   const handleRunCode = async () => {
+    if (!hasStarted) return;
+    setActiveTab("output");
     setIsRunning(true);
     setRunResult(null);
     setResult(null);
     try {
       // Create a mock test case from the example so they can run it
-      const testCase = { input: currentProblem.exampleInput, expected: currentProblem.exampleOutput };
-      const funcName = currentProblem.title.replace(/\s/g, ""); // basic camelcase approx
+      const tc = currentProblem.testCases ? currentProblem.testCases[0] : { input: currentProblem.exampleInput, expected: currentProblem.exampleOutput };
+      const funcName = currentProblem.funcName || currentProblem.title.replace(/\s/g, "");
 
       const resp = await fetch(`${API_BASE}/api/code/run`, {
         method: "POST",
@@ -164,7 +262,7 @@ export default function InterviewPrep() {
         body: JSON.stringify({
           code,
           language: language === "cpp" ? "cpp" : language,
-          testCase,
+          testCase: tc,
           funcName
         }),
       });
@@ -179,10 +277,12 @@ export default function InterviewPrep() {
   };
 
   const handleAnalyze = async () => {
+    if (!hasStarted) return;
+    setActiveTab("output");
     setIsAnalyzing(true);
     setIsThinking(false);
     try {
-      const funcName = currentProblem.title.replace(/\s/g, "");
+      const funcName = currentProblem.funcName || currentProblem.title.replace(/\s/g, "");
       
       // Run both AI analysis and actual code execution in parallel
       const [aiResp, codeResp] = await Promise.all([
@@ -197,7 +297,7 @@ export default function InterviewPrep() {
           body: JSON.stringify({
             code,
             language: language === "cpp" ? "cpp" : language,
-            testCases: [{ input: currentProblem.exampleInput, expected: currentProblem.exampleOutput }],
+            testCases: currentProblem.testCases || [{ input: currentProblem.exampleInput, expected: currentProblem.exampleOutput }],
             funcName
           }),
         }).catch(() => null)
@@ -252,7 +352,7 @@ export default function InterviewPrep() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col gap-4 text-text p-4 pb-12 relative overflow-hidden">
+    <div className="h-full flex flex-col gap-4 text-text p-4 relative overflow-hidden">
       {/* Tab Switch Warning Overlay */}
       {tabSwitchWarning && (
         <div
@@ -335,16 +435,25 @@ export default function InterviewPrep() {
               <AlertTriangle size={14} /> {tabSwitchCount} switch{tabSwitchCount !== 1 ? "es" : ""}
             </span>
           )}
-          <span className="text-sm font-black uppercase tracking-wider bg-background px-3 py-1.5 border-2 border-text shadow-[2px_2px_0px_#111]">
-            Time: {(thinkingTime / 1000).toFixed(0)}s
-          </span>
+          {hasStarted ? (
+            <span className="text-sm font-black uppercase tracking-wider bg-background px-3 py-1.5 border-2 border-text shadow-[2px_2px_0px_#111]">
+              Time: {(thinkingTime / 1000).toFixed(0)}s
+            </span>
+          ) : (
+            <button
+              onClick={() => setHasStarted(true)}
+              className="bg-primary px-4 py-1.5 border-2 border-text font-black uppercase tracking-wider shadow-[2px_2px_0px_#111] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111] transition-all"
+            >
+              START INTERVIEW
+            </button>
+          )}
         </div>
       </div>
 
       {/* Main Grid — 4 columns: Problem | Editor | Voice | Proctor */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-4 min-h-0">
         {/* Left Panel: Problem Statement */}
-        <div className="brutal-card bg-surface p-6 flex flex-col overflow-y-auto">
+        <div className="brutal-card bg-surface p-6 flex flex-col overflow-y-auto h-full">
           <h3 className="text-xl font-black font-geist uppercase border-b-4 border-text pb-2 mb-4">
             {QUESTIONS[topic].title}
           </h3>
@@ -371,32 +480,49 @@ export default function InterviewPrep() {
         </div>
 
         {/* Center Panel: Editor + Console Stack */}
-        <div className="flex flex-col gap-4 lg:col-span-2 min-h-0">
-          <div className="brutal-card bg-surface flex flex-col flex-1 relative overflow-hidden group min-h-0">
-            <div className="flex justify-between items-center p-3 bg-background border-b-4 border-text">
-              <span className="text-sm font-black font-geist uppercase flex items-center gap-2">
-                <Code size={18} /> IDE
-              </span>
-              <div className="flex gap-3">
-                <button
-                  className="brutal-btn-secondary px-3 py-1.5 text-sm flex items-center gap-1"
-                  onClick={handleRunCode}
-                  disabled={isRunning || isAnalyzing}
-                >
-                  <Play size={16} /> {isRunning ? "Running..." : "Run"}
-                </button>
-                <button
-                  className="brutal-btn bg-success px-4 py-1.5 text-sm flex items-center gap-2"
-                  onClick={handleAnalyze}
-                  disabled={isAnalyzing}
-                >
-                  <Send size={16} /> Submit & Analyze
-                </button>
-              </div>
-            </div>
+        <div className="brutal-card bg-surface flex flex-col gap-0 lg:col-span-2 min-h-0 h-full overflow-hidden">
+          {/* Tabs */}
+          <div className="flex bg-background border-b-4 border-text flex-shrink-0">
+            <button
+              onClick={() => setActiveTab("code")}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 font-black font-geist uppercase border-r-4 border-text transition-colors ${
+                activeTab === "code" ? "bg-primary text-text" : "bg-surface text-text hover:bg-[#e2e8f0]"
+              }`}
+            >
+              <Code size={18} /> Code
+            </button>
+            <button
+              onClick={() => setActiveTab("output")}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 font-black font-geist uppercase transition-colors ${
+                activeTab === "output" ? "bg-primary text-text" : "bg-surface text-text hover:bg-[#e2e8f0]"
+              }`}
+            >
+              <Terminal size={18} /> Output Console
+            </button>
+          </div>
 
-            <div
-              className="flex-1 w-full bg-white min-h-0"
+          <div className="flex justify-between items-center p-3 bg-surface border-b-4 border-text flex-shrink-0">
+            <div className="flex gap-3 ml-auto">
+              <button
+                className="brutal-btn-secondary px-3 py-1.5 text-sm flex items-center gap-1"
+                onClick={handleRunCode}
+                disabled={isRunning || isAnalyzing || !hasStarted}
+              >
+                <Play size={16} /> {isRunning ? "Running..." : "Run"}
+              </button>
+              <button
+                className="brutal-btn bg-success px-4 py-1.5 text-sm flex items-center gap-2"
+                onClick={handleAnalyze}
+                disabled={isAnalyzing || !hasStarted}
+              >
+                <Send size={16} /> Submit & Analyze
+              </button>
+            </div>
+          </div>
+
+          <div className="flex-1 relative overflow-hidden bg-white flex flex-col min-h-0">
+            <div 
+              className={`flex-1 w-full min-h-0 ${activeTab === "code" ? "block" : "hidden"}`}
               onPaste={(e) => {
                 e.preventDefault();
                 alert("Pasting strictly restricted in Interview Mode.");
@@ -420,14 +546,8 @@ export default function InterviewPrep() {
                 }}
               />
             </div>
-          </div>
-
-          {/* Dedicated Output Terminal */}
-          <div className="brutal-card bg-surface flex flex-col h-[250px] flex-shrink-0 relative overflow-hidden">
-             <div className="bg-background border-b-4 border-text px-4 py-2 font-black uppercase text-sm flex items-center gap-2">
-                <Terminal size={16} /> Output Console
-             </div>
-             <div className="flex-1 overflow-y-auto p-4 bg-text text-surface font-mono text-sm">
+            
+            <div className={`flex-1 overflow-y-auto p-4 bg-text text-surface font-mono text-sm ${activeTab === "output" ? "block" : "hidden"}`}>
                 {!runResult && !result && (
                   <div className="opacity-50 flex items-center justify-center h-full">
                      Awaiting execution... Click Run or Submit to see output.
@@ -526,7 +646,7 @@ export default function InterviewPrep() {
         </div>
 
         {/* Right Panel: Voice + Proctoring stacked */}
-        <div className="flex flex-col gap-4 min-h-0 overflow-hidden">
+        <div className="flex flex-col gap-4 min-h-0 overflow-hidden h-full">
           <div className="flex-shrink-0 min-h-[220px]">
             <VoicePanel
               transcript={transcript}
@@ -537,13 +657,15 @@ export default function InterviewPrep() {
           </div>
           <div className="flex-1 min-h-0 overflow-hidden brutal-card bg-surface">
             <ProctoringPanel
-              isActive={proctorActive}
+              isActive={hasStarted && proctorActive}
               onViolation={handleViolation}
               onScoreUpdate={setIntegrityScore}
             />
           </div>
         </div>
       </div>
+
+      
     </div>
   );
 }

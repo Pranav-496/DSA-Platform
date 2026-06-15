@@ -9,6 +9,9 @@ const ALGORITHMS = {
   insertion: { name: 'Insertion Sort', time: 'O(n²)', space: 'O(1)', best: 'O(n)', description: 'Builds sorted array one item at a time by insertion.' },
   merge: { name: 'Merge Sort', time: 'O(n log n)', space: 'O(n)', best: 'O(n log n)', description: 'Divides array in half, sorts each half, then merges them.' },
   quick: { name: 'Quick Sort', time: 'O(n log n)', space: 'O(log n)', best: 'O(n log n)', description: 'Picks a pivot, partitions around it, recursively sorts partitions.' },
+  heap: { name: 'Heap Sort', time: 'O(n log n)', space: 'O(1)', best: 'O(n log n)', description: 'Builds a max heap, then repeatedly extracts the maximum element.' },
+  shell: { name: 'Shell Sort', time: 'O(n log n)', space: 'O(1)', best: 'O(n log n)', description: 'Optimization of insertion sort allowing exchange of far items.' },
+  cocktail: { name: 'Cocktail Sort', time: 'O(n²)', space: 'O(1)', best: 'O(n)', description: 'Bidirectional bubble sort, traverses both forwards and backwards.' },
 };
 
 function generateArray(size) {
@@ -254,6 +257,157 @@ export default function SortingVisualizer() {
     setPivotIndex(-1);
   }, [anim, delay]);
 
+  // ================================================
+  // HEAP SORT
+  // ================================================
+  const heapSort = useCallback(async () => {
+    let arr = [...arrayRef.current];
+    const n = arr.length;
+
+    async function heapify(arr, n, i) {
+      let largest = i;
+      let left = 2 * i + 1;
+      let right = 2 * i + 2;
+
+      if (left < n) {
+        setComparing([largest, left]);
+        anim.incrementStep();
+        await delay(anim.speed);
+        if (arr[left] > arr[largest]) largest = left;
+        setComparing([]);
+      }
+
+      if (right < n) {
+        setComparing([largest, right]);
+        anim.incrementStep();
+        await delay(anim.speed);
+        if (arr[right] > arr[largest]) largest = right;
+        setComparing([]);
+      }
+
+      if (largest !== i) {
+        setSwapping([i, largest]);
+        setStatusMessage(`Swapping ${arr[i]} and ${arr[largest]} to maintain heap property`);
+        [arr[i], arr[largest]] = [arr[largest], arr[i]];
+        setArray([...arr]);
+        await delay(anim.speed * 0.5);
+        setSwapping([]);
+        await heapify(arr, n, largest);
+      }
+    }
+
+    setStatusMessage('Phase 1: Building Max Heap');
+    for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+      await heapify(arr, n, i);
+    }
+
+    setStatusMessage('Phase 2: Extracting elements from heap');
+    for (let i = n - 1; i > 0; i--) {
+      setStatusMessage(`Extracting max element ${arr[0]} to end`);
+      setSwapping([0, i]);
+      [arr[0], arr[i]] = [arr[i], arr[0]];
+      setArray([...arr]);
+      await delay(anim.speed * 0.5);
+      setSwapping([]);
+      setSortedIndices(prev => [...prev, i]);
+      await heapify(arr, i, 0);
+    }
+    setSortedIndices(prev => [...prev, 0]);
+  }, [anim, delay]);
+
+  // ================================================
+  // SHELL SORT
+  // ================================================
+  const shellSort = useCallback(async () => {
+    let arr = [...arrayRef.current];
+    const n = arr.length;
+
+    for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
+      setStatusMessage(`Sorting with gap ${gap}`);
+      for (let i = gap; i < n; i++) {
+        let temp = arr[i];
+        let j;
+        setActiveIndices([i]);
+        for (j = i; j >= gap; j -= gap) {
+          setComparing([j - gap, i]);
+          anim.incrementStep();
+          await delay(anim.speed);
+          if (arr[j - gap] > temp) {
+             setSwapping([j, j - gap]);
+             arr[j] = arr[j - gap];
+             setArray([...arr]);
+             await delay(anim.speed * 0.4);
+             setSwapping([]);
+          } else {
+             setComparing([]);
+             break;
+          }
+          setComparing([]);
+        }
+        arr[j] = temp;
+        setArray([...arr]);
+        setActiveIndices([]);
+        await delay(anim.speed * 0.3);
+      }
+    }
+    setSortedIndices(arr.map((_, i) => i));
+  }, [anim, delay]);
+
+  // ================================================
+  // COCKTAIL SHAKER SORT
+  // ================================================
+  const cocktailSort = useCallback(async () => {
+    let arr = [...arrayRef.current];
+    let n = arr.length;
+    let swapped = true;
+    let start = 0;
+    let end = n - 1;
+
+    while (swapped) {
+      swapped = false;
+      setStatusMessage(`Forward pass from index ${start} to ${end}`);
+      for (let i = start; i < end; i++) {
+        setComparing([i, i + 1]);
+        anim.incrementStep();
+        await delay(anim.speed);
+        if (arr[i] > arr[i + 1]) {
+          setSwapping([i, i + 1]);
+          [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+          setArray([...arr]);
+          swapped = true;
+          await delay(anim.speed * 0.5);
+          setSwapping([]);
+        }
+        setComparing([]);
+      }
+      
+      if (!swapped) break;
+      setSortedIndices(prev => [...prev, end]);
+      end--;
+      swapped = false;
+      
+      setStatusMessage(`Backward pass from index ${end} to ${start}`);
+      for (let i = end - 1; i >= start; i--) {
+        setComparing([i, i + 1]);
+        anim.incrementStep();
+        await delay(anim.speed);
+        if (arr[i] > arr[i + 1]) {
+          setSwapping([i, i + 1]);
+          [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+          setArray([...arr]);
+          swapped = true;
+          await delay(anim.speed * 0.5);
+          setSwapping([]);
+        }
+        setComparing([]);
+      }
+      setSortedIndices(prev => [...prev, start]);
+      start++;
+    }
+    setSortedIndices(arr.map((_, i) => i));
+  }, [anim, delay]);
+
+
   const runAlgorithm = async () => {
     anim.start();
     setSortedIndices([]);
@@ -270,6 +424,9 @@ export default function SortingVisualizer() {
         case 'insertion': await insertionSort(); break;
         case 'merge': await mergeSort(); break;
         case 'quick': await quickSort(); break;
+        case 'heap': await heapSort(); break;
+        case 'shell': await shellSort(); break;
+        case 'cocktail': await cocktailSort(); break;
       }
       setStatusMessage('✅ Sorting complete!');
     } catch (e) {
@@ -354,10 +511,10 @@ export default function SortingVisualizer() {
       </div>
 
       {/* Bar Visualization */}
-      <div className="flex-1 bg-background border-4 border-text flex items-end justify-center gap-1 p-6 pt-12 relative min-h-[150px] overflow-hidden shadow-brutal-md">
+      <div className="flex-1 bg-background border-4 border-text flex items-end justify-center gap-1 p-6 pt-12 relative min-h-[400px] lg:min-h-[500px] overflow-hidden shadow-brutal-md">
         {/* Thinking Overlay / AI Tooltip */}
         {(anim.isPlaying || statusMessage) && statusMessage && (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-surface border-4 border-text p-2 px-4 shadow-[4px_4px_0px_#111] animate-fade-in flex items-center gap-3 z-20 min-w-[300px]">
+          <div className="absolute top-4 right-4 bg-surface border-4 border-text p-2 px-4 shadow-[4px_4px_0px_#111] animate-fade-in flex items-center gap-3 z-20 min-w-[250px] max-w-[350px]">
              <div className="bg-primary border-2 border-text rounded-none p-1.5 flex-shrink-0 shadow-[2px_2px_0px_#111]">
                 <BrainCircuit size={18} className="text-text animate-pulse" />
              </div>
@@ -365,7 +522,7 @@ export default function SortingVisualizer() {
                 <div className="flex justify-between items-center mb-0.5">
                    <p className="text-[10px] font-black text-text uppercase tracking-widest border-b-2 border-text pb-0.5 inline-block">AI Thinking Trace</p>
                 </div>
-                <p className="text-sm font-bold truncate">{statusMessage}</p>
+                <p className="text-sm font-bold break-words">{statusMessage}</p>
              </div>
           </div>
         )}

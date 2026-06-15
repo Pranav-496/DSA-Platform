@@ -14,9 +14,12 @@ import {
   LayoutDashboard,
   BarChart3,
   Search,
+  Menu,
   X,
   Trophy,
   User,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { AuthContext } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
@@ -29,12 +32,32 @@ import AuthPage from "./pages/AuthPage";
 import LandingPage from "./pages/LandingPage";
 import Profile from "./pages/Profile";
 import Leaderboard from "./pages/Leaderboard";
+import SystemDesign from "./pages/SystemDesign";
 import { AuthProvider } from "./context/AuthContext";
 
 function MainLayout() {
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const location = useLocation();
+
+  const [theme, setTheme] = React.useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
+
+  React.useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
 
   React.useEffect(() => {
     const handleKeyDown = (e) => {
@@ -57,6 +80,7 @@ function MainLayout() {
     { title: "Bubble Sort", type: "Algorithm", path: "/visualize", icon: BarChart3 },
     { title: "Arrays Quiz", type: "Quiz", path: "/quiz/arrays", icon: BookOpen },
     { title: "Interview Prep", type: "Practice", path: "/interview", icon: Mic },
+    { title: "System Design", type: "Sandbox", path: "/system-design", icon: LayoutDashboard },
   ].filter(
     (item) =>
       item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -67,12 +91,44 @@ function MainLayout() {
   const shouldShowSidebar = !hideSidebarRoutes.includes(location.pathname);
 
   return (
-    <div className="flex bg-background min-h-screen text-text font-geist">
-      {shouldShowSidebar && <Sidebar setSearchOpen={setSearchOpen} />}
+    <div className="flex flex-col bg-background h-screen overflow-hidden text-text font-geist">
+      {/* Sticky Top Navbar */}
+      {shouldShowSidebar && (
+        <header className="sticky top-0 z-30 bg-surface border-b-4 border-text shadow-brutal-sm flex items-center justify-between px-4 md:px-8 py-3 shrink-0">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 bg-primary border-4 border-text rounded shadow-brutal-sm hover:-translate-y-1 hover:shadow-[4px_4px_0px_var(--text-color)] transition-all flex items-center gap-2"
+            >
+              <Menu size={24} className="text-text" />
+              <span className="font-bold uppercase tracking-wide hidden md:inline">Menu</span>
+            </button>
+            <h1 className="font-black text-2xl tracking-tighter uppercase hidden lg:block ml-4">
+              AlgoNova
+            </h1>
+          </div>
+          <button
+            onClick={toggleTheme}
+            className="p-2 bg-primary border-4 border-text rounded shadow-brutal-sm hover:-translate-y-1 hover:shadow-[4px_4px_0px_var(--text-color)] transition-all flex items-center gap-2"
+            title="Toggle Theme"
+          >
+            {theme === "light" ? (
+              <Moon size={24} className="text-text" />
+            ) : (
+              <Sun size={24} className="text-text" />
+            )}
+            <span className="font-bold uppercase tracking-wide hidden md:inline">Theme</span>
+          </button>
+        </header>
+      )}
+
+      <div className="flex-1 flex overflow-hidden relative">
+      
+      {shouldShowSidebar && <Sidebar setSearchOpen={setSearchOpen} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}
 
       {/* Search Overlay */}
       {searchOpen && (
-        <div className="fixed inset-0 bg-text/80 backdrop-blur-sm z-50 flex items-start justify-center pt-20 p-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-start justify-center pt-20 p-4">
           <div className="w-full max-w-2xl mx-auto brutal-card bg-surface p-6 shadow-brutal-lg">
             <div className="flex items-center gap-4 mb-6 border-b-4 border-text pb-4">
               <Search className="text-text" size={28} />
@@ -84,7 +140,7 @@ function MainLayout() {
                 className="flex-1 bg-transparent text-xl font-bold placeholder-text/50 outline-none"
                 autoFocus
               />
-              <button onClick={() => { setSearchOpen(false); setSearchQuery(""); }} className="text-text hover:bg-danger hover:text-surface border-2 border-transparent hover:border-text p-1 transition-all">
+              <button onClick={() => { setSearchOpen(false); setSearchQuery(""); setSidebarOpen(false); }} className="text-text hover:bg-danger hover:text-surface border-2 border-transparent hover:border-text p-1 transition-all">
                 <X size={28} />
               </button>
             </div>
@@ -93,7 +149,7 @@ function MainLayout() {
                 <Link
                   key={i}
                   to={result.path}
-                  onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+                  onClick={() => { setSearchOpen(false); setSearchQuery(""); setSidebarOpen(false); }}
                   className="flex items-center gap-4 p-4 rounded-lg hover:bg-primary border-4 border-transparent hover:border-text transition-all group shadow-sm hover:shadow-brutal-sm"
                 >
                   <result.icon size={24} className="text-text" />
@@ -112,7 +168,7 @@ function MainLayout() {
       )}
 
       {/* Main Content Pane */}
-      <main className="flex-1 p-4 md:p-8 relative overflow-y-auto h-screen w-full">
+      <main className="flex-1 p-4 md:p-8 relative overflow-y-auto h-full w-full transition-all">
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -123,10 +179,12 @@ function MainLayout() {
           <Route path="/visualize" element={<Visualizer />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/interview" element={<InterviewPrep />} />
+          <Route path="/system-design" element={<SystemDesign />} />
           <Route path="/quiz/:topic" element={<Quiz />} />
           <Route path="/quiz" element={<Quiz />} />
         </Routes>
       </main>
+      </div>
     </div>
   );
 }
@@ -141,7 +199,7 @@ function App() {
   );
 }
 
-function Sidebar({ setSearchOpen }) {
+function Sidebar({ setSearchOpen, sidebarOpen, setSidebarOpen }) {
   const location = useLocation();
   const { user } = React.useContext(AuthContext);
 
@@ -153,6 +211,7 @@ function Sidebar({ setSearchOpen }) {
     { to: "/visualize", icon: BarChart3, label: "Visualizer" },
     { to: "/practice", icon: Terminal, label: "Practice HQ" },
     { to: "/interview", icon: Mic, label: "Interview Prep" },
+    { to: "/system-design", icon: LayoutDashboard, label: "System Design" },
   ];
 
   const handleSearchClick = () => {
@@ -160,7 +219,25 @@ function Sidebar({ setSearchOpen }) {
   };
 
   return (
-    <aside className="w-64 bg-surface border-r-8 border-text flex flex-col items-center py-6 z-10 flex-shrink-0 shadow-[4px_0_0_#111]">
+    <>
+      {/* Backdrop */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Drawer */}
+      <aside className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition duration-200 ease-in-out w-64 bg-surface border-r-8 border-text flex flex-col items-center py-6 z-50 shadow-[4px_0_0_#111] h-screen`}>
+        
+        {/* Close Button */}
+        <button 
+          onClick={() => setSidebarOpen(false)}
+          className="absolute top-4 right-4 p-1 hover:bg-danger hover:text-surface border-2 border-transparent hover:border-text transition-all rounded"
+        >
+          <X size={24} />
+        </button>
       <div className="flex items-center gap-3 mb-10 px-6 w-full">
         <img src="/favicon.svg" alt="AlgoNova Logo" className="w-10 h-10" />
         <h1 className="text-2xl font-black uppercase tracking-tighter">
@@ -168,7 +245,7 @@ function Sidebar({ setSearchOpen }) {
         </h1>
       </div>
 
-      <nav className="w-full flex-1 px-4 space-y-2">
+      <nav className="w-full flex-1 px-4 space-y-2 overflow-y-auto min-h-0">
         {/* Search Button */}
         <button
           onClick={handleSearchClick}
@@ -192,6 +269,7 @@ function Sidebar({ setSearchOpen }) {
             <Link
               key={item.to}
               to={item.to}
+              onClick={() => setSidebarOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg border-4 transition-all group relative
                 ${
                   isActive
@@ -209,9 +287,9 @@ function Sidebar({ setSearchOpen }) {
       </nav>
 
       {/* Bottom section */}
-      <div className="px-4 w-full mt-auto">
+      <div className="px-4 w-full mt-auto pt-6 border-t-4 border-text">
         {user && (
-          <Link to="/profile" className="mb-6 flex items-center gap-3 p-3 bg-surface border-4 border-text rounded-lg shadow-brutal-sm hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111] transition-all cursor-pointer block">
+          <Link to="/profile" className="flex items-center gap-3 p-3 bg-surface border-4 border-text rounded-lg shadow-brutal-sm hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111] transition-all cursor-pointer block">
             <div className="w-10 h-10 rounded-full bg-warning border-4 border-text flex items-center justify-center flex-shrink-0">
               <User size={20} className="text-text" />
             </div>
@@ -221,19 +299,9 @@ function Sidebar({ setSearchOpen }) {
             </div>
           </Link>
         )}
-        
-        <div className="border-t-4 border-text pt-6">
-          <div className="bg-background border-4 border-text rounded-lg p-4 text-center shadow-[4px_4px_0px_#111]">
-            <p className="text-xs font-bold uppercase tracking-wider mb-1">
-              Built For
-            </p>
-            <p className="text-sm font-black uppercase">
-              DSA Enthusiasts
-            </p>
-          </div>
-        </div>
       </div>
     </aside>
+    </>
   );
 }
 

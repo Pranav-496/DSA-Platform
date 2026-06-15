@@ -6,7 +6,22 @@
 
 :root {
   --bg-color: #FAFAFA;
+  --surface-color: #FFFFFF;
   --text-color: #111111;
+  --border-color: #111111;
+  --text-muted: #666666;
+  --primary: #FFD600;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+}
+
+.dark {
+  --bg-color: #121212;
+  --surface-color: #1E1E1E;
+  --text-color: #F3F4F6;
+  --border-color: #333333;
+  --text-muted: #9CA3AF;
   --primary: #FFD600;
   --success: #22C55E;
   --warning: #F59E0B;

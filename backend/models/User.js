@@ -71,6 +71,11 @@ const UserSchema = new mongoose.Schema({
       of: Number,
       default: {},
     },
+    activityHeatmap: {
+      type: Map,
+      of: Number,
+      default: {},
+    },
     voiceScores: [{
       topic: String,
       score: Number,

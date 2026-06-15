@@ -36,7 +36,7 @@ export default function Visualizer() {
   const ActiveComponent = VISUALIZER_COMPONENTS[activeCategory];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-8rem)] min-h-[650px]">
+    <div className="flex flex-col lg:flex-row gap-4 h-full">
       {/* Category Sidebar */}
       <div className="w-full lg:w-64 flex-shrink-0 flex flex-col gap-2 overflow-y-auto brutal-card bg-surface p-4 h-full">
         <h2 className="text-xl font-black uppercase font-geist tracking-tight border-b-4 border-text pb-2 mb-2">

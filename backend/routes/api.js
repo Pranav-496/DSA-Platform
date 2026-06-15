@@ -375,8 +375,11 @@ router.post("/profile/update", protect, async (req, res) => {
     }
 
     const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ error: "User not found" });
     
-    if (name) user.name = name;
+    if (name && name.trim() !== "") {
+       user.name = name;
+    }
     if (bio !== undefined) user.bio = bio;
     if (website !== undefined) user.website = website;
     
@@ -391,6 +394,16 @@ router.post("/profile/update", protect, async (req, res) => {
 
 router.get("/leaderboard", async (req, res) => {
   try {
+    const redisClient = require('../utils/redisClient');
+    const CACHE_KEY = 'leaderboard:top100';
+
+    if (redisClient.isReady) {
+      const cached = await redisClient.get(CACHE_KEY);
+      if (cached) {
+        return res.json(JSON.parse(cached));
+      }
+    }
+
     const topUsers = await User.find({ isVerified: true })
       .sort({ "gamification.xp": -1, "progress.problemsSolved": -1 })
       .limit(100)
@@ -407,6 +420,11 @@ router.get("/leaderboard", async (req, res) => {
       problems: u.progress?.problemsSolved || 0,
       streak: u.gamification?.streak?.current || 0
     }));
+
+    if (redisClient.isReady) {
+      // Cache for 60 seconds (1 minute)
+      await redisClient.setEx(CACHE_KEY, 60, JSON.stringify(formattedLeaderboard));
+    }
 
     res.json(formattedLeaderboard);
   } catch (error) {

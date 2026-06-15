@@ -17,7 +17,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function twoSum(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function twoSum(nums, target) {\n  // Write your solution here\n  return null;\n}",
       "python": "def two_sum(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object twoSum(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -51,7 +51,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function search(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function search(nums, target) {\n  // Write your solution here\n  return null;\n}",
       "python": "def search(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object search(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -85,7 +85,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function isValid(nums) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function isValid(s) {\n  // Write your solution here\n  return null;\n}",
       "python": "def is_valid(nums):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object isValid(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -119,7 +119,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function maxSubArray(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function maxSubArray(nums) {\n  // Write your solution here\n  return null;\n}",
       "python": "def max_sub_array(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object maxSubArray(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -153,7 +153,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function climbStairs(nums) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function climbStairs(n) {\n  // Write your solution here\n  return null;\n}",
       "python": "def climb_stairs(nums):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object climbStairs(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -187,7 +187,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function lengthOfLongestSubstring(nums) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function lengthOfLongestSubstring(s) {\n  // Write your solution here\n  return null;\n}",
       "python": "def length_of_longest_substring(nums):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object lengthOfLongestSubstring(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -221,7 +221,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function maxArea(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function maxArea(height) {\n  // Write your solution here\n  return null;\n}",
       "python": "def max_area(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object maxArea(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -255,7 +255,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function merge(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function merge(intervals) {\n  // Write your solution here\n  return null;\n}",
       "python": "def merge(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object merge(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -285,7 +285,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function productExceptSelf(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function productExceptSelf(nums) {\n  // Write your solution here\n  return null;\n}",
       "python": "def product_except_self(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object productExceptSelf(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -315,7 +315,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function maxProfit(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function maxProfit(prices) {\n  // Write your solution here\n  return null;\n}",
       "python": "def max_profit(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object maxProfit(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -345,7 +345,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function containsDuplicate(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function containsDuplicate(nums) {\n  // Write your solution here\n  return null;\n}",
       "python": "def contains_duplicate(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object containsDuplicate(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -379,7 +379,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function isAnagram(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function isAnagram(s, t) {\n  // Write your solution here\n  return null;\n}",
       "python": "def is_anagram(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object isAnagram(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -409,7 +409,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function groupAnagrams(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function groupAnagrams(strs) {\n  // Write your solution here\n  return null;\n}",
       "python": "def group_anagrams(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object groupAnagrams(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -440,7 +440,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function topKFrequent(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function topKFrequent(nums, k) {\n  // Write your solution here\n  return null;\n}",
       "python": "def top_k_frequent(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object topKFrequent(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -470,7 +470,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function isPalindrome(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function isPalindrome(s) {\n  // Write your solution here\n  return null;\n}",
       "python": "def is_palindrome(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object isPalindrome(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -500,7 +500,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function threeSum(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function threeSum(nums) {\n  // Write your solution here\n  return null;\n}",
       "python": "def three_sum(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object threeSum(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -530,7 +530,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function minWindow(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function minWindow(s, t) {\n  // Write your solution here\n  return null;\n}",
       "python": "def min_window(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object minWindow(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -560,7 +560,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function searchRotated(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function searchRotated(nums, target) {\n  // Write your solution here\n  return null;\n}",
       "python": "def search_rotated(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object searchRotated(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -590,7 +590,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function findMin(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function findMin(nums) {\n  // Write your solution here\n  return null;\n}",
       "python": "def find_min(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object findMin(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -620,7 +620,7 @@ export const PROBLEMS = [
       }
     ],
     "starterCode": {
-      "javascript": "function minEatingSpeed(a, b) {\n  // Write your solution here\n  return null;\n}",
+      "javascript": "function minEatingSpeed(piles, h) {\n  // Write your solution here\n  return null;\n}",
       "python": "def min_eating_speed(a, b):\n    # Write your solution here\n    pass",
       "java": "class Solution {\n    public Object minEatingSpeed(Object input) {\n        // Write your solution here\n        return null;\n    }\n}",
       "cpp": "// Write your C++ solution here\n"
@@ -1500,6 +1500,80 @@ export const PROBLEMS = [
         "input": "[1,2,3]",
         "expected": "0"
       }
+    ]
+  },
+  {
+    "id": 51,
+    "title": "Merge k Sorted Lists",
+    "difficulty": "Hard",
+    "tags": ["Linked List", "Divide and Conquer", "Heap"],
+    "funcName": "mergeKLists",
+    "description": "You are given an array of `k` linked-lists `lists`, each linked-list is sorted in ascending order. Merge all the linked-lists into one sorted linked-list and return it.",
+    "examples": [
+      {
+        "input": "[[1,4,5],[1,3,4],[2,6]]",
+        "output": "[1,1,2,3,4,4,5,6]",
+        "explanation": "The linked-lists are:\n[\n  1->4->5,\n  1->3->4,\n  2->6\n]\nmerging them into one sorted list:\n1->1->2->3->4->4->5->6"
+      }
+    ],
+    "starterCode": {
+      "javascript": "function mergeKLists(lists) {\n  // Write your solution here\n  return null;\n}",
+      "python": "def mergeKLists(lists):\n    # Write your solution here\n    pass",
+      "java": "class Solution {\n    public Object mergeKLists(Object[] lists) {\n        // Write your solution here\n        return null;\n    }\n}",
+      "cpp": "// Write your C++ solution here\n"
+    },
+    "testCases": [
+      { "input": "[[1,4,5],[1,3,4],[2,6]]", "expected": "[1,1,2,3,4,4,5,6]" },
+      { "input": "[]", "expected": "[]" }
+    ]
+  },
+  {
+    "id": 52,
+    "title": "Trapping Rain Water",
+    "difficulty": "Hard",
+    "tags": ["Array", "Two Pointers", "Dynamic Programming", "Stack"],
+    "funcName": "trap",
+    "description": "Given `n` non-negative integers representing an elevation map where the width of each bar is `1`, compute how much water it can trap after raining.",
+    "examples": [
+      {
+        "input": "[0,1,0,2,1,0,1,3,2,1,2,1]",
+        "output": "6",
+        "explanation": "The above elevation map is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped."
+      }
+    ],
+    "starterCode": {
+      "javascript": "function trap(height) {\n  // Write your solution here\n  return 0;\n}",
+      "python": "def trap(height):\n    # Write your solution here\n    pass",
+      "java": "class Solution {\n    public int trap(int[] height) {\n        // Write your solution here\n        return 0;\n    }\n}",
+      "cpp": "// Write your C++ solution here\n"
+    },
+    "testCases": [
+      { "input": "[0,1,0,2,1,0,1,3,2,1,2,1]", "expected": "6" },
+      { "input": "[4,2,0,3,2,5]", "expected": "9" }
+    ]
+  },
+  {
+    "id": 53,
+    "title": "LRU Cache",
+    "difficulty": "Medium",
+    "tags": ["Hash Table", "Linked List", "Design"],
+    "funcName": "LRUCache",
+    "description": "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.",
+    "examples": [
+      {
+        "input": "[\"LRUCache\", \"put\", \"put\", \"get\", \"put\", \"get\", \"put\", \"get\", \"get\", \"get\"]\n[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]",
+        "output": "[null, null, null, 1, null, -1, null, -1, 3, 4]",
+        "explanation": "Operations sequence tracking caching state."
+      }
+    ],
+    "starterCode": {
+      "javascript": "class LRUCache {\n  constructor(capacity) {\n    \n  }\n  get(key) {\n    \n  }\n  put(key, value) {\n    \n  }\n}",
+      "python": "class LRUCache:\n    def __init__(self, capacity: int):\n        pass\n    def get(self, key: int) -> int:\n        pass\n    def put(self, key: int, value: int) -> None:\n        pass",
+      "java": "class LRUCache {\n    public LRUCache(int capacity) {\n        \n    }\n    public int get(int key) {\n        return -1;\n    }\n    public void put(int key, int value) {\n        \n    }\n}",
+      "cpp": "// Write your C++ solution here\n"
+    },
+    "testCases": [
+      { "input": "[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]", "expected": "[null, null, null, 1, null, -1, null, -1, 3, 4]" }
     ]
   }
 ];

@@ -68,7 +68,7 @@ export default function Leaderboard() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] overflow-y-auto pr-4 text-text pb-12">
+    <div className="h-full overflow-y-auto pr-4 text-text">
       <div className="flex flex-col items-center justify-center py-12 mb-8 border-4 border-text bg-primary shadow-[8px_8px_0px_#111]">
         <div className="bg-surface border-4 border-text p-4 rounded-none shadow-[4px_4px_0px_#111] mb-6">
           <Trophy size={56} className="text-text" />

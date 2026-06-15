@@ -13,6 +13,7 @@ const interviewRoutes = require("./routes/interview");
 const proctorRoutes = require("./routes/proctor");
 
 const app = express();
+const { apiLimiter, aiLimiter, codeExecLimiter } = require("./middleware/rateLimiter");
 
 app.use(
   cors({
@@ -35,16 +36,16 @@ mongoose
 app.use("/api/auth", authRouter);
 
 // Core API routes (problems, quiz, progress, leaderboard)
-app.use("/api", apiRoutes);
+app.use("/api", apiLimiter, apiRoutes);
 
 // AI routes (code analysis, voice analysis)
-app.use("/api/ai", aiRoutes);
+app.use("/api/ai", aiLimiter, aiRoutes);
 
 // Code execution routes
-app.use("/api/code", codeRoutes);
+app.use("/api/code", codeExecLimiter, codeRoutes);
 
 // Interview evaluation routes
-app.use("/api/interview", interviewRoutes);
+app.use("/api/interview", aiLimiter, interviewRoutes);
 
 // Proctoring routes
 app.use("/api/proctor", proctorRoutes);
@@ -58,7 +59,7 @@ if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
 
   // Catch-all: send index.html for client-side routing (must be AFTER API routes)
-  app.get("*", (req, res) => {
+  app.get(/(.*)/, (req, res) => {
     res.sendFile(path.join(clientDistPath, "index.html"));
   });
   console.log("📦 Serving frontend build from:", clientDistPath);
@@ -68,6 +69,20 @@ if (fs.existsSync(clientDistPath)) {
   console.log("   Run 'npm run build' in /frontend to generate production build");
 }
 
-app.listen(PORT, () => {
+const http = require("http");
+const { Server } = require("socket.io");
+const matchmaking = require("./socket/matchmaking");
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: true,
+    credentials: true,
+  }
+});
+
+matchmaking(io);
+
+server.listen(PORT, () => {
   console.log(`🚀 AlgoNova Server running on port ${PORT}`);
 });
