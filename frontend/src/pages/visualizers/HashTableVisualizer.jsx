@@ -20,7 +20,6 @@ export default function HashTableVisualizer() {
   const [activeSlot, setActiveSlot] = useState(-1);
   const [activeItem, setActiveItem] = useState(null);
   const [foundItem, setFoundItem] = useState(null);
-  const [highlightedSlot, setHighlightedSlot] = useState(-1);
   const [hashResult, setHashResult] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
 
@@ -35,7 +34,7 @@ export default function HashTableVisualizer() {
     setActiveSlot(-1);
     setActiveItem(null);
     setFoundItem(null);
-    setHighlightedSlot(-1);
+
     setHashResult('');
     setStatusMessage('');
   };

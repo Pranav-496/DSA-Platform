@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import ControlBar from './ControlBar';
 import useAnimationControl from './useAnimationControl';
 import { Shuffle } from 'lucide-react';

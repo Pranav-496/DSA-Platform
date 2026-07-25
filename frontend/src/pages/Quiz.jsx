@@ -40,6 +40,7 @@ export default function Quiz() {
   const [timeLeft, setTimeLeft] = useState(30);
   const [isAnswered, setIsAnswered] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [saveError, setSaveError] = useState('');
 
   useEffect(() => {
     setCurrentQ(0);
@@ -158,7 +159,9 @@ export default function Quiz() {
           type: "quiz",
           data: { topic: topicKey, score: percentage },
         }),
-      }).catch(() => {});
+      }).catch(() => {
+        setSaveError('Could not save quiz progress. Check your connection.');
+      });
     }
   }, [showResult]);
 
@@ -166,6 +169,11 @@ export default function Quiz() {
     const wrongCount = answers.filter((a) => !a.isCorrect).length;
     return (
       <div className="max-w-2xl mx-auto text-text space-y-8 animate-fade-in p-6 brutal-card">
+        {saveError && (
+          <div className="p-3 bg-warning border-4 border-text text-text font-bold text-sm shadow-brutal-sm">
+            ⚠ {saveError}
+          </div>
+        )}
         <div className="text-center space-y-4">
           <Trophy
             className={`mx-auto ${percentage >= 80 ? "text-warning" : percentage >= 50 ? "text-primary" : "text-text"}`}
@@ -266,7 +274,7 @@ export default function Quiz() {
 
   return (
     <div className="max-w-2xl mx-auto text-text space-y-6">
-      <div className="flex items-center justify-between brutal-card p-4">
+      <div className="flex items-center justify-between flex-wrap gap-3 brutal-card p-4">
         <h2 className="text-2xl font-geist font-black uppercase tracking-tight text-text">
           Quiz: {topicKey.charAt(0).toUpperCase() + topicKey.slice(1)}
         </h2>

@@ -3,6 +3,7 @@ const router = express.Router();
 const vm = require("vm");
 const { optionalAuth } = require("../middleware/authMiddleware");
 const User = require("../models/User");
+const { executeLocal } = require("../utils/executor");
 
 // ============================================
 // Code Execution Engine (Local Fallback)
@@ -98,14 +99,7 @@ router.post("/run", optionalAuth, async (req, res) => {
     if (langConfig.language === "javascript") {
       pistonData = await executeJavascriptLocally(execCode);
     } else {
-      // Mock execution for other languages due to Piston API block
-      pistonData = {
-        run: {
-          code: 0,
-          stdout: testCase?.expected ? testCase.expected : "Mock Execution Success (Piston API Blocked)",
-          stderr: ""
-        }
-      };
+      pistonData = { run: await executeLocal(execCode, langConfig.language) };
     }
 
     const elapsed = Date.now() - startTime;
@@ -201,7 +195,7 @@ router.post("/submit", optionalAuth, async (req, res) => {
         if (langConfig.language === "javascript") {
            pistonData = await executeJavascriptLocally(execCode);
         } else {
-           pistonData = { run: { code: 0, stdout: tc.expected, stderr: "" } };
+           pistonData = { run: await executeLocal(execCode, langConfig.language) };
         }
 
         const elapsed = Date.now() - startTime;

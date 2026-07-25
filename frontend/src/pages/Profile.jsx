@@ -24,6 +24,14 @@ export default function Profile() {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({ name: "", bio: "", website: "" });
@@ -96,11 +104,11 @@ export default function Profile() {
           localStorage.setItem("algonova_name", data.user.name);
         }
       } else {
-        alert(data.error || data.message || `Failed to save profile (Status: ${res.status}). Please try again.`);
+        setToast({ type: 'error', message: data.error || data.message || `Failed to save profile (Status: ${res.status}). Please try again.` });
       }
     } catch (err) {
       console.error(err);
-      alert("Network error: Could not reach the server to save profile. Is the backend running?");
+      setToast({ type: 'error', message: 'Network error: Could not reach server.' });
     }
   };
 
@@ -116,7 +124,7 @@ export default function Profile() {
     problemsSolved: 0,
     placementReadiness: 0,
     accuracy: 100,
-    weakAreas: ["No Data"],
+    weakAreas: [],
   };
 
   const gamify = profileData?.gamification || {
@@ -130,6 +138,13 @@ export default function Profile() {
 
   return (
     <div className="text-text h-full">
+      {toast && (
+        <div className={`fixed top-20 right-4 z-50 p-4 border-4 border-text shadow-brutal font-bold text-sm max-w-sm animate-slide-in ${
+          toast.type === 'error' ? 'bg-danger text-surface' : 'bg-success text-surface'
+        }`}>
+          {toast.type === 'error' ? '✕ ' : '✓ '}{toast.message}
+        </div>
+      )}
       <div className="flex flex-col md:flex-row justify-between md:items-start mb-8 gap-4">
         {isEditing ? (
           <div className="flex-1 max-w-xl brutal-card bg-surface p-6 shadow-[4px_4px_0px_#111]">
@@ -175,17 +190,24 @@ export default function Profile() {
           </div>
         ) : (
           <div className="flex-1">
-            <div className="flex items-center gap-4">
-              <h2 className="text-4xl font-black font-geist uppercase tracking-tight">
-                {userInfo.name ? `${userInfo.name}` : "Operator"}
-              </h2>
-              <button onClick={() => setIsEditing(true)} className="p-2 border-4 border-transparent hover:border-text hover:bg-surface rounded transition-all text-text/50 hover:text-text shadow-none" title="Edit Profile">
-                <Edit2 size={20} />
-              </button>
+            <div className="flex items-center gap-5">
+              <div className="w-16 h-16 rounded-full bg-primary border-4 border-text shadow-brutal-sm flex items-center justify-center flex-shrink-0">
+                <span className="text-2xl font-black text-text">{(userInfo.name || 'U').charAt(0).toUpperCase()}</span>
+              </div>
+              <div>
+                <div className="flex items-center gap-4">
+                  <h2 className="text-4xl font-black font-geist uppercase tracking-tight">
+                    {userInfo.name ? `${userInfo.name}` : "Operator"}
+                  </h2>
+                  <button onClick={() => setIsEditing(true)} className="p-2 border-4 border-transparent hover:border-text hover:bg-surface rounded transition-all text-text/50 hover:text-text shadow-none" title="Edit Profile">
+                    <Edit2 size={20} />
+                  </button>
+                </div>
+                <p className="text-text/70 font-bold uppercase tracking-wider text-sm mt-1">
+                  ID: {user?.id?.substring(0, 8)}... | {userInfo.email || user?.email}
+                </p>
+              </div>
             </div>
-            <p className="text-text/70 font-bold uppercase tracking-wider text-sm mt-1">
-              ID: {user?.id?.substring(0, 8)}... | {userInfo.email || user?.email}
-            </p>
             {userInfo.bio && (
               <p className="mt-3 font-medium text-lg max-w-2xl border-l-4 border-primary pl-4">{userInfo.bio}</p>
             )}

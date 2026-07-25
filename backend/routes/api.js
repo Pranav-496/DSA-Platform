@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { protect } = require("../middleware/authMiddleware");
 const User = require("../models/User");
+const SystemDesignSave = require("../models/SystemDesignSave");
+const Problem = require("../models/Problem");
+const QuizQuestion = require("../models/QuizQuestion");
 
 // Mock DB for when MongoDB is not connected
 const mockDb = {
@@ -12,6 +15,7 @@ const mockDb = {
     weakAreas: [],
     quizScores: new Map(),
     voiceScores: [],
+    systemDesignScores: [],
     recentActivity: []
   },
   gamification: {
@@ -28,155 +32,28 @@ const mockDb = {
   }
 };
 
-
-const problems = [
-  {
-    id: 1,
-    title: "Two Sum",
-    difficulty: "Easy",
-    tags: ["Array", "Hash Map"],
-    description:
-      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-  },
-  {
-    id: 2,
-    title: "Binary Search",
-    difficulty: "Easy",
-    tags: ["Array", "Binary Search"],
-    description:
-      "Given a sorted array and a target, return the index if found.",
-  },
-  {
-    id: 3,
-    title: "Valid Parentheses",
-    difficulty: "Easy",
-    tags: ["Stack", "String"],
-    description: "Determine if a string of brackets is valid.",
-  },
-  {
-    id: 4,
-    title: "Reverse Linked List",
-    difficulty: "Medium",
-    tags: ["Linked List"],
-    description: "Reverse a singly linked list.",
-  },
-  {
-    id: 5,
-    title: "Maximum Subarray",
-    difficulty: "Medium",
-    tags: ["Array", "DP"],
-    description: "Find the contiguous subarray with the largest sum.",
-  },
-  {
-    id: 6,
-    title: "Merge Two Sorted Lists",
-    difficulty: "Easy",
-    tags: ["Linked List", "Recursion"],
-    description: "Merge two sorted linked lists into one sorted list.",
-  },
-  {
-    id: 7,
-    title: "Climbing Stairs",
-    difficulty: "Easy",
-    tags: ["DP", "Math"],
-    description: "Count distinct ways to climb n stairs taking 1 or 2 steps.",
-  },
-  {
-    id: 8,
-    title: "Number of Islands",
-    difficulty: "Hard",
-    tags: ["Graph", "BFS", "DFS"],
-    description: "Count the number of islands in a 2D grid.",
-  },
-];
-
-router.get("/problems", (req, res) => {
-  res.json(problems);
+router.get("/problems", async (req, res) => {
+  try {
+    const problems = await Problem.find({}).sort({ id: 1 }).lean();
+    res.json(problems);
+  } catch (err) { console.error(err);
+    res.status(500).json({ error: "Failed to fetch problems" });
+  }
 });
 
-const quizData = {
-  arrays: [
-    {
-      id: 1,
-      question: "What is the time complexity of binary search?",
-      options: ["O(n)", "O(log n)", "O(n^2)", "O(1)"],
-      answer: "O(log n)",
-    },
-    {
-      id: 2,
-      question: "Which data structure is used in BFS?",
-      options: ["Stack", "Queue", "Tree", "Array"],
-      answer: "Queue",
-    },
-    {
-      id: 3,
-      question: "What is the worst-case time complexity of QuickSort?",
-      options: ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"],
-      answer: "O(n^2)",
-    },
-    {
-      id: 4,
-      question: "What is the space complexity of Merge Sort?",
-      options: ["O(1)", "O(log n)", "O(n)", "O(n^2)"],
-      answer: "O(n)",
-    },
-    {
-      id: 5,
-      question: "Two pointers technique works best on:",
-      options: ["Unsorted arrays", "Sorted arrays", "Trees", "Graphs"],
-      answer: "Sorted arrays",
-    },
-  ],
-  trees: [
-    {
-      id: 1,
-      question: "In-order traversal of BST gives:",
-      options: ["Random order", "Descending", "Ascending", "Level order"],
-      answer: "Ascending",
-    },
-    {
-      id: 2,
-      question: "Height of balanced BST with n nodes:",
-      options: ["O(n)", "O(log n)", "O(n^2)", "O(1)"],
-      answer: "O(log n)",
-    },
-    {
-      id: 3,
-      question: "Pre-order visits:",
-      options: [
-        "Left-Root-Right",
-        "Root-Left-Right",
-        "Left-Right-Root",
-        "Level order",
-      ],
-      answer: "Root-Left-Right",
-    },
-  ],
-  graphs: [
-    {
-      id: 1,
-      question: "BFS uses:",
-      options: ["Stack", "Queue", "Heap", "Array"],
-      answer: "Queue",
-    },
-    {
-      id: 2,
-      question: "DFS uses:",
-      options: ["Queue", "Hash Map", "Stack", "Deque"],
-      answer: "Stack",
-    },
-    {
-      id: 3,
-      question: "Time complexity of BFS/DFS:",
-      options: ["O(V)", "O(E)", "O(V+E)", "O(VxE)"],
-      answer: "O(V+E)",
-    },
-  ],
-};
-
-router.get("/quiz", (req, res) => {
-  const topic = req.query.topic || "arrays";
-  res.json(quizData[topic] || quizData.arrays);
+router.get("/quiz", async (req, res) => {
+  try {
+    const topic = req.query.topic || "arrays";
+    const questions = await QuizQuestion.find({ topic }).sort({ id: 1 }).lean();
+    if (questions.length === 0) {
+       // fallback if empty
+       const fallback = await QuizQuestion.find({ topic: "arrays" }).sort({ id: 1 }).lean();
+       return res.json(fallback);
+    }
+    res.json(questions);
+  } catch (err) { console.error(err);
+    res.status(500).json({ error: "Failed to fetch quiz data" });
+  }
 });
 
 // ============================================
@@ -199,6 +76,7 @@ router.get("/progress", protect, async (req, res) => {
         accuracy: 100,
         quizScores: {},
         voiceScores: [],
+        systemDesignScores: [],
         placementReadiness: 0,
         weakAreas: [],
         recentActivity: [],
@@ -216,7 +94,7 @@ router.get("/progress", protect, async (req, res) => {
         website: user.website
       }
     });
-  } catch (error) {
+  } catch (error) { console.error(error);
     res.status(500).json({ error: "Failed to fetch progress" });
   }
 });
@@ -266,6 +144,12 @@ router.post("/progress/update", protect, async (req, res) => {
       }
     };
 
+    // Update Activity Heatmap
+    const todayKey = now.toISOString().split('T')[0];
+    if (!prog.activityHeatmap) prog.activityHeatmap = new Map();
+    const currentActivity = prog.activityHeatmap.get(todayKey) || 0;
+    prog.activityHeatmap.set(todayKey, currentActivity + 1);
+
     if (now.getHours() >= 0 && now.getHours() < 4) {
       awardBadge('night_owl', 'Night Owl', 'Solved a challenge after midnight.', 'neon-purple');
     }
@@ -307,6 +191,17 @@ router.post("/progress/update", protect, async (req, res) => {
       if (data.score < 60 && !prog.weakAreas.includes(data.topic)) {
         prog.weakAreas.push(data.topic);
       }
+    } else if (type === "system_design") {
+      gamify.xp += 150 + Math.floor(data.score); // Base 150 + score
+      prog.systemDesignScores.push(data);
+      prog.recentActivity.unshift({
+        type: "system",
+        text: `System Design: ${data.challengeTitle} (${data.score}/100) (+${150 + Math.floor(data.score)} XP)`,
+        time: now,
+      });
+      if (prog.systemDesignScores.length === 1) {
+        awardBadge('architect_init', 'Architect', 'Completed your first System Design critique.', 'neon-green');
+      }
     }
 
     // Rank Tier Evaluation
@@ -334,13 +229,18 @@ router.post("/progress/update", protect, async (req, res) => {
       avgVoiceScore = prog.voiceScores.reduce((a, b) => a + (b.score || 0), 0) / prog.voiceScores.length;
     }
 
+    let avgSystemScore = 0;
+    if (prog.systemDesignScores && prog.systemDesignScores.length > 0) {
+      avgSystemScore = prog.systemDesignScores.reduce((a, b) => a + (b.score || 0), 0) / prog.systemDesignScores.length;
+    }
+
     // Consistency = streak-based (max 100)
     const consistency = Math.min(100, (gamify.streak.current || 0) * 15);
 
     // If no learning activity at all, readiness = 0
-    const hasActivity = prog.problemsSolved > 0 || (prog.quizScores && prog.quizScores.size > 0) || (prog.voiceScores && prog.voiceScores.length > 0);
+    const hasActivity = prog.problemsSolved > 0 || (prog.quizScores && prog.quizScores.size > 0) || (prog.voiceScores && prog.voiceScores.length > 0) || (prog.systemDesignScores && prog.systemDesignScores.length > 0);
     prog.placementReadiness = hasActivity
-      ? Math.round((problemAccuracy * 0.4) + (avgQuizScore * 0.2) + (avgVoiceScore * 0.2) + (consistency * 0.2))
+      ? Math.round((problemAccuracy * 0.3) + (avgQuizScore * 0.15) + (avgVoiceScore * 0.15) + (avgSystemScore * 0.25) + (consistency * 0.15))
       : 0;
 
     if (req.user.isMock) {
@@ -353,7 +253,7 @@ router.post("/progress/update", protect, async (req, res) => {
       await user.save();
       return res.json({ success: true, progress: user.progress, gamification: user.gamification });
     }
-  } catch (error) {
+  } catch (error) { console.error(error);
     console.error(error);
     res.status(500).json({ error: "Failed to update progress" });
   }
@@ -386,7 +286,7 @@ router.post("/profile/update", protect, async (req, res) => {
     await user.save();
     
     res.json({ success: true, user: { name: user.name, bio: user.bio, website: user.website } });
-  } catch (error) {
+  } catch (error) { console.error(error);
     console.error("Profile Update Error: ", error);
     res.status(500).json({ error: "Failed to update profile" });
   }
@@ -427,9 +327,85 @@ router.get("/leaderboard", async (req, res) => {
     }
 
     res.json(formattedLeaderboard);
-  } catch (error) {
+  } catch (error) { console.error(error);
     console.error("Leaderboard Error: ", error);
     res.status(500).json({ error: "Failed to fetch leaderboard" });
+  }
+});
+
+// ============================================
+// System Design Cloud Save API
+// ============================================
+
+router.post("/system-design/save", protect, async (req, res) => {
+  try {
+    if (req.user.isMock) {
+      return res.json({ success: true, message: "Mock user save successful" });
+    }
+    
+    const { name, challengeId, elements, appState } = req.body;
+    
+    // Upsert logic based on challengeId or name
+    let save = null;
+    if (challengeId) {
+      save = await SystemDesignSave.findOne({ userId: req.user._id, challengeId });
+    }
+    if (!save) {
+      save = await SystemDesignSave.findOne({ userId: req.user._id, name });
+    }
+    
+    if (save) {
+      save.elements = elements;
+      save.appState = appState;
+      save.name = name;
+      await save.save();
+    } else {
+      save = new SystemDesignSave({
+        userId: req.user._id,
+        name,
+        challengeId,
+        elements,
+        appState
+      });
+      await save.save();
+    }
+    
+    res.json({ success: true, save });
+  } catch (error) { console.error(error);
+    console.error("System Design Save Error:", error);
+    res.status(500).json({ error: "Failed to save system design" });
+  }
+});
+
+router.get("/system-design/saves", protect, async (req, res) => {
+  try {
+    if (req.user.isMock) {
+      return res.json([]);
+    }
+    const saves = await SystemDesignSave.find({ userId: req.user._id }).sort({ updatedAt: -1 });
+    res.json(saves);
+  } catch (error) { console.error(error);
+    console.error("Fetch Saves Error:", error);
+    res.status(500).json({ error: "Failed to fetch system designs" });
+  }
+});
+
+router.delete("/system-design/saves/:id", protect, async (req, res) => {
+  try {
+    if (req.user.isMock) {
+      return res.json({ success: true });
+    }
+    const save = await SystemDesignSave.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user._id
+    });
+    if (!save) {
+      return res.status(404).json({ error: "Save not found" });
+    }
+    res.json({ success: true });
+  } catch (error) { console.error(error);
+    console.error("Delete Save Error:", error);
+    res.status(500).json({ error: "Failed to delete save" });
   }
 });
 

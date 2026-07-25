@@ -29,6 +29,9 @@
 }
 
 @layer base {
+  html {
+    font-size: 13px;
+  }
   body {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -46,15 +49,15 @@
 /* ========== Neo-Brutalism Core Utilities ========== */
 
 .brutal-card {
-  @apply bg-surface border-4 border-border rounded-lg shadow-brutal transition-transform duration-200;
+  @apply bg-surface border-2 border-border rounded-lg shadow-brutal transition-transform duration-200;
 }
 
 .brutal-card:hover {
-  @apply -translate-y-1 shadow-brutal-lg;
+  @apply -translate-y-0.5 shadow-brutal-lg;
 }
 
 .brutal-btn {
-  @apply bg-primary text-text font-bold border-4 border-border rounded-lg shadow-brutal px-6 py-3 transition-all duration-200 uppercase tracking-wide cursor-pointer;
+  @apply bg-primary text-text font-bold border-2 border-border rounded-lg shadow-brutal px-4 py-2 transition-all duration-200 uppercase tracking-wide cursor-pointer;
 }
 
 .brutal-btn:hover {
@@ -141,3 +144,47 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--text-color);
 }
 
+/* ========== Animations ========== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+/* ─── Excalidraw Overrides (v0.18.1) ───────────────────────── */
+/* Hide the library sidebar trigger button in toolbar */
+.excalidraw .sidebar-trigger,
+.excalidraw .default-sidebar-trigger {
+  display: none !important;
+}
+/* Hide the entire sidebar panel (library) */
+.excalidraw .sidebar,
+.excalidraw .default-sidebar,
+.excalidraw .layer-ui__library {
+  display: none !important;
+}
+/* Hide the welcome screen overlay */
+.excalidraw .welcome-screen-center,
+.excalidraw .WelcomeScreen-logo,
+.excalidraw [class*="welcome-screen"] {
+  display: none !important;
+}
+/* Hide the properties panel (Stroke, Background, etc.) */
+.excalidraw .App-menu__left {
+  display: none !important;
+}
+/* Ensure Excalidraw fills its container properly */
+.excalidraw,
+.excalidraw .excalidraw-container {
+  height: 100% !important;
+  width: 100% !important;
+}

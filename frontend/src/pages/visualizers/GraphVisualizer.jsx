@@ -118,7 +118,7 @@ export default function GraphVisualizer() {
       setActiveNodeId(-1);
     } catch (e) { if (e.message !== 'cancelled') console.error(e); }
     anim.finish();
-  }, [startNode, graph, anim, delay, getAdj]);
+  }, [startNode, anim, delay, getAdj]);
 
   const dfs = useCallback(async () => {
     anim.start();
@@ -156,7 +156,7 @@ export default function GraphVisualizer() {
       setActiveNodeId(-1);
     } catch (e) { if (e.message !== 'cancelled') console.error(e); }
     anim.finish();
-  }, [startNode, graph, anim, delay, getAdj]);
+  }, [startNode, anim, delay, getAdj]);
 
   const runAlgorithm = () => {
     if (algorithm === 'bfs') bfs();

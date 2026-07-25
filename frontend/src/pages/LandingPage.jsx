@@ -18,7 +18,6 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen w-full bg-background text-text overflow-x-hidden pt-16 md:pt-24 font-inter">
       
-      {/* Navbar Placeholder for alignment if needed, or assumed to be in App layout */}
       <nav className="fixed top-0 w-full bg-surface border-b-4 border-border z-50 px-6 py-4 flex justify-between items-center shadow-brutal-sm">
         <div className="font-geist font-bold text-2xl tracking-tight">ALGONOVA</div>
         <div>
@@ -163,9 +162,9 @@ export default function LandingPage() {
           <div>
             <h4 className="font-bold text-xl mb-4 uppercase">Company</h4>
             <ul className="space-y-2 opacity-80">
-              <li><a href="#" className="hover:text-primary transition-colors">About</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Privacy</a></li>
+              <li><Link to="/dashboard" className="hover:text-primary transition-colors">About</Link></li>
+              <li><a href="mailto:support@algonova.dev" className="hover:text-primary transition-colors">Contact</a></li>
+              <li><span className="opacity-60 cursor-default">Privacy Policy</span></li>
             </ul>
           </div>
         </div>

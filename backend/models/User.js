@@ -81,6 +81,11 @@ const UserSchema = new mongoose.Schema({
       score: Number,
       date: { type: Date, default: Date.now }
     }],
+    systemDesignScores: [{
+      challengeTitle: String,
+      score: Number,
+      date: { type: Date, default: Date.now }
+    }],
     recentActivity: [{
       type: { type: String, enum: ['problem', 'quiz', 'voice', 'system'] },
       text: String,

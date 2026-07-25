@@ -182,6 +182,7 @@ export default function InterviewPrep() {
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const [activeTab, setActiveTab] = useState("code");
+  const [clipboardWarning, setClipboardWarning] = useState('');
 
   // Timer logic
   const [thinkingTime, setThinkingTime] = useState(0);
@@ -353,6 +354,12 @@ export default function InterviewPrep() {
 
   return (
     <div className="h-full flex flex-col gap-4 text-text p-4 relative overflow-hidden">
+      {/* Clipboard Warning Toast */}
+      {clipboardWarning && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-danger text-surface border-4 border-text shadow-brutal font-bold text-sm animate-fade-in">
+          ⚠ {clipboardWarning}
+        </div>
+      )}
       {/* Tab Switch Warning Overlay */}
       {tabSwitchWarning && (
         <div
@@ -392,9 +399,9 @@ export default function InterviewPrep() {
       )}
 
       {/* Header */}
-      <div className="flex flex-wrap justify-between items-center gap-4 bg-surface p-4 border-4 border-text shadow-brutal-sm rounded-lg">
-        <div className="flex flex-wrap items-center gap-4">
-          <h2 className="text-2xl font-geist font-black uppercase tracking-tight">
+      <div className="flex flex-wrap justify-between items-center gap-3 bg-surface p-2.5 border-2 border-text shadow-[2px_2px_0px_#111] rounded-lg">
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="text-lg font-geist font-black uppercase tracking-tight">
             Interview Sim
           </h2>
           <select
@@ -406,7 +413,7 @@ export default function InterviewPrep() {
               setThinkingTime(0);
               setIsThinking(true);
             }}
-            className="bg-background border-2 border-text px-4 py-2 text-sm font-bold uppercase tracking-wider focus:outline-none focus:ring-4 focus:ring-primary shadow-[2px_2px_0px_#111] cursor-pointer"
+            className="bg-background border-2 border-text px-2.5 py-1 text-xs font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-primary shadow-[2px_2px_0px_#111] cursor-pointer"
           >
             {Object.keys(QUESTIONS).map((q) => (
               <option key={q} value={q}>
@@ -417,7 +424,7 @@ export default function InterviewPrep() {
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="bg-background border-2 border-text px-4 py-2 text-sm font-bold uppercase tracking-wider focus:outline-none focus:ring-4 focus:ring-primary shadow-[2px_2px_0px_#111] cursor-pointer"
+            className="bg-background border-2 border-text px-2.5 py-1 text-xs font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-primary shadow-[2px_2px_0px_#111] cursor-pointer"
           >
             <option value="javascript">JavaScript</option>
             <option value="python">Python</option>
@@ -425,24 +432,24 @@ export default function InterviewPrep() {
             <option value="cpp">C++</option>
           </select>
         </div>
-        <div className="flex flex-wrap gap-4 items-center">
-          <div className={`flex items-center gap-2 px-3 py-1.5 border-2 border-text rounded font-black uppercase shadow-[2px_2px_0px_#111] ${getBgColor(integrityScore)}`}>
-            <Shield size={16} />
+        <div className="flex flex-wrap gap-3 items-center">
+          <div className={`flex items-center gap-1.5 px-2 py-1 border-2 border-text rounded font-black text-xs uppercase shadow-[2px_2px_0px_#111] ${getBgColor(integrityScore)}`}>
+            <Shield size={14} />
             <span>{integrityScore}% Integrity</span>
           </div>
           {tabSwitchCount > 0 && (
-            <span className="text-sm font-black text-danger uppercase tracking-wider bg-surface px-2 py-1 border-2 border-danger flex items-center gap-1 shadow-[2px_2px_0px_#ef4444]">
-              <AlertTriangle size={14} /> {tabSwitchCount} switch{tabSwitchCount !== 1 ? "es" : ""}
+            <span className="text-[10px] font-black text-danger uppercase tracking-wider bg-surface px-2 py-1 border-2 border-danger flex items-center gap-1 shadow-[2px_2px_0px_#ef4444]">
+              <AlertTriangle size={12} /> {tabSwitchCount} switch{tabSwitchCount !== 1 ? "es" : ""}
             </span>
           )}
           {hasStarted ? (
-            <span className="text-sm font-black uppercase tracking-wider bg-background px-3 py-1.5 border-2 border-text shadow-[2px_2px_0px_#111]">
+            <span className="text-xs font-black uppercase tracking-wider bg-background px-2.5 py-1.5 border-2 border-text shadow-[2px_2px_0px_#111]">
               Time: {(thinkingTime / 1000).toFixed(0)}s
             </span>
           ) : (
             <button
               onClick={() => setHasStarted(true)}
-              className="bg-primary px-4 py-1.5 border-2 border-text font-black uppercase tracking-wider shadow-[2px_2px_0px_#111] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111] transition-all"
+              className="bg-primary px-3 py-1.5 border-2 border-text text-xs font-black uppercase tracking-wider shadow-[2px_2px_0px_#111] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#111] transition-all"
             >
               START INTERVIEW
             </button>
@@ -525,11 +532,13 @@ export default function InterviewPrep() {
               className={`flex-1 w-full min-h-0 ${activeTab === "code" ? "block" : "hidden"}`}
               onPaste={(e) => {
                 e.preventDefault();
-                alert("Pasting strictly restricted in Interview Mode.");
+                setClipboardWarning("Pasting restricted in Interview Mode.");
+                setTimeout(() => setClipboardWarning(''), 2500);
               }}
               onCopy={(e) => {
                 e.preventDefault();
-                alert("Copying strictly restricted in Interview Mode.");
+                setClipboardWarning("Copying restricted in Interview Mode.");
+                setTimeout(() => setClipboardWarning(''), 2500);
               }}
             >
               <Editor

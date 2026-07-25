@@ -94,30 +94,30 @@ function MainLayout() {
     <div className="flex flex-col bg-background h-screen overflow-hidden text-text font-geist">
       {/* Sticky Top Navbar */}
       {shouldShowSidebar && (
-        <header className="sticky top-0 z-30 bg-surface border-b-4 border-text shadow-brutal-sm flex items-center justify-between px-4 md:px-8 py-3 shrink-0">
-          <div className="flex items-center gap-4">
+        <header className="sticky top-0 z-30 bg-surface border-b-2 border-text shadow-[0px_2px_0px_var(--text-color)] flex items-center justify-between px-3 md:px-4 py-1.5 shrink-0">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="p-2 bg-primary border-4 border-text rounded shadow-brutal-sm hover:-translate-y-1 hover:shadow-[4px_4px_0px_var(--text-color)] transition-all flex items-center gap-2"
+              className="px-2 py-1 bg-primary border-2 border-text rounded shadow-[2px_2px_0px_var(--text-color)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_var(--text-color)] transition-all flex items-center gap-1.5"
             >
-              <Menu size={24} className="text-text" />
-              <span className="font-bold uppercase tracking-wide hidden md:inline">Menu</span>
+              <Menu size={18} className="text-text" />
+              <span className="text-xs font-bold uppercase tracking-wider hidden md:inline">Menu</span>
             </button>
-            <h1 className="font-black text-2xl tracking-tighter uppercase hidden lg:block ml-4">
+            <h1 className="font-black text-lg tracking-tighter uppercase hidden lg:block ml-2">
               AlgoNova
             </h1>
           </div>
           <button
             onClick={toggleTheme}
-            className="p-2 bg-primary border-4 border-text rounded shadow-brutal-sm hover:-translate-y-1 hover:shadow-[4px_4px_0px_var(--text-color)] transition-all flex items-center gap-2"
+            className="px-2 py-1 bg-primary border-2 border-text rounded shadow-[2px_2px_0px_var(--text-color)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_var(--text-color)] transition-all flex items-center gap-1.5"
             title="Toggle Theme"
           >
             {theme === "light" ? (
-              <Moon size={24} className="text-text" />
+              <Moon size={18} className="text-text" />
             ) : (
-              <Sun size={24} className="text-text" />
+              <Sun size={18} className="text-text" />
             )}
-            <span className="font-bold uppercase tracking-wide hidden md:inline">Theme</span>
+            <span className="text-xs font-bold uppercase tracking-wider hidden md:inline">Theme</span>
           </button>
         </header>
       )}
@@ -168,7 +168,7 @@ function MainLayout() {
       )}
 
       {/* Main Content Pane */}
-      <main className="flex-1 p-4 md:p-8 relative overflow-y-auto h-full w-full transition-all">
+      <main className="flex-1 p-2 md:p-4 relative overflow-y-auto h-full w-full transition-all">
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={<Dashboard />} />

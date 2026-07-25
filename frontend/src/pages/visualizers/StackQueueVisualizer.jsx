@@ -192,8 +192,6 @@ export default function StackQueueVisualizer() {
           <div className="flex items-center gap-2">
             <span className="text-success text-xs font-mono font-black uppercase mr-2 -rotate-90">FRONT</span>
             {items.map((item, idx) => {
-              const isFront = idx === 0;
-              const isBack = idx === items.length - 1;
               const isActive = activeIndex === idx;
               const isRemoving = removingIndex === idx;
 

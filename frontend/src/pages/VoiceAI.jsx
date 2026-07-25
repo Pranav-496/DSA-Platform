@@ -138,8 +138,9 @@ export default function VoiceAI() {
           type: "voice",
           data: { topic, score: data.score },
         }),
-      }).catch((err) => console.log("Progress update failed"));
+      }).catch((err) => console.log("Progress update failed", err));
     } catch (e) {
+      console.error("Analysis failed, using offline fallback:", e);
       // Offline fallback
       const words = finalTranscript.toLowerCase().split(/\W+/);
       const score = Math.min(95, 50 + words.length);

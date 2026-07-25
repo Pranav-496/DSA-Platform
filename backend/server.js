@@ -4,7 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
-
+const seedDatabase = require('./utils/seedDatabase');
 const apiRoutes = require("./routes/api");
 const aiRoutes = require("./routes/ai");
 const authRouter = require("./routes/auth").router;
@@ -29,7 +29,10 @@ const MONGO_URI =
 
 mongoose
   .connect(MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
+  .then(async () => {
+    console.log("✅ MongoDB Connected");
+    await seedDatabase();
+  })
   .catch((err) => console.log("❌ MongoDB Error: ", err.message));
 
 // Auth routes

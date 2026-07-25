@@ -34,7 +34,7 @@ export default function LinkedListVisualizer() {
   });
 
   const [inputVal, setInputVal] = useState('');
-  const [inputPos, setInputPos] = useState('');
+
   const [activeNodeId, setActiveNodeId] = useState(-1);
   const [foundNodeId, setFoundNodeId] = useState(-1);
   const [highlightedIds, setHighlightedIds] = useState([]);

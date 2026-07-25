@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { analyzeVoice, evaluateCode } = require("../ai/ruleEngine");
+const InterviewConfig = require("../models/InterviewConfig");
 
 /**
  * POST /api/interview/analyze
@@ -10,6 +11,18 @@ const { analyzeVoice, evaluateCode } = require("../ai/ruleEngine");
 router.post("/analyze", async (req, res) => {
   try {
     const { transcript, topic, code, thinkingTime, language } = req.body;
+
+    let config = await InterviewConfig.findOne({ id: "default_config" }).lean();
+    if (!config) {
+      // Fallback in case DB is unseeded
+      config = {
+        edgeCaseKeywords: ["edge case:20", "boundary:15", "null:15", "empty:15"],
+        patterns: ["binary search:20", "hash map:20", "two pointer:20"],
+        confidenceDeductions: ["uh:5", "um:5", "not sure:15"],
+        followUpQuestions: {},
+        scoringWeights: { speed: 0.1, edge: 0.1, pattern: 0.08, confidence: 0.07 }
+      };
+    }
 
     // ===== 1. Voice/DSA Analysis (AI or Rule-based) =====
     const voiceResult = await analyzeVoice(transcript || "", topic);
@@ -38,65 +51,29 @@ router.post("/analyze", async (req, res) => {
     // ===== 4. Edge Case Score — from transcript analysis =====
     let edgeScore = 0;
     const tLower = (transcript || "").toLowerCase();
-    const edgeCaseKeywords = [
-      { word: "empty", weight: 15 },
-      { word: "null", weight: 15 },
-      { word: "single element", weight: 15 },
-      { word: "single", weight: 10 },
-      { word: "edge case", weight: 20 },
-      { word: "edge", weight: 10 },
-      { word: "boundary", weight: 15 },
-      { word: "overflow", weight: 15 },
-      { word: "negative", weight: 10 },
-      { word: "zero", weight: 10 },
-      { word: "duplicate", weight: 10 },
-      { word: "worst case", weight: 15 },
-    ];
-    edgeCaseKeywords.forEach(({ word, weight }) => {
+    
+    config.edgeCaseKeywords.forEach((entry) => {
+      const [word, weightStr] = entry.split(":");
+      const weight = parseInt(weightStr || "10", 10);
       if (tLower.includes(word)) edgeScore += weight;
     });
     edgeScore = Math.min(100, edgeScore);
 
     // ===== 5. Pattern Recognition Score =====
     let patternScore = 0;
-    const patterns = [
-      { word: "binary search", weight: 20 },
-      { word: "divide and conquer", weight: 20 },
-      { word: "two pointer", weight: 20 },
-      { word: "two pointers", weight: 20 },
-      { word: "hash map", weight: 20 },
-      { word: "hash table", weight: 20 },
-      { word: "sliding window", weight: 20 },
-      { word: "dynamic programming", weight: 20 },
-      { word: "greedy", weight: 15 },
-      { word: "recursion", weight: 15 },
-      { word: "backtracking", weight: 15 },
-      { word: "bfs", weight: 15 },
-      { word: "dfs", weight: 15 },
-      { word: "stack", weight: 10 },
-      { word: "queue", weight: 10 },
-      { word: "in-place", weight: 10 },
-      { word: "memoization", weight: 15 },
-    ];
-    patterns.forEach(({ word, weight }) => {
+    config.patterns.forEach((entry) => {
+      const [word, weightStr] = entry.split(":");
+      const weight = parseInt(weightStr || "10", 10);
       if (tLower.includes(word)) patternScore += weight;
     });
     patternScore = Math.min(100, patternScore);
 
     // ===== 6. Confidence Score — based on speech patterns =====
     let confidenceScore = 100;
-    const confidenceDeductions = [
-      { word: "uh", weight: 5 },
-      { word: "um", weight: 5 },
-      { word: "maybe", weight: 10 },
-      { word: "i think", weight: 8 },
-      { word: "i guess", weight: 12 },
-      { word: "not sure", weight: 15 },
-      { word: "i don't know", weight: 20 },
-      { word: "probably", weight: 8 },
-      { word: "sort of", weight: 8 },
-    ];
-    confidenceDeductions.forEach(({ word, weight }) => {
+    
+    config.confidenceDeductions.forEach((entry) => {
+      const [word, weightStr] = entry.split(":");
+      const weight = parseInt(weightStr || "10", 10);
       const regex = new RegExp(word, 'gi');
       const matches = tLower.match(regex);
       if (matches) confidenceScore -= (matches.length * weight);
@@ -111,25 +88,20 @@ router.post("/analyze", async (req, res) => {
       0.25 * codeScore +
       0.25 * dsaScore +
       0.15 * communicationScore +
-      0.10 * speedScore +
-      0.10 * edgeScore +
-      0.08 * patternScore +
-      0.07 * confidenceScore
+      (config.scoringWeights.speed || 0.10) * speedScore +
+      (config.scoringWeights.edge || 0.10) * edgeScore +
+      (config.scoringWeights.pattern || 0.08) * patternScore +
+      (config.scoringWeights.confidence || 0.07) * confidenceScore
     );
 
     // ===== 8. Generate Follow-Up Question =====
-    const followUpQuestions = {
-      "Binary Search": "What happens if the array contains duplicates? How would you find the first occurrence?",
-      "Bubble Sort": "Can you optimize Bubble Sort to detect if the array is already sorted? What's the best case then?",
-      "Merge Sort": "Can Merge Sort be done in-place? What's the trade-off?",
-      "Quick Sort": "How does pivot selection affect worst-case performance? What's the Median of Three strategy?",
-      "BFS": "How would you modify BFS to find the shortest path in a weighted graph?",
-      "DFS": "Can you use DFS to detect a cycle in a directed graph? How?",
-      "Hash Map": "How would you handle hash collisions if using open addressing instead of chaining?",
-      "Two Pointers": "Can the Two Pointers approach work on unsorted arrays? When would it fail?",
-    };
-    const followUpQuestion = followUpQuestions[topic] ||
-      "Can you optimize this further, or explain what would happen if the input scale doubled?";
+    let followUpQuestion = "Can you optimize this further, or explain what would happen if the input scale doubled?";
+    if (config.followUpQuestions && config.followUpQuestions[topic]) {
+      const qArray = config.followUpQuestions[topic];
+      if (qArray.length > 0) {
+        followUpQuestion = qArray[0];
+      }
+    }
 
     return res.json({
       codeScore: Math.round(codeScore),

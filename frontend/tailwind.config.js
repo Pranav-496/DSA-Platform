@@ -26,9 +26,9 @@ export default {
         mono: ['Fira Code', 'Monaco', 'monospace']
       },
       boxShadow: {
-        'brutal': '4px 4px 0px 0px rgba(17,17,17,1)',
-        'brutal-lg': '8px 8px 0px 0px rgba(17,17,17,1)',
-        'brutal-sm': '2px 2px 0px 0px rgba(17,17,17,1)',
+        'brutal': '2px 2px 0px 0px rgba(17,17,17,1)',
+        'brutal-lg': '4px 4px 0px 0px rgba(17,17,17,1)',
+        'brutal-sm': '1px 1px 0px 0px rgba(17,17,17,1)',
       }
     },
   },

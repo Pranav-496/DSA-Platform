@@ -16,7 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 
-import { PROBLEMS } from "../data/problems.js";
+
 
 const diffColors = {
   Easy: "bg-success text-surface border-text",
@@ -25,6 +25,8 @@ const diffColors = {
 };
 
 export default function Practice() {
+  const [problems, setProblems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState(1);
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("");
@@ -40,7 +42,7 @@ export default function Practice() {
   const recognitionRef = useRef(null);
   const { token } = useContext(AuthContext);
 
-  const problem = PROBLEMS.find((p) => p.id === selectedId);
+  const problem = problems.find((p) => p.id === selectedId);
   const langMap = {
     javascript: "javascript",
     python: "python",
@@ -48,6 +50,20 @@ export default function Practice() {
     cpp: "cpp",
   };
   const LANGS = ["javascript", "python", "java", "cpp"];
+
+  useEffect(() => {
+    fetch(`${API_BASE}/api/problems`)
+      .then(res => res.json())
+      .then(data => {
+        setProblems(data);
+        if (data.length > 0) setSelectedId(data[0].id);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to load problems", err);
+        setLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     if (problem) {
@@ -205,12 +221,22 @@ export default function Practice() {
 
   return (
     <div className="h-full flex flex-col md:flex-row gap-4 text-text p-4">
+      {loading ? (
+        <div className="w-full h-full flex items-center justify-center">
+          <Loader size={32} className="animate-spin text-primary" />
+        </div>
+      ) : !problem ? (
+        <div className="w-full h-full flex items-center justify-center font-bold">
+          No problems found. Please ensure database is seeded.
+        </div>
+      ) : (
+        <>
       {/* Problem List Sidebar */}
       <div className="w-full md:w-64 flex-shrink-0 flex flex-col gap-2 overflow-y-auto brutal-card bg-surface p-4">
         <h3 className="text-sm font-black uppercase tracking-wider mb-2 font-geist">
           Problems
         </h3>
-        {PROBLEMS.map((p) => (
+        {problems.map((p) => (
           <button
             key={p.id}
             onClick={() => setSelectedId(p.id)}
@@ -554,6 +580,8 @@ export default function Practice() {
           {codeReview && <CodeReviewPanel reviewData={codeReview} />}
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

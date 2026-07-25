@@ -1,23 +1,10 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const PendingUser = require('../models/PendingUser');
 const nodemailer = require('nodemailer');
 
 const router = express.Router();
-
-// In-memory store for pending registrations (unverified users)
-// Discards data on server restart to keep the database clean from 'fake identities'
-const pendingUsers = new Map();
-
-// Helper to clean up expired pending users periodically
-setInterval(() => {
-    const now = Date.now();
-    for (const [email, user] of pendingUsers.entries()) {
-        if (user.expires < now) {
-            pendingUsers.delete(email);
-        }
-    }
-}, 5 * 60 * 1000); // Every 5 minutes
 
 
 const transporter = nodemailer.createTransport({
@@ -30,7 +17,10 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const JWT_SECRET = process.env.JWT_SECRET || 'algonova_hackathon_super_secret_key_123!';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+    throw new Error("FATAL ERROR: JWT_SECRET is not defined in environment variables. Refusing to start in insecure mode.");
+}
 
 // Generate JWT token
 const generateToken = (id) => {
@@ -52,14 +42,12 @@ router.post('/register', async (req, res) => {
         // 2. Generate OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        // 3. Store in memory (not database) until verified
-        pendingUsers.set(email, {
-            name,
-            email,
-            password,
-            otp,
-            expires: Date.now() + 10 * 60 * 1000 // 10 minutes
-        });
+        // 3. Store in database
+        await PendingUser.findOneAndUpdate(
+            { email },
+            { name, email, password, otp },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
 
 
         if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
@@ -96,14 +84,14 @@ router.post('/verify-registration', async (req, res) => {
     try {
         const { email, otp } = req.body;
         
-        // 1. Check in-memory store
-        const pendingUser = pendingUsers.get(email);
+        // 1. Check in database
+        const pendingUser = await PendingUser.findOne({ email });
 
         if (!pendingUser) {
             return res.status(400).json({ message: 'Registration session expired or not found. Please register again.' });
         }
 
-        if (pendingUser.otp !== otp || pendingUser.expires < Date.now()) {
+        if (pendingUser.otp !== otp) {
             return res.status(400).json({ message: 'Invalid or expired OTP' });
         }
 
@@ -126,8 +114,8 @@ router.post('/verify-registration', async (req, res) => {
             }
         });
 
-        // 3. Clear from memory
-        pendingUsers.delete(email);
+        // 3. Clear from database
+        await PendingUser.deleteOne({ email });
 
 
         res.status(201).json({

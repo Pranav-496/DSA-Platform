@@ -4,6 +4,53 @@ import { useNavigate } from 'react-router-dom';
 import { Terminal, Mail, Lock, UserPlus, KeyRound, ShieldAlert } from 'lucide-react';
 import API_BASE from '../config/api';
 
+function OtpInput({ value, onChange }) {
+  const inputRefs = React.useRef([]);
+  const digits = value.padEnd(6, '').split('').slice(0, 6);
+
+  const handleChange = (index, val) => {
+    if (val.length > 1) val = val.slice(-1);
+    if (val && !/^\d$/.test(val)) return;
+    const newDigits = [...digits];
+    newDigits[index] = val;
+    onChange(newDigits.join(''));
+    if (val && index < 5) inputRefs.current[index + 1]?.focus();
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (e.key === 'Backspace' && !digits[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    onChange(pasted);
+    const focusIdx = Math.min(pasted.length, 5);
+    inputRefs.current[focusIdx]?.focus();
+  };
+
+  return (
+    <div className="flex gap-2 justify-center">
+      {digits.map((digit, i) => (
+        <input
+          key={i}
+          ref={el => inputRefs.current[i] = el}
+          type="text"
+          inputMode="numeric"
+          maxLength={1}
+          value={digit || ''}
+          onChange={e => handleChange(i, e.target.value)}
+          onKeyDown={e => handleKeyDown(i, e)}
+          onPaste={handlePaste}
+          className="w-12 h-14 text-center text-2xl font-black bg-background border-4 border-text shadow-brutal-sm focus:border-primary focus:ring-0 outline-none transition-colors"
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function AuthPage() {
   const [mode, setMode] = useState('login'); // login | register | register-otp | forgot | otp | reset
   const [name, setName] = useState('');
@@ -181,15 +228,13 @@ export default function AuthPage() {
       return (
         <form onSubmit={handleOtpSubmit} className="space-y-4">
           <div>
-            <label className="block font-bold mb-2 uppercase text-sm">6-Digit Code</label>
-            <div className="relative">
-              <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 text-text w-5 h-5" />
-              <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required maxLength={6} className="brutal-input w-full !pl-12 text-center tracking-[0.5em] text-xl font-mono" placeholder="000000" />
-            </div>
+            <label className="block font-bold mb-3 uppercase text-sm text-center">Enter 6-Digit Code</label>
+            <OtpInput value={otp} onChange={setOtp} />
           </div>
           <button type="submit" disabled={loading} className="brutal-btn w-full">
             {loading ? "Verifying..." : "Verify Code"}
           </button>
+          <button type="button" onClick={() => { setMode('forgot'); setError(''); setSuccessMsg(''); }} className="w-full font-bold text-sm hover:underline mt-4">← Back to Forgot Password</button>
         </form>
       );
     }
@@ -198,15 +243,13 @@ export default function AuthPage() {
       return (
         <form onSubmit={handleRegisterOtpSubmit} className="space-y-4">
           <div>
-            <label className="block font-bold mb-2 uppercase text-sm">Registration Code</label>
-            <div className="relative">
-              <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 text-text w-5 h-5" />
-              <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required maxLength={6} className="brutal-input w-full !pl-12 text-center tracking-[0.5em] text-xl font-mono" placeholder="000000" />
-            </div>
+            <label className="block font-bold mb-3 uppercase text-sm text-center">Enter 6-Digit Code</label>
+            <OtpInput value={otp} onChange={setOtp} />
           </div>
           <button type="submit" disabled={loading} className="brutal-btn w-full">
             {loading ? "Verifying..." : "Complete Registration"}
           </button>
+          <button type="button" onClick={() => { setMode('register'); setError(''); setSuccessMsg(''); setOtp(''); }} className="w-full font-bold text-sm hover:underline mt-4">← Back to Registration</button>
         </form>
       );
     }
@@ -224,6 +267,7 @@ export default function AuthPage() {
           <button type="submit" disabled={loading} className="brutal-btn w-full">
             {loading ? "Updating..." : "Update Password"}
           </button>
+          <button type="button" onClick={() => setMode('login')} className="w-full font-bold text-sm hover:underline mt-4">← Back to Login</button>
         </form>
       );
     }

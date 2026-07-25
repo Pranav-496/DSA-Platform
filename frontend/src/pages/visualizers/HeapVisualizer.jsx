@@ -8,7 +8,6 @@ function getTreeLayout(arr) {
   const edges = [];
   if (arr.length === 0) return { nodes, edges };
   
-  const maxDepth = Math.floor(Math.log2(arr.length)) + 1;
   const totalWidth = 700;
   
   for (let i = 0; i < arr.length; i++) {
@@ -56,9 +55,9 @@ export default function HeapVisualizer() {
     setStatusMessage('');
   };
 
-  const shouldSwap = (parentVal, childVal) => {
+  const shouldSwap = useCallback((parentVal, childVal) => {
     return heapType === 'min' ? childVal < parentVal : childVal > parentVal;
-  };
+  }, [heapType]);
 
   const insertValue = useCallback(async () => {
     const val = parseInt(inputVal);
@@ -99,7 +98,7 @@ export default function HeapVisualizer() {
       setActiveIndices([]);
     } catch (e) { if (e.message !== 'cancelled') console.error(e); }
     anim.finish();
-  }, [inputVal, heap, heapType, anim, delay]);
+  }, [inputVal, heap, heapType, anim, delay, shouldSwap]);
 
   const extractRoot = useCallback(async () => {
     if (heap.length === 0) { setStatusMessage('⚠ Heap is empty!'); return; }
@@ -151,7 +150,7 @@ export default function HeapVisualizer() {
       setActiveIndices([]);
     } catch (e) { if (e.message !== 'cancelled') console.error(e); }
     anim.finish();
-  }, [heap, heapType, anim, delay]);
+  }, [heap, heapType, anim, delay, shouldSwap]);
 
   const layout = getTreeLayout(heap);
 
