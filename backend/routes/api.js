@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const { protect } = require("../middleware/authMiddleware");
 const User = require("../models/User");
 const SystemDesignSave = require("../models/SystemDesignSave");
 const Problem = require("../models/Problem");
 const QuizQuestion = require("../models/QuizQuestion");
+
+const PROBLEMS_DATA = require("../data/problems");
+const QUIZ_DATA = require("../data/quizData");
 
 // Mock DB for when MongoDB is not connected
 const mockDb = {
@@ -34,25 +38,38 @@ const mockDb = {
 
 router.get("/problems", async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.json(PROBLEMS_DATA);
+    }
     const problems = await Problem.find({}).sort({ id: 1 }).lean();
+    if (!problems || problems.length === 0) {
+      return res.json(PROBLEMS_DATA);
+    }
     res.json(problems);
-  } catch (err) { console.error(err);
-    res.status(500).json({ error: "Failed to fetch problems" });
+  } catch (err) {
+    console.error("GET /problems fallback:", err.message);
+    res.json(PROBLEMS_DATA);
   }
 });
 
 router.get("/quiz", async (req, res) => {
   try {
     const topic = req.query.topic || "arrays";
+    if (mongoose.connection.readyState !== 1) {
+      const questions = QUIZ_DATA[topic] || QUIZ_DATA["arrays"] || [];
+      return res.json(questions.map((q, idx) => ({ ...q, topic, _id: `mock_q_${idx}` })));
+    }
     const questions = await QuizQuestion.find({ topic }).sort({ id: 1 }).lean();
-    if (questions.length === 0) {
-       // fallback if empty
-       const fallback = await QuizQuestion.find({ topic: "arrays" }).sort({ id: 1 }).lean();
-       return res.json(fallback);
+    if (!questions || questions.length === 0) {
+      const fallback = QUIZ_DATA[topic] || QUIZ_DATA["arrays"] || [];
+      return res.json(fallback.map((q, idx) => ({ ...q, topic, _id: `mock_q_${idx}` })));
     }
     res.json(questions);
-  } catch (err) { console.error(err);
-    res.status(500).json({ error: "Failed to fetch quiz data" });
+  } catch (err) {
+    console.error("GET /quiz fallback:", err.message);
+    const topic = req.query.topic || "arrays";
+    const questions = QUIZ_DATA[topic] || QUIZ_DATA["arrays"] || [];
+    res.json(questions.map((q, idx) => ({ ...q, topic, _id: `mock_q_${idx}` })));
   }
 });
 
@@ -293,6 +310,13 @@ router.post("/profile/update", protect, async (req, res) => {
 });
 
 router.get("/leaderboard", async (req, res) => {
+  const getMockLeaderboard = () => [
+    { rank: 1, id: "1", identity: "CyberCoder", xp: 1250, tier: "AlgoNova Elite", problems: 18, streak: 7 },
+    { rank: 2, id: "2", identity: "BinaryNinja", xp: 820, tier: "Diamond", problems: 14, streak: 5 },
+    { rank: 3, id: "3", identity: "DevOperator", xp: 450, tier: "Gold", problems: 9, streak: 3 },
+    { rank: 4, id: "4", identity: "Test User", xp: mockDb.gamification.xp, tier: mockDb.gamification.rankTier, problems: mockDb.progress.problemsSolved, streak: mockDb.gamification.streak.current }
+  ];
+
   try {
     const redisClient = require('../utils/redisClient');
     const CACHE_KEY = 'leaderboard:top100';
@@ -304,17 +328,25 @@ router.get("/leaderboard", async (req, res) => {
       }
     }
 
+    if (mongoose.connection.readyState !== 1) {
+      return res.json(getMockLeaderboard());
+    }
+
     const topUsers = await User.find({ isVerified: true })
       .sort({ "gamification.xp": -1, "progress.problemsSolved": -1 })
       .limit(100)
       .select("name email gamification progress.problemsSolved")
       .lean();
     
+    if (!topUsers || topUsers.length === 0) {
+      return res.json(getMockLeaderboard());
+    }
+
     // Anonymize emails slightly for the leaderboard
     const formattedLeaderboard = topUsers.map((u, index) => ({
       rank: index + 1,
       id: u._id,
-      identity: u.name || (u.email.split('@')[0].substring(0, 5) + '***'),
+      identity: u.name || (u.email ? u.email.split('@')[0].substring(0, 5) + '***' : 'Anonymous'),
       xp: u.gamification?.xp || 0,
       tier: u.gamification?.rankTier || 'Bronze',
       problems: u.progress?.problemsSolved || 0,
@@ -322,14 +354,13 @@ router.get("/leaderboard", async (req, res) => {
     }));
 
     if (redisClient.isReady) {
-      // Cache for 60 seconds (1 minute)
       await redisClient.setEx(CACHE_KEY, 60, JSON.stringify(formattedLeaderboard));
     }
 
     res.json(formattedLeaderboard);
-  } catch (error) { console.error(error);
-    console.error("Leaderboard Error: ", error);
-    res.status(500).json({ error: "Failed to fetch leaderboard" });
+  } catch (error) {
+    console.error("Leaderboard Error: ", error.message);
+    res.json(getMockLeaderboard());
   }
 });
 

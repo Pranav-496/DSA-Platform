@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const { analyzeVoice, evaluateCode } = require("../ai/ruleEngine");
 const InterviewConfig = require("../models/InterviewConfig");
 
@@ -12,9 +13,17 @@ router.post("/analyze", async (req, res) => {
   try {
     const { transcript, topic, code, thinkingTime, language } = req.body;
 
-    let config = await InterviewConfig.findOne({ id: "default_config" }).lean();
+    let config = null;
+    if (mongoose.connection.readyState === 1) {
+      try {
+        config = await InterviewConfig.findOne({ id: "default_config" }).lean();
+      } catch (e) {
+        console.error("Config fetch error:", e.message);
+      }
+    }
+
     if (!config) {
-      // Fallback in case DB is unseeded
+      // Fallback in case DB is unseeded or offline
       config = {
         edgeCaseKeywords: ["edge case:20", "boundary:15", "null:15", "empty:15"],
         patterns: ["binary search:20", "hash map:20", "two pointer:20"],

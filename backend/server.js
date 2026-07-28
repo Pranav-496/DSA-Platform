@@ -28,12 +28,12 @@ const MONGO_URI =
   process.env.MONGO_URI || "mongodb://localhost:27017/algonova";
 
 mongoose
-  .connect(MONGO_URI)
+  .connect(MONGO_URI, { serverSelectionTimeoutMS: 2000 })
   .then(async () => {
     console.log("✅ MongoDB Connected");
     await seedDatabase();
   })
-  .catch((err) => console.log("❌ MongoDB Error: ", err.message));
+  .catch((err) => console.log("⚠️ MongoDB Disconnected (Using Mock Fallback System):", err.message));
 
 // Auth routes
 app.use("/api/auth", authRouter);

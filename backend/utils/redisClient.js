@@ -5,12 +5,14 @@ const redisClient = createClient({
   url: process.env.REDIS_URL || 'redis://localhost:6379'
 });
 
-redisClient.on('error', (err) => console.log('Redis Client Error', err));
+redisClient.on('error', (err) => {
+  if (err.code === 'ECONNREFUSED' || (err.message && err.message.includes('ECONNREFUSED'))) return;
+  console.log('Redis Client Warning:', err.message || err);
+});
 redisClient.on('connect', () => console.log('✅ Redis Connected'));
 
-// Only connect if not in a pure build environment (optional safeguard)
 if (process.env.NODE_ENV !== 'test') {
-  redisClient.connect().catch(console.error);
+  redisClient.connect().catch(() => {});
 }
 
 module.exports = redisClient;

@@ -23,6 +23,13 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  googleId: {
+    type: String,
+  },
+  avatar: {
+    type: String,
+    default: "",
+  },
   bio: {
     type: String,
     default: "",
@@ -32,18 +39,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "",
     trim: true,
-  },
-  registrationOtp: {
-    type: String,
-  },
-  registrationOtpExpires: {
-    type: Date,
-  },
-  resetOtp: {
-    type: String,
-  },
-  resetOtpExpires: {
-    type: Date,
   },
   gamification: {
     xp: { type: Number, default: 0 },
