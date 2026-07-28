@@ -34,33 +34,33 @@ export default function LandingPage() {
   if (loading) return null;
 
   return (
-    <div className="min-h-screen w-full bg-background text-text overflow-x-hidden pt-16 md:pt-24 font-inter">
+    <div className="min-h-[100dvh] w-full max-w-[100vw] bg-background text-text overflow-x-hidden pt-16 md:pt-24 font-inter">
       
       {/* Top Navigation */}
-      <nav className="fixed top-0 w-full bg-surface border-b-4 border-border z-50 px-6 py-4 flex justify-between items-center shadow-brutal-sm">
-        <div className="font-geist font-bold text-2xl tracking-tight">ALGONOVA</div>
-        <div className="flex items-center gap-4">
+      <nav className="fixed top-0 w-full max-w-[100vw] bg-surface border-b-4 border-border z-50 px-4 sm:px-6 py-3.5 flex justify-between items-center shadow-brutal-sm">
+        <div className="font-geist font-bold text-xl sm:text-2xl tracking-tight">ALGONOVA</div>
+        <div className="flex items-center gap-3">
           <button
             onClick={toggleTheme}
-            className="px-3 py-1.5 bg-primary border-2 border-text rounded shadow-brutal-sm hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 font-bold text-xs uppercase cursor-pointer"
+            className="px-2.5 py-1.5 bg-primary border-2 border-text rounded shadow-brutal-sm hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-1.5 font-bold text-xs uppercase cursor-pointer"
             title="Toggle Theme"
           >
             {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
             <span className="hidden sm:inline">Theme</span>
           </button>
-          <Link to="/login" className="brutal-btn py-2 px-6 text-sm font-bold uppercase">Login</Link>
+          <Link to="/login" className="brutal-btn py-1.5 px-4 sm:px-6 text-xs sm:text-sm font-bold uppercase">Login</Link>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="w-full max-w-[1200px] mx-auto px-6 py-20 md:py-32 flex flex-col items-center text-center">
-        <div className="brutal-card inline-block p-4 mb-8 bg-surface transform -rotate-2">
-          <Terminal className="w-12 h-12 text-text" />
+      <section className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 py-12 sm:py-20 md:py-32 flex flex-col items-center text-center">
+        <div className="brutal-card inline-block p-3 sm:p-4 mb-6 sm:mb-8 bg-surface transform -rotate-2">
+          <Terminal className="w-8 h-8 sm:w-12 sm:h-12 text-text" />
         </div>
-        <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-geist font-extrabold leading-none mb-6 tracking-tight uppercase">
+        <h1 className="text-3.5xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-geist font-extrabold leading-tight mb-6 tracking-tight uppercase">
           Master Algorithms.<br /> <span className="bg-primary px-2">Visualized.</span>
         </h1>
-        <p className="text-lg md:text-2xl font-medium mb-12 max-w-3xl leading-relaxed">
+        <p className="text-base sm:text-lg md:text-2xl font-medium mb-8 sm:mb-12 max-w-3xl leading-relaxed">
           The premium Neo-Brutalist platform for learning, practicing, and mastering Data Structures & Algorithms. 
           Stop memorizing. Start visualizing.
         </p>

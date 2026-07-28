@@ -91,7 +91,7 @@ function MainLayout() {
   const shouldShowSidebar = !hideSidebarRoutes.includes(location.pathname);
 
   return (
-    <div className="flex flex-col bg-background h-screen overflow-hidden text-text font-geist">
+    <div className="flex flex-col bg-background h-[100dvh] w-full max-w-[100vw] overflow-hidden text-text font-geist">
       {/* Sticky Top Navbar */}
       {shouldShowSidebar && (
         <header className="sticky top-0 z-30 bg-surface border-b-2 border-text shadow-[0px_2px_0px_var(--text-color)] flex items-center justify-between px-3 md:px-4 py-1.5 shrink-0">
