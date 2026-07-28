@@ -167,8 +167,22 @@ export default function LandingPage() {
             </ul>
           </div>
         </div>
-        <div className="w-full max-w-[1200px] mx-auto px-6 mt-12 pt-8 border-t border-surface/30 text-center opacity-60">
-          © {new Date().getFullYear()} AlgoNova. All rights reserved.
+        <div className="w-full max-w-[1200px] mx-auto px-6 mt-12 pt-8 border-t border-surface/30 text-center flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-medium">
+          <div className="opacity-80">
+            © {new Date().getFullYear()} AlgoNova. All rights reserved.
+          </div>
+          <div className="bg-surface text-text px-4 py-2 rounded-lg border-2 border-surface shadow-brutal-sm font-bold flex flex-wrap items-center justify-center gap-2">
+            <span>Made with ❤️ by <strong className="text-primary">Pranav Landge</strong></span>
+            <span className="hidden sm:inline">•</span>
+            <a 
+              href="https://pranavlandge.in" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-primary hover:underline font-extrabold flex items-center gap-1"
+            >
+              Explore more on pranavlandge.in ↗
+            </a>
+          </div>
         </div>
       </footer>
     </div>

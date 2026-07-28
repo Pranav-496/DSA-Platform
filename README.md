@@ -1,122 +1,87 @@
 <div align="center">
   <h1 align="center">🚀 AlgoNova</h1>
   <p align="center">
-    <strong>Next Gen Data Structures and Algorithms Platform</strong>
+    <strong>AI-Powered Data Structures, Algorithms & System Design Platform</strong>
+    <br />
+    <em>Developed & Designed by <a href="https://pranavlandge.in">Pranav Landge</a></em>
     <br />
     <br />
-    <a href="#about-the-project">About</a>
+    <a href="https://algonova-by-pranav.vercel.app"><strong>🌐 Live Web App</strong></a>
     ·
-    <a href="#features">Features</a>
+    <a href="#key-features">Features</a>
     ·
-    <a href="#getting-started">Getting Started</a>
+    <a href="#architecture">Architecture</a>
     ·
-    <a href="#roadmap">Roadmap</a>
+    <a href="#deployment">Deployment</a>
   </p>
 </div>
 
 ---
 
-## 📖 About The Project
+## 📖 About AlgoNova
 
-AlgoNova is a modern, brutalist-styled platform designed for mastering Data Structures and Algorithms (DSA) comprehensively. Going beyond a simple coding playground, it acts as a personal interviewer, reviewer, and coding environment. It features an interactive IDE, a cutting-edge AI-powered Interview Simulator, and gamification elements, built specifically to help you ace your next technical interview.
+**AlgoNova** is an interactive, Neo-Brutalist platform built to redefine how engineers prepare for Data Structures & Algorithms (DSA), System Design, and Technical Interviews.
+
+Instead of passive memorization, AlgoNova provides:
+- 👁️ **Interactive DSA Visualizers**: Step-by-step state visualization for trees, graphs, dynamic programming, sorting, and searching.
+- 🤖 **AI Interview & Code Review Engine**: Real-time evaluation of time/space complexity, edge cases, speech clarity, and dynamic interviewer follow-up questions.
+- 📐 **System Design Sandbox**: Interactive canvas to design, simulate, and grade system architectures.
+- 🏆 **Gamified Progress Tracking**: XP, streak badges, placement readiness scores, and global leaderboards.
+
+---
+
+## 🔗 Live URLs & Social Preview
+
+- 🌐 **Frontend App**: [https://algonova-by-pranav.vercel.app](https://algonova-by-pranav.vercel.app)
+- ⚙️ **Backend API**: [https://dsa-platform-rxfd.onrender.com](https://dsa-platform-rxfd.onrender.com)
+- 👨‍💻 **Developer Portfolio**: [https://pranavlandge.in](https://pranavlandge.in)
+
+> **Social Sharing Preview**: When shared on WhatsApp, LinkedIn, Twitter, or Discord, AlgoNova displays rich Open Graph meta cards with official titles, descriptions, and thumbnails.
+
+---
 
 ## ✨ Key Features
 
-- 🤖 **AI Interview Simulator**: Practice technical interviews with an AI that evaluates your code, logic, communication, and thinking speed. Includes voice transcription to analyze your verbal explanations!
-- 🔍 **AI Code Review**: Submit your code and receive deep, actionable feedback on time/space complexity, edge cases, and potential code quality improvements.
-- 👁️ **Proctoring System**: Stay focused. Tab-switching is continuously monitored and directly impacts your "Integrity Score" during simulated interviews.
-- 💾 **Mock Fallback System**: No MongoDB? No problem. The backend seamlessly falls back to a mock in-memory database so you can start developing or using the app immediately.
-- 🎨 **Brutalist UI**: Bold aesthetics, strong contrasts, and clear, intuitive layouts built with React and Tailwind CSS.
+- 🔐 **Dual Auth Options**: Manual account creation and Google 1-Tap OAuth 2.0.
+- 💬 **Dynamic AI Follow-Ups**: Simulates real tech interviewers asking 3 targeted follow-up questions based on candidate solution code.
+- 🛡️ **Proctoring System**: Monitors tab switches and focus metrics during timed interview simulations.
+- 🗄️ **MongoDB Atlas Cloud Database**: Production user persistence with dynamic mock fallback for zero downtime.
+- 🎨 **Neo-Brutalist UI/UX**: High-contrast, vibrant, tactile design system with instant light/dark mode toggling.
 
-## 🛠️ Built With
+---
 
-**Frontend:**
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Monaco Editor](https://microsoft.github.io/monaco-editor/)
+## 🛠️ Tech Stack
 
-**Backend:**
-- [Node.js](https://nodejs.org/)
-- [Express.js](https://expressjs.com/)
-- [MongoDB](https://www.mongodb.com/) (with in-memory mock fallback)
+- **Frontend**: React 19, Vite, Tailwind CSS, Lucide Icons, Framer Motion, Monaco Code Editor
+- **Backend**: Node.js, Express.js, MongoDB Atlas (Mongoose), JWT, Nodemailer, Google Auth Library
+- **AI & Integrations**: Google Gemini API, Rule-Engine Heuristics, Google OAuth 2.0
+- **Hosting**: Vercel Global Edge CDN (Frontend) + Render Web Service (Backend)
 
-**AI & Code Execution:**
-- **Piston API** - For secure and reliable code execution.
-- **Groq / AI Models** - For comprehensive code review and interview analysis.
+---
 
-## 🚀 Getting Started
+## 🚀 Local Setup
 
-Follow these steps to get a local copy up and running.
+```bash
+# Clone the repository
+git clone https://github.com/Pranav-496/DSA-Platform.git
+cd DSA-Platform
 
-### Prerequisites
+# Install all dependencies
+npm run install-all
 
-Make sure you have Node.js and npm installed.
+# Start dev server
+npm run dev
+```
 
-### Installation
+---
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Pranav-496/DSA-Platform.git
-   cd DSA-Platform
-   ```
+## 👨‍💻 Author & Credits
 
-2. **Install frontend dependencies:**
-   ```bash
-   cd frontend
-   npm install
-   ```
+Designed, built, and maintained with ❤️ by **Pranav Landge**.
 
-3. **Install backend dependencies:**
-   ```bash
-   cd ../backend
-   npm install
-   ```
+- 🌐 **Portfolio**: [pranavlandge.in](https://pranavlandge.in)
+- 🐙 **GitHub**: [@Pranav-496](https://github.com/Pranav-496)
 
-4. **Environment Variables:**
-   Create a `.env` file in the `backend` directory and add the following:
-   ```env
-   MONGO_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   ```
-   *(Note: If MongoDB is not provided, the system will fall back to an in-memory database).*
+---
 
-5. **Run the development servers:**
-   Open two terminal windows/tabs:
-   
-   *Terminal 1 (Frontend):*
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-   
-   *Terminal 2 (Backend):*
-   ```bash
-   cd backend
-   node server.js
-   ```
-
-## 🗺️ Roadmap & Future Enhancements
-
-We have grand plans for AlgoNova. If you are looking to contribute or expand this project, here are some highly recommended features:
-
-- [ ] ⚔️ **Multiplayer / 1v1 Battles**: Allow users to challenge each other in real-time coding matches. 
-- [ ] 🏆 **Community Leaderboard**: Global ranking system based on Elo/MMR rating.
-- [ ] 📚 **Problem Explanations / Editorial**: Step-by-step guides and video tutorials for each problem.
-- [ ] 📅 **Daily Challenges**: Introduce a "Problem of the Day" with streak rewards to keep users engaged.
-- [ ] 📐 **System Design Practice**: A dedicated section to simulate system design interviews using an interactive whiteboard tool.
-- [ ] 📝 **Code Snippets Library**: Allow users to save and categorize their favorite algorithms or data structures.
-
-## 🤝 Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the **MIT License**.

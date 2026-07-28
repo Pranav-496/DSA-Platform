@@ -287,7 +287,7 @@ function Sidebar({ setSearchOpen, sidebarOpen, setSidebarOpen }) {
       </nav>
 
       {/* Bottom section */}
-      <div className="px-4 w-full mt-auto pt-6 border-t-4 border-text">
+      <div className="px-4 w-full mt-auto pt-4 border-t-4 border-text flex flex-col gap-3">
         {user && (
           <Link to="/profile" className="flex items-center gap-3 p-3 bg-surface border-4 border-text rounded-lg shadow-brutal-sm hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111] transition-all cursor-pointer block">
             <div className="w-10 h-10 rounded-full bg-warning border-4 border-text flex items-center justify-center flex-shrink-0">
@@ -299,6 +299,17 @@ function Sidebar({ setSearchOpen, sidebarOpen, setSidebarOpen }) {
             </div>
           </Link>
         )}
+        <div className="p-2.5 bg-background border-2 border-text rounded-lg text-center text-xs font-bold shadow-brutal-sm">
+          <span className="opacity-90">Made with ❤️ by <strong>Pranav Landge</strong></span>
+          <a 
+            href="https://pranavlandge.in" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-primary hover:underline font-extrabold block mt-1"
+          >
+            Explore on pranavlandge.in ↗
+          </a>
+        </div>
       </div>
     </aside>
     </>
