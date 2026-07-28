@@ -1,11 +1,29 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Terminal, Code, Activity, Award, CheckCircle, HelpCircle } from 'lucide-react';
+import { Terminal, Code, Activity, Award, CheckCircle, HelpCircle, Sun, Moon } from 'lucide-react';
 
 export default function LandingPage() {
   const { token, loading } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === "light" ? "dark" : "light"));
+  };
 
   useEffect(() => {
     if (!loading && token) {
@@ -18,9 +36,18 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen w-full bg-background text-text overflow-x-hidden pt-16 md:pt-24 font-inter">
       
+      {/* Top Navigation */}
       <nav className="fixed top-0 w-full bg-surface border-b-4 border-border z-50 px-6 py-4 flex justify-between items-center shadow-brutal-sm">
         <div className="font-geist font-bold text-2xl tracking-tight">ALGONOVA</div>
-        <div>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={toggleTheme}
+            className="px-3 py-1.5 bg-primary border-2 border-text rounded shadow-brutal-sm hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 font-bold text-xs uppercase cursor-pointer"
+            title="Toggle Theme"
+          >
+            {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
+            <span className="hidden sm:inline">Theme</span>
+          </button>
           <Link to="/login" className="brutal-btn py-2 px-6 text-sm font-bold uppercase">Login</Link>
         </div>
       </nav>
@@ -38,10 +65,10 @@ export default function LandingPage() {
           Stop memorizing. Start visualizing.
         </p>
         <div className="flex flex-col sm:flex-row gap-6 w-full max-w-md mx-auto justify-center">
-          <Link to="/login" className="brutal-btn w-full sm:w-auto text-lg py-4 px-8">
+          <Link to={token ? "/dashboard" : "/login"} className="brutal-btn w-full sm:w-auto text-lg py-4 px-8">
             Start Learning
           </Link>
-          <Link to="/visualizer" className="brutal-btn-secondary w-full sm:w-auto text-lg py-4 px-8">
+          <Link to={token ? "/visualize" : "/login"} className="brutal-btn-secondary w-full sm:w-auto text-lg py-4 px-8">
             Try Visualizer
           </Link>
         </div>
@@ -80,48 +107,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="py-20 bg-background">
-        <div className="w-full max-w-[1200px] mx-auto px-6">
-          <div className="brutal-card bg-surface p-12 text-center">
-            <h2 className="text-3xl md:text-5xl font-geist font-bold mb-12 uppercase">By the Numbers</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div>
-                <div className="text-6xl font-black font-geist mb-2">50+</div>
-                <div className="text-xl font-bold uppercase tracking-wider">Algorithms Visualized</div>
-              </div>
-              <div>
-                <div className="text-6xl font-black font-geist mb-2">10k+</div>
-                <div className="text-xl font-bold uppercase tracking-wider">Active Learners</div>
-              </div>
-              <div>
-                <div className="text-6xl font-black font-geist mb-2">99%</div>
-                <div className="text-xl font-bold uppercase tracking-wider">Interview Success</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-20 bg-[#E2E8F0] border-y-4 border-border">
-        <div className="w-full max-w-[1200px] mx-auto px-6">
-          <h2 className="text-4xl md:text-5xl font-geist font-bold mb-16 text-center uppercase">Wall of Love</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <TestimonialCard 
-              quote="AlgoNova completely changed how I understand dynamic programming. The visualizer is an absolute game-changer."
-              author="Sarah Jenkins"
-              role="Software Engineer @ TechCorp"
-            />
-            <TestimonialCard 
-              quote="The brutalist UI is incredibly refreshing. It keeps me focused on the code and the logic, not unnecessary fluff."
-              author="David Chen"
-              role="CS Student"
-            />
-          </div>
-        </div>
-      </section>
-
       {/* FAQ Section */}
       <section className="py-20 bg-background">
         <div className="w-full max-w-[800px] mx-auto px-6">
@@ -143,7 +128,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Professional Footer */}
       <footer className="bg-text text-surface py-12 border-t-8 border-primary">
         <div className="w-full max-w-[1200px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
@@ -153,17 +138,17 @@ export default function LandingPage() {
           <div>
             <h4 className="font-bold text-xl mb-4 uppercase">Product</h4>
             <ul className="space-y-2 opacity-80">
-              <li><Link to="/visualizer" className="hover:text-primary transition-colors">Visualizer</Link></li>
-              <li><Link to="/practice" className="hover:text-primary transition-colors">Practice</Link></li>
-              <li><Link to="/learn" className="hover:text-primary transition-colors">Learn</Link></li>
+              <li><Link to="/login" className="hover:text-primary transition-colors">Visualizer</Link></li>
+              <li><Link to="/login" className="hover:text-primary transition-colors">Practice</Link></li>
+              <li><Link to="/login" className="hover:text-primary transition-colors">Learn</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-xl mb-4 uppercase">Company</h4>
+            <h4 className="font-bold text-xl mb-4 uppercase">Platform</h4>
             <ul className="space-y-2 opacity-80">
-              <li><Link to="/dashboard" className="hover:text-primary transition-colors">About</Link></li>
+              <li><Link to="/login" className="hover:text-primary transition-colors">Login / Register</Link></li>
               <li><a href="mailto:support@algonova.dev" className="hover:text-primary transition-colors">Contact</a></li>
-              <li><span className="opacity-60 cursor-default">Privacy Policy</span></li>
+              <li><span className="opacity-60 cursor-default">Terms & Privacy</span></li>
             </ul>
           </div>
         </div>
@@ -172,7 +157,7 @@ export default function LandingPage() {
             © {new Date().getFullYear()} AlgoNova. All rights reserved.
           </div>
           <div className="bg-surface text-text px-4 py-2 rounded-lg border-2 border-surface shadow-brutal-sm font-bold flex flex-wrap items-center justify-center gap-2">
-            <span>Made with ❤️ by <strong className="text-primary">Pranav Landge</strong></span>
+            <span>Designed & Developed by <strong className="text-primary">Pranav Landge</strong></span>
             <span className="hidden sm:inline">•</span>
             <a 
               href="https://pranavlandge.in" 
@@ -192,35 +177,26 @@ export default function LandingPage() {
 const FeatureCard = ({ icon, title, description, color }) => (
   <div className={`brutal-card p-8 ${color}`}>
     <div className="bg-text text-surface w-14 h-14 flex items-center justify-center rounded-lg border-2 border-text mb-6 shadow-brutal-sm">
-      {icon}
+      {React.cloneElement(icon, { size: 28 })}
     </div>
-    <h3 className="text-2xl font-bold font-geist mb-4 uppercase tracking-wide">{title}</h3>
-    <p className="font-medium opacity-90 leading-relaxed text-lg">{description}</p>
+    <h3 className="text-2xl font-geist font-bold mb-4 uppercase">{title}</h3>
+    <p className="font-medium opacity-90 leading-relaxed text-base">{description}</p>
   </div>
 );
 
-const TestimonialCard = ({ quote, author, role }) => (
-  <div className="brutal-card bg-surface p-8">
-    <div className="text-3xl text-primary mb-4 font-geist">"</div>
-    <p className="text-lg font-medium mb-8 leading-relaxed">{quote}</p>
-    <div className="flex items-center gap-4 border-t-2 border-border pt-6">
-      <div className="w-12 h-12 bg-primary border-2 border-border rounded-full flex items-center justify-center font-bold">
-        {author.charAt(0)}
+const FAQItem = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="brutal-card bg-surface p-6 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+      <div className="flex justify-between items-center">
+        <h3 className="text-xl font-bold uppercase">{question}</h3>
+        <span className="text-2xl font-black">{isOpen ? '−' : '+'}</span>
       </div>
-      <div>
-        <div className="font-bold font-geist uppercase">{author}</div>
-        <div className="text-sm opacity-80 font-medium">{role}</div>
-      </div>
+      {isOpen && (
+        <p className="mt-4 font-medium opacity-80 pt-4 border-t-2 border-text leading-relaxed">
+          {answer}
+        </p>
+      )}
     </div>
-  </div>
-);
-
-const FAQItem = ({ question, answer }) => (
-  <div className="brutal-card bg-surface p-6 text-left">
-    <h3 className="flex items-center gap-3 font-bold text-xl font-geist mb-2 uppercase">
-      <HelpCircle className="w-6 h-6 text-primary flex-shrink-0" />
-      {question}
-    </h3>
-    <p className="pl-9 font-medium text-lg">{answer}</p>
-  </div>
-);
+  );
+};

@@ -77,7 +77,7 @@ npm run dev
 
 ## 👨‍💻 Author & Credits
 
-Designed, built, and maintained with ❤️ by **Pranav Landge**.
+Designed, built, and maintained by **Pranav Landge**.
 
 - 🌐 **Portfolio**: [pranavlandge.in](https://pranavlandge.in)
 - 🐙 **GitHub**: [@Pranav-496](https://github.com/Pranav-496)

@@ -300,7 +300,7 @@ function Sidebar({ setSearchOpen, sidebarOpen, setSidebarOpen }) {
           </Link>
         )}
         <div className="p-2.5 bg-background border-2 border-text rounded-lg text-center text-xs font-bold shadow-brutal-sm">
-          <span className="opacity-90">Made with ❤️ by <strong>Pranav Landge</strong></span>
+          <span className="opacity-90">Designed & Developed by <strong>Pranav Landge</strong></span>
           <a 
             href="https://pranavlandge.in" 
             target="_blank" 
