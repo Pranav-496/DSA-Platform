@@ -1,7 +1,7 @@
-// API base URL
-// In production on Vercel, point to the Render backend
-// In development, the Vite proxy handles /api -> localhost:5000
-let API_BASE = import.meta.env.VITE_API_URL || "";
+// API base URL for AlgoNova Platform
+// Points to Render production backend (https://dsa-platform-rxfd.onrender.com) or custom environment URL
+let API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://dsa-platform-rxfd.onrender.com" : "");
+
 if (API_BASE.endsWith("/api")) {
   API_BASE = API_BASE.slice(0, -4);
 }
