@@ -21,8 +21,7 @@ export default function LandingPage() {
       <nav className="fixed top-0 w-full bg-surface border-b-4 border-border z-50 px-6 py-4 flex justify-between items-center shadow-brutal-sm">
         <div className="font-geist font-bold text-2xl tracking-tight">ALGONOVA</div>
         <div>
-          <Link to="/login" className="brutal-btn-secondary mr-4 py-2 px-4 text-sm">Login</Link>
-          <Link to="/register" className="brutal-btn py-2 px-4 text-sm">Sign Up</Link>
+          <Link to="/login" className="brutal-btn py-2 px-6 text-sm font-bold uppercase">Login</Link>
         </div>
       </nav>
 

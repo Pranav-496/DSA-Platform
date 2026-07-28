@@ -33,24 +33,15 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
+    let res;
     try {
-      const res = await fetch(`${API_BASE}/api/auth/login`, {
+      res = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
-
-      setToken(data.token);
-      setUser({ id: data._id, email: data.email, name: data.name, avatar: data.avatar || "" });
-      localStorage.setItem("algonova_token", data.token);
-      localStorage.setItem("algonova_email", data.email);
-      localStorage.setItem("algonova_name", data.name);
-      if (data.avatar) localStorage.setItem("algonova_avatar", data.avatar);
-      return data;
-    } catch (err) {
-      console.warn("Real login failed (likely MongoDB disconnected). Falling back to Mock Login.", err);
+    } catch (networkErr) {
+      console.warn("Network error during login. Falling back to Mock Login.", networkErr);
       const mockToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YWJjZDEyMzQ1Njc4OTAiLCJlbWFpbCI6InRlc3RAYWxnb25vdmEuY29tIiwibmFtZSI6IlRlc3QgVXNlciJ9.mocksignature";
       setToken(mockToken);
       setUser({ id: "64abcd1234567890", email: email || "test@algonova.com", name: "Test User" });
@@ -59,27 +50,31 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("algonova_name", "Test User");
       return { token: mockToken, _id: "64abcd1234567890", email: email || "test@algonova.com", name: "Test User" };
     }
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || "Invalid email or password");
+    }
+
+    setToken(data.token);
+    setUser({ id: data._id, email: data.email, name: data.name, avatar: data.avatar || "" });
+    localStorage.setItem("algonova_token", data.token);
+    localStorage.setItem("algonova_email", data.email);
+    localStorage.setItem("algonova_name", data.name);
+    if (data.avatar) localStorage.setItem("algonova_avatar", data.avatar);
+    return data;
   };
 
   const register = async (name, email, password) => {
+    let res;
     try {
-      const res = await fetch(`${API_BASE}/api/auth/register`, {
+      res = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
-
-      setToken(data.token);
-      setUser({ id: data._id, email: data.email, name: data.name, avatar: data.avatar || "" });
-      localStorage.setItem("algonova_token", data.token);
-      localStorage.setItem("algonova_email", data.email);
-      localStorage.setItem("algonova_name", data.name);
-      if (data.avatar) localStorage.setItem("algonova_avatar", data.avatar);
-      return data;
-    } catch (err) {
-      console.warn("Real register failed. Falling back to Mock Direct Register.", err);
+    } catch (networkErr) {
+      console.warn("Network error during register. Falling back to Mock Register.", networkErr);
       const mockToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YWJjZDEyMzQ1Njc4OTAiLCJlbWFpbCI6InRlc3RAYWxnb25vdmEuY29tIiwibmFtZSI6Ik9wZXJhdG9yIn0.mocksignature";
       setToken(mockToken);
       setUser({ id: "64abcd1234567890", email: email || "user@algonova.com", name: name || "Operator" });
@@ -88,6 +83,19 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("algonova_name", name || "Operator");
       return { token: mockToken, _id: "64abcd1234567890", email: email || "user@algonova.com", name: name || "Operator" };
     }
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || "Registration failed");
+    }
+
+    setToken(data.token);
+    setUser({ id: data._id, email: data.email, name: data.name, avatar: data.avatar || "" });
+    localStorage.setItem("algonova_token", data.token);
+    localStorage.setItem("algonova_email", data.email);
+    localStorage.setItem("algonova_name", data.name);
+    if (data.avatar) localStorage.setItem("algonova_avatar", data.avatar);
+    return data;
   };
 
   const googleLogin = async (googleData, clientId) => {
