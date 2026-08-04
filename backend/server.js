@@ -53,23 +53,29 @@ app.use("/api/interview", aiLimiter, interviewRoutes);
 // Proctoring routes
 app.use("/api/proctor", proctorRoutes);
 
-app.get("/health", (req, res) => res.send("AlgoNova Backend is Running"));
+// Health Check & Root Endpoints for Uptime Monitors
+app.get(["/", "/health", "/api/health"], (req, res) => {
+  res.status(200).json({
+    status: "online",
+    service: "AlgoNova API Backend Engine",
+    timestamp: new Date().toISOString(),
+    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected"
+  });
+});
 
-// Serve static files from the React app build directory (production)
+// Serve static files from the React app build directory (if available)
 const clientDistPath = path.join(__dirname, "../frontend/dist");
 
 if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
 
-  // Catch-all: send index.html for client-side routing (must be AFTER API routes)
+  // Catch-all: send index.html for client-side routing
   app.get(/(.*)/, (req, res) => {
     res.sendFile(path.join(clientDistPath, "index.html"));
   });
   console.log("📦 Serving frontend build from:", clientDistPath);
 } else {
-  console.log("⚠️  Frontend build not found at:", clientDistPath);
-  console.log("   Current Directory:", process.cwd());
-  console.log("   Run 'npm run build' in /frontend to generate production build");
+  console.log("⚠️ Frontend build not compiled locally on backend (Serving as Dedicated API Server)");
 }
 
 const http = require("http");
