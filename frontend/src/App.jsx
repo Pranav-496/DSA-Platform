@@ -20,6 +20,7 @@ import {
   User,
   Sun,
   Moon,
+  FileSearch,
 } from "lucide-react";
 import { AuthContext } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
@@ -36,6 +37,7 @@ import SystemDesign from "./pages/SystemDesign";
 import { AuthProvider } from "./context/AuthContext";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
+import ResumeScreener from "./pages/ResumeScreener";
 
 function MainLayout() {
   const [searchOpen, setSearchOpen] = React.useState(false);
@@ -83,6 +85,7 @@ function MainLayout() {
     { title: "Arrays Quiz", type: "Quiz", path: "/quiz/arrays", icon: BookOpen },
     { title: "Interview Prep", type: "Practice", path: "/interview", icon: Mic },
     { title: "System Design", type: "Sandbox", path: "/system-design", icon: LayoutDashboard },
+    { title: "Resume Screener", type: "Tool", path: "/resume-screener", icon: FileSearch },
   ].filter(
     (item) =>
       item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -182,6 +185,7 @@ function MainLayout() {
           <Route path="/practice" element={<Practice />} />
           <Route path="/interview" element={<InterviewPrep />} />
           <Route path="/system-design" element={<SystemDesign />} />
+          <Route path="/resume-screener" element={<ResumeScreener />} />
           <Route path="/quiz/:topic" element={<Quiz />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/terms" element={<TermsPage />} />
@@ -216,6 +220,7 @@ function Sidebar({ setSearchOpen, sidebarOpen, setSidebarOpen }) {
     { to: "/practice", icon: Terminal, label: "Practice HQ" },
     { to: "/interview", icon: Mic, label: "Interview Prep" },
     { to: "/system-design", icon: LayoutDashboard, label: "System Design" },
+    { to: "/resume-screener", icon: FileSearch, label: "Resume Screener" },
   ];
 
   const handleSearchClick = () => {

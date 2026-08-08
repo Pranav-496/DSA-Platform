@@ -11,6 +11,7 @@ const authRouter = require("./routes/auth").router;
 const codeRoutes = require("./routes/code");
 const interviewRoutes = require("./routes/interview");
 const proctorRoutes = require("./routes/proctor");
+const resumeRoutes = require("./routes/resume");
 
 const app = express();
 const { apiLimiter, aiLimiter, codeExecLimiter } = require("./middleware/rateLimiter");
@@ -52,6 +53,9 @@ app.use("/api/interview", aiLimiter, interviewRoutes);
 
 // Proctoring routes
 app.use("/api/proctor", proctorRoutes);
+
+// Resume ATS Screener routes
+app.use("/api/resume", aiLimiter, resumeRoutes);
 
 // Health Check & Root Endpoints for Uptime Monitors
 app.get(["/", "/health", "/api/health"], (req, res) => {

@@ -219,6 +219,18 @@ router.post("/progress/update", protect, async (req, res) => {
       if (prog.systemDesignScores.length === 1) {
         awardBadge('architect_init', 'Architect', 'Completed your first System Design critique.', 'neon-green');
       }
+    } else if (type === "resume") {
+      gamify.xp += 75 + Math.floor((data.score || 0) * 0.5);
+      if (!prog.resumeScores) prog.resumeScores = [];
+      prog.resumeScores.push(data);
+      prog.recentActivity.unshift({
+        type: "system",
+        text: `Resume ATS Scan: ${data.score}/100 (${data.grade}) (+${75 + Math.floor((data.score || 0) * 0.5)} XP)`,
+        time: now,
+      });
+      if (prog.resumeScores.length === 1) {
+        awardBadge('resume_ready', 'Resume Ready', 'Completed your first ATS Resume Scan.', 'neon-cyan');
+      }
     }
 
     // Rank Tier Evaluation
