@@ -136,7 +136,8 @@ export const AuthProvider = ({ children }) => {
       const userEmail = googleUser?.email || "google_user@algonova.com";
       const userName = googleUser?.name || (userEmail.split("@")[0]);
       const userAvatar = googleUser?.picture || googleUser?.avatar || "";
-      const mockToken = `google_jwt_${Date.now()}`;
+      const payloadBase64 = btoa(JSON.stringify({ id: `google_${Date.now()}` }));
+      const mockToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${payloadBase64}.mocksignature`;
 
       setToken(mockToken);
       setUser({ id: `google_${Date.now()}`, email: userEmail, name: userName, avatar: userAvatar });
