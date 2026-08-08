@@ -34,6 +34,8 @@ import Profile from "./pages/Profile";
 import Leaderboard from "./pages/Leaderboard";
 import SystemDesign from "./pages/SystemDesign";
 import { AuthProvider } from "./context/AuthContext";
+import TermsPage from "./pages/TermsPage";
+import PrivacyPage from "./pages/PrivacyPage";
 
 function MainLayout() {
   const [searchOpen, setSearchOpen] = React.useState(false);
@@ -87,7 +89,7 @@ function MainLayout() {
       item.type.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const hideSidebarRoutes = ["/", "/login"];
+  const hideSidebarRoutes = ["/", "/login", "/terms", "/privacy"];
   const shouldShowSidebar = !hideSidebarRoutes.includes(location.pathname);
 
   return (
@@ -182,6 +184,8 @@ function MainLayout() {
           <Route path="/system-design" element={<SystemDesign />} />
           <Route path="/quiz/:topic" element={<Quiz />} />
           <Route path="/quiz" element={<Quiz />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       </main>
       </div>

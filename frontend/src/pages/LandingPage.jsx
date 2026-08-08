@@ -147,8 +147,8 @@ export default function LandingPage() {
             <h4 className="font-bold text-xl mb-4 uppercase">Platform</h4>
             <ul className="space-y-2 opacity-80">
               <li><Link to="/login" className="hover:text-primary transition-colors">Login / Register</Link></li>
-              <li><a href="mailto:support@algonova.dev" className="hover:text-primary transition-colors">Contact</a></li>
-              <li><span className="opacity-60 cursor-default">Terms & Privacy</span></li>
+              <li><a href="https://pranavlandge.in" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Contact</a></li>
+              <li><Link to="/terms" className="hover:text-primary transition-colors">Terms</Link> &amp; <Link to="/privacy" className="hover:text-primary transition-colors">Privacy</Link></li>
             </ul>
           </div>
         </div>
