@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ControlBar from './ControlBar';
+import CodeTracer from './CodeTracer';
 import useAnimationControl from './useAnimationControl';
-import { Shuffle, SlidersHorizontal, BrainCircuit, Activity } from 'lucide-react';
+import { Shuffle, SlidersHorizontal, BrainCircuit, Activity, Code2, PanelRightClose, PanelRightOpen } from 'lucide-react';
 
 const ALGORITHMS = {
   bubble: { name: 'Bubble Sort', time: 'O(n²)', space: 'O(1)', best: 'O(n)', description: 'Repeatedly swaps adjacent elements if they are in wrong order.' },
@@ -32,6 +33,7 @@ export default function SortingVisualizer() {
   const [comparing, setComparing] = useState([]);
   const [swapping, setSwapping] = useState([]);
   const [statusMessage, setStatusMessage] = useState('');
+  const [showCodePanel, setShowCodePanel] = useState(true);
 
   const anim = useAnimationControl();
   const arrayRef = useRef(array);
@@ -471,6 +473,15 @@ export default function SortingVisualizer() {
           <button onClick={handleNewArray} className="flex items-center gap-2 px-3 py-1 bg-warning hover:bg-warning/80 text-text font-black uppercase border-2 border-text transition-all shadow-[2px_2px_0px_#111] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111]">
             <Shuffle size={16} /> Randomize
           </button>
+          <div className="w-1 h-6 bg-text"></div>
+          <button 
+            onClick={() => setShowCodePanel(!showCodePanel)}
+            className="flex items-center gap-2 px-3 py-1 bg-surface hover:bg-primary text-text font-black uppercase border-2 border-text transition-all shadow-[2px_2px_0px_#111] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111]"
+            title={showCodePanel ? 'Hide Code Panel' : 'Show Code Panel'}
+          >
+            {showCodePanel ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
+            <span className="hidden xl:inline text-xs">Code</span>
+          </button>
         </div>
       </div>
 
@@ -510,57 +521,74 @@ export default function SortingVisualizer() {
         <span className="flex items-center gap-2 font-black text-[10px] uppercase"><span className="w-4 h-4 border-2 border-text bg-success shadow-[2px_2px_0px_#111]"></span> Sorted</span>
       </div>
 
-      {/* Bar Visualization */}
-      <div className="flex-1 bg-background border-4 border-text flex items-end justify-center gap-1 p-6 pt-12 relative min-h-[400px] lg:min-h-[500px] overflow-hidden shadow-brutal-md">
-        {/* Thinking Overlay / AI Tooltip */}
-        {(anim.isPlaying || statusMessage) && statusMessage && (
-          <div className="absolute top-4 right-4 bg-surface border-4 border-text p-2 px-4 shadow-[4px_4px_0px_#111] animate-fade-in flex items-center gap-3 z-20 min-w-[250px] max-w-[350px]">
-             <div className="bg-primary border-2 border-text rounded-none p-1.5 flex-shrink-0 shadow-[2px_2px_0px_#111]">
-                <BrainCircuit size={18} className="text-text animate-pulse" />
-             </div>
-             <div className="flex-1 overflow-hidden">
-                <div className="flex justify-between items-center mb-0.5">
-                   <p className="text-[10px] font-black text-text uppercase tracking-widest border-b-2 border-text pb-0.5 inline-block">AI Thinking Trace</p>
-                </div>
-                <p className="text-sm font-bold break-words">{statusMessage}</p>
-             </div>
+      {/* Main Content: Bars + Code Panel */}
+      <div className="flex-1 flex gap-4 min-h-[400px] lg:min-h-[500px]">
+        {/* Bar Visualization */}
+        <div className={`bg-background border-4 border-text flex items-end justify-center gap-1 p-6 pt-12 relative overflow-hidden shadow-brutal-md ${showCodePanel ? 'flex-1' : 'w-full'}`}>
+          {/* Thinking Overlay / AI Tooltip */}
+          {(anim.isPlaying || statusMessage) && statusMessage && (
+            <div className="absolute top-4 right-4 bg-surface border-4 border-text p-2 px-4 shadow-[4px_4px_0px_#111] animate-fade-in flex items-center gap-3 z-20 min-w-[250px] max-w-[350px]">
+               <div className="bg-primary border-2 border-text rounded-none p-1.5 flex-shrink-0 shadow-[2px_2px_0px_#111]">
+                  <BrainCircuit size={18} className="text-text animate-pulse" />
+               </div>
+               <div className="flex-1 overflow-hidden">
+                  <div className="flex justify-between items-center mb-0.5">
+                     <p className="text-[10px] font-black text-text uppercase tracking-widest border-b-2 border-text pb-0.5 inline-block">AI Thinking Trace</p>
+                  </div>
+                  <p className="text-sm font-bold break-words">{statusMessage}</p>
+               </div>
+            </div>
+          )}
+
+          {array.map((val, idx) => {
+            const isSorted = sortedIndices.includes(idx);
+            const isComparing = comparing.includes(idx);
+            const isSwapping = swapping.includes(idx);
+            const isActive = activeIndices.includes(idx);
+            const isPivot = pivotIndex === idx;
+            const heightPercent = (val / maxVal) * 75; // Leave top 25% empty for AI trace
+
+            let barColor = 'bg-text';
+            if (isPivot) barColor = 'bg-warning';
+            else if (isSwapping) barColor = 'bg-danger';
+            else if (isComparing) barColor = 'bg-primary opacity-60';
+            else if (isActive) barColor = 'bg-primary';
+            else if (isSorted) barColor = 'bg-success';
+
+            return (
+              <div
+                key={idx}
+                className={`transition-all duration-100 ${barColor} border-2 border-text relative group shadow-[2px_2px_0px_#111]`}
+                style={{
+                  height: `${heightPercent}%`,
+                  width: `${Math.max(100 / array.length - 1, 3)}%`,
+                  minWidth: '10px',
+                }}
+              >
+                {array.length <= 30 && (
+                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-black text-text">
+                    {val}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+
+        </div>
+
+        {/* Code Tracing Panel */}
+        {showCodePanel && (
+          <div className="w-[420px] xl:w-[460px] flex-shrink-0 hidden lg:flex flex-col">
+            <CodeTracer
+              algorithm={algorithm}
+              statusMessage={statusMessage}
+              comparing={comparing}
+              swapping={swapping}
+              sortedIndices={sortedIndices}
+              isPlaying={anim.isPlaying}
+            />
           </div>
         )}
-
-        {array.map((val, idx) => {
-          const isSorted = sortedIndices.includes(idx);
-          const isComparing = comparing.includes(idx);
-          const isSwapping = swapping.includes(idx);
-          const isActive = activeIndices.includes(idx);
-          const isPivot = pivotIndex === idx;
-          const heightPercent = (val / maxVal) * 75; // Leave top 25% empty for AI trace
-
-          let barColor = 'bg-text';
-          if (isPivot) barColor = 'bg-warning';
-          else if (isSwapping) barColor = 'bg-danger';
-          else if (isComparing) barColor = 'bg-primary opacity-60';
-          else if (isActive) barColor = 'bg-primary';
-          else if (isSorted) barColor = 'bg-success';
-
-          return (
-            <div
-              key={idx}
-              className={`transition-all duration-100 ${barColor} border-2 border-text relative group shadow-[2px_2px_0px_#111]`}
-              style={{
-                height: `${heightPercent}%`,
-                width: `${Math.max(100 / array.length - 1, 3)}%`,
-                minWidth: '10px',
-              }}
-            >
-              {array.length <= 30 && (
-                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-black text-text">
-                  {val}
-                </span>
-              )}
-            </div>
-          );
-        })}
-
       </div>
 
       {/* Controls */}
