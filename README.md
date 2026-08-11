@@ -214,7 +214,7 @@ Designed, architected, and developed by **Pranav Landge**.
 
 - 🌐 **Portfolio**: [pranavlandge.in](https://pranavlandge.in)
 - 🐙 **GitHub**: [@Pranav-496](https://github.com/Pranav-496)
-- 💼 **LinkedIn**: [Pranav Landge](https://linkedin.com/in/pranav-landge)
+- 💼 **LinkedIn**: [Pranav Landge](https://www.linkedin.com/in/pranav-landge-064072329)
 
 ---
 
