@@ -4,6 +4,7 @@
   "description": "AI-Powered DSA Platform + Interview System",
   "scripts": {
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "postinstall": "cd backend && npm install",
     "build": "cd backend && npm install",
     "build:frontend": "cd frontend && npm install --include=dev && npm run build",
     "start": "cd backend && node server.js",
