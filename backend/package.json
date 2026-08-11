@@ -4,7 +4,7 @@
   "description": "AlgoNova Backend API Service",
   "main": "server.js",
   "scripts": {
-    "build": "echo 'Backend build complete'",
+    "build": "npm install",
     "start": "node server.js",
     "dev": "node server.js"
   },
