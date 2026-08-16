@@ -215,9 +215,3 @@ Designed, architected, and developed by **Pranav Landge**.
 - 🌐 **Portfolio**: [pranavlandge.in](https://pranavlandge.in)
 - 🐙 **GitHub**: [@Pranav-496](https://github.com/Pranav-496)
 - 💼 **LinkedIn**: [Pranav Landge](https://www.linkedin.com/in/pranav-landge-064072329)
-
----
-
-<div align="center">
-  <p>Distributed under the <strong>MIT License</strong>. Copyright © 2026 Pranav Landge.</p>
-</div>
