@@ -162,8 +162,8 @@ export default function VoiceAI() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 text-text pb-12">
       {/* Header */}
-      <div className="text-center space-y-3 mb-8 bg-surface border-4 border-text p-8 shadow-[8px_8px_0px_#111]">
-        <h2 className="text-4xl font-geist font-black uppercase tracking-widest text-text">
+      <div className="text-center space-y-3 mb-8 bg-surface border border-border p-8 shadow-[8px_8px_0px_#111]">
+        <h2 className="text-4xl font-geist font-bold uppercase tracking-widest text-text">
           Voice AI Evaluator
         </h2>
         <p className="text-text font-bold text-lg">
@@ -171,7 +171,7 @@ export default function VoiceAI() {
         </p>
 
         <div className="flex items-center justify-center gap-4 mt-6">
-          <label className="text-sm font-black uppercase tracking-widest text-text">Topic:</label>
+          <label className="text-sm font-bold uppercase tracking-widest text-text">Topic:</label>
           <select
             value={topic}
             onChange={(e) => {
@@ -179,7 +179,7 @@ export default function VoiceAI() {
               setResults(null);
               setTranscript("");
             }}
-            className="bg-background border-4 border-text text-text font-bold px-4 py-2 rounded-none text-sm focus:border-primary outline-none shadow-[2px_2px_0px_#111] cursor-pointer"
+            className="bg-background border border-border text-text font-bold px-4 py-2 rounded-none text-sm focus:border-primary outline-none shadow-soft cursor-pointer"
           >
             {TOPICS.map((t) => (
               <option key={t} value={t}>
@@ -191,13 +191,13 @@ export default function VoiceAI() {
       </div>
 
       {/* Recording Area */}
-      <div className="bg-background border-4 border-text shadow-[8px_8px_0px_#111] p-10 flex flex-col items-center justify-center relative overflow-hidden">
+      <div className="bg-background border border-border shadow-[8px_8px_0px_#111] p-10 flex flex-col items-center justify-center relative overflow-hidden">
         {isRecording && (
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0 bg-primary/20 animate-pulse"></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border-4 border-text animate-ping"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-border animate-ping"></div>
             <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border-4 border-text animate-ping"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-border animate-ping"
               style={{ animationDelay: "0.5s" }}
             ></div>
           </div>
@@ -206,11 +206,11 @@ export default function VoiceAI() {
         <button
           onClick={toggleRecording}
           disabled={isAnalyzing}
-          className={`relative z-10 w-28 h-28 rounded-full flex items-center justify-center border-4 border-text transition-all duration-300
+          className={`relative z-10 w-28 h-28 rounded-full flex items-center justify-center border border-border transition-all duration-300
             ${
               isRecording
                 ? "bg-danger text-surface shadow-[8px_8px_0px_#111] translate-y-[-4px]"
-                : "bg-surface text-text hover:bg-primary hover:shadow-[8px_8px_0px_#111] hover:-translate-y-1 shadow-[4px_4px_0px_#111]"
+                : "bg-surface text-text hover:bg-primary hover:shadow-[8px_8px_0px_#111] hover:-translate-y-1 shadow-card"
             }
             ${isAnalyzing ? "opacity-50 cursor-not-allowed" : ""}`}
         >
@@ -221,27 +221,27 @@ export default function VoiceAI() {
           )}
         </button>
 
-        <p className="mt-8 text-lg font-black uppercase tracking-wider text-text">
+        <p className="mt-8 text-lg font-bold uppercase tracking-wider text-text">
           {isAnalyzing
             ? "🧠 Analyzing your response..."
             : isRecording
               ? "🎙️ Listening & Recording..."
               : "Click to start your explanation"}
         </p>
-        <p className="text-sm font-bold text-text/80 mt-2 bg-surface px-3 py-1 border-2 border-text shadow-[2px_2px_0px_#111]">
+        <p className="text-sm font-bold text-text/80 mt-2 bg-surface px-3 py-1 border border-border shadow-soft">
           {isRecording ? "Click again to stop and analyze" : `Topic: ${topic}`}
         </p>
         {!("webkitSpeechRecognition" in window) &&
           !("SpeechRecognition" in window) && (
-            <p className="text-xs font-bold uppercase text-warning bg-text px-3 py-1 mt-4 shadow-[2px_2px_0px_#111]">
+            <p className="text-xs font-bold uppercase text-warning bg-text px-3 py-1 mt-4 shadow-soft">
               ⚠️ Speech recognition not supported in this browser. Using sample
               transcripts.
             </p>
           )}
 
         {transcript && (
-          <div className="mt-8 w-full bg-surface border-4 border-text p-6 relative shadow-inner">
-            <div className="absolute -top-4 -right-4 bg-primary border-4 border-text rounded-none p-2 shadow-[2px_2px_0px_#111]">
+          <div className="mt-8 w-full bg-surface border border-border p-6 relative shadow-inner">
+            <div className="absolute -top-4 -right-4 bg-primary border border-border rounded-none p-2 shadow-soft">
               <Volume2 className="text-text" size={20} />
             </div>
             <p className="text-text text-lg font-bold leading-relaxed italic">
@@ -274,25 +274,25 @@ export default function VoiceAI() {
           </div>
 
           {/* Detailed Feedback */}
-          <div className="bg-surface border-4 border-text p-6 shadow-[8px_8px_0px_#111]">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b-4 border-text">
+          <div className="bg-surface border border-border p-6 shadow-[8px_8px_0px_#111]">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
               <BrainCircuit size={24} className="text-text" />
-              <h3 className="text-2xl font-black font-geist uppercase tracking-widest text-text">
+              <h3 className="text-2xl font-bold font-geist uppercase tracking-widest text-text">
                 AI Feedback
               </h3>
             </div>
-            <p className="text-text text-lg font-bold bg-background border-4 border-text p-4 leading-relaxed shadow-inner">
+            <p className="text-text text-lg font-bold bg-background border border-border p-4 leading-relaxed shadow-inner">
               {results.feedback}
             </p>
 
             {results.matchedKeywords && results.matchedKeywords.length > 0 && (
               <div className="mt-6">
-                <p className="text-sm font-black uppercase text-text mb-3">Keywords matched:</p>
+                <p className="text-sm font-bold uppercase text-text mb-3">Keywords matched:</p>
                 <div className="flex flex-wrap gap-2">
                   {results.matchedKeywords.map((kw, i) => (
                     <span
                       key={i}
-                      className="text-xs font-black uppercase px-3 py-1 bg-success text-surface border-2 border-text shadow-[2px_2px_0px_#111]"
+                      className="text-xs font-bold uppercase px-3 py-1 bg-success text-surface border border-border shadow-soft"
                     >
                       {kw}
                     </span>
@@ -302,16 +302,16 @@ export default function VoiceAI() {
             )}
 
             {results.missedSteps && results.missedSteps.length > 0 && (
-              <div className="mt-6 border-4 border-text bg-warning p-4 shadow-[4px_4px_0px_#111]">
-                <p className="text-text font-black text-lg uppercase mb-3 flex items-center gap-2">
-                  <span className="bg-surface text-text px-2 py-0.5 border-2 border-text">⚠</span>
+              <div className="mt-6 border border-border bg-warning p-4 shadow-card">
+                <p className="text-text font-bold text-lg uppercase mb-3 flex items-center gap-2">
+                  <span className="bg-surface text-text px-2 py-0.5 border border-border">⚠</span>
                   Concept gaps detected:
                 </p>
                 <ul className="space-y-2">
                   {results.missedSteps.map((step, i) => (
                     <li
                       key={i}
-                      className="text-text font-bold text-base flex items-center gap-3 bg-surface p-2 border-2 border-text"
+                      className="text-text font-bold text-base flex items-center gap-3 bg-surface p-2 border border-border"
                     >
                       <span className="w-3 h-3 bg-text flex-shrink-0"></span>
                       Mention "{step}"
@@ -344,16 +344,16 @@ function ScoreCard({ title, score, color }) {
 
   return (
     <div
-      className={`bg-surface p-6 flex flex-col items-center justify-center border-4 border-text shadow-[6px_6px_0px_#111] transition-all hover:-translate-y-1 hover:shadow-[8px_8px_0px_#111]`}
+      className={`bg-surface p-6 flex flex-col items-center justify-center border border-border shadow-[6px_6px_0px_#111] transition-all hover:-translate-y-1 hover:shadow-[8px_8px_0px_#111]`}
     >
-      <p className="text-text font-black text-sm uppercase tracking-widest mb-3 bg-background px-3 py-1 border-2 border-text shadow-inner">
+      <p className="text-text font-bold text-sm uppercase tracking-widest mb-3 bg-background px-3 py-1 border border-border shadow-inner">
         {title}
       </p>
-      <p className="text-5xl font-black font-geist text-text">
+      <p className="text-5xl font-bold font-geist text-text">
         {Math.round(numScore)}%
       </p>
       {/* Progress bar */}
-      <div className="w-full mt-6 bg-background border-2 border-text h-3 overflow-hidden shadow-inner">
+      <div className="w-full mt-6 bg-background border border-border h-3 overflow-hidden shadow-inner">
         <div
           className={`${c.bg} h-full transition-all duration-1000 border-r-2 border-text`}
           style={{ width: `${numScore}%` }}

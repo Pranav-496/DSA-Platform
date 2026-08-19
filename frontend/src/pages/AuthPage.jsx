@@ -67,7 +67,7 @@ function GoogleAuthButtonContent({ onGoogleSuccess, loading }) {
     <div className="w-full mt-4 flex flex-col items-center">
       <div className="w-full flex items-center my-3 gap-2">
         <div className="h-[2px] flex-1 bg-text opacity-30"></div>
-        <span className="font-black text-xs uppercase tracking-wider text-text/70 px-2">OR</span>
+        <span className="font-bold text-xs uppercase tracking-wider text-text/70 px-2">OR</span>
         <div className="h-[2px] flex-1 bg-text opacity-30"></div>
       </div>
       
@@ -75,7 +75,7 @@ function GoogleAuthButtonContent({ onGoogleSuccess, loading }) {
         type="button"
         disabled={loading}
         onClick={handleClick}
-        className="w-full py-2.5 px-4 bg-surface border-4 border-text rounded-lg shadow-brutal-sm hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#111] active:translate-y-0 active:shadow-none transition-all flex items-center justify-center gap-3 font-bold text-sm uppercase cursor-pointer"
+        className="w-full py-2.5 px-4 bg-surface border border-border rounded-lg shadow-soft hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#111] active:translate-y-0 active:shadow-none transition-all flex items-center justify-center gap-3 font-bold text-sm uppercase cursor-pointer"
       >
         <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -289,7 +289,7 @@ export default function AuthPage() {
             <div className="mb-4">
               <img src="/favicon.svg" alt="AlgoNova Logo" className="w-16 h-16" />
             </div>
-            <h1 className="text-2xl font-geist font-black uppercase tracking-tight mb-1">
+            <h1 className="text-2xl font-geist font-bold uppercase tracking-tight mb-1">
               {titles[mode]}
             </h1>
             <p className="font-medium opacity-80 text-sm">
@@ -298,13 +298,13 @@ export default function AuthPage() {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-danger border-4 border-text rounded-lg text-surface font-bold text-sm">
+            <div className="mb-6 p-4 bg-danger border border-border rounded-lg text-surface font-bold text-sm">
               ERROR: {error}
             </div>
           )}
           
           {successMsg && (
-            <div className="mb-6 p-4 bg-success border-4 border-text rounded-lg text-surface font-bold text-sm">
+            <div className="mb-6 p-4 bg-success border border-border rounded-lg text-surface font-bold text-sm">
               SUCCESS: {successMsg}
             </div>
           )}
@@ -312,7 +312,7 @@ export default function AuthPage() {
           {renderForm()}
 
           {(mode === 'login' || mode === 'register') && (
-            <div className="mt-6 pt-4 border-t-4 border-text text-center font-bold text-sm">
+            <div className="mt-6 pt-4 border-t border-border text-center font-bold text-sm">
               {mode === 'login' ? "Don't have an account? " : "Already have an account? "}
               <button
                 onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); setSuccessMsg(''); setConfirmPassword(''); }}

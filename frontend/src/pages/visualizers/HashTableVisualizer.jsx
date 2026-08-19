@@ -152,26 +152,26 @@ export default function HashTableVisualizer() {
       <div className="flex flex-wrap items-center gap-2">
         {Object.entries(operations).map(([key, op]) => (
           <button key={key} onClick={() => { setOperation(key); resetHighlights(); }}
-            className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-wider transition-all border-2
-              ${operation === key ? 'bg-primary text-text border-text shadow-[2px_2px_0px_#111]'
+            className={`px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-all border-2
+              ${operation === key ? 'bg-primary text-text border-text shadow-soft'
                 : 'bg-surface text-text/70 border-text hover:text-text hover:bg-background'}`}>
             {op.label}
           </button>
         ))}
         <div className="ml-auto flex items-center gap-2">
           <input type="number" value={inputVal} onChange={(e) => setInputVal(e.target.value)}
-            placeholder="Value" className="w-20 bg-surface border-2 border-text text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-[2px_2px_0px_#111]" />
+            placeholder="Value" className="w-20 bg-surface border border-border text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-soft" />
         </div>
       </div>
 
       {/* Description */}
-      <div className="bg-surface border-2 border-text rounded-lg px-4 py-2 flex items-center justify-between shadow-brutal-sm">
+      <div className="bg-surface border border-border rounded-lg px-4 py-2 flex items-center justify-between shadow-soft">
         <p className="text-text/70 text-sm font-geist">Hash Table with separate chaining. Hash function: <span className="text-primary font-mono font-bold">h(k) = k % {TABLE_SIZE}</span></p>
         {hashResult && <span className="text-warning text-xs font-mono font-bold">{hashResult}</span>}
       </div>
 
       {/* Hash Table Visualization */}
-      <div className="flex-1 bg-surface border-4 border-text shadow-brutal p-6 flex flex-col gap-2 min-h-[150px] relative overflow-auto rounded-lg">
+      <div className="flex-1 bg-surface border border-border shadow-card p-6 flex flex-col gap-2 min-h-[150px] relative overflow-auto rounded-lg">
         <div className="absolute top-3 right-4 text-xs text-text/70 font-mono font-bold">{statusMessage}</div>
 
         {table.map((chain, slotIdx) => {
@@ -179,8 +179,8 @@ export default function HashTableVisualizer() {
           return (
             <div key={slotIdx} className="flex items-center gap-2">
               {/* Slot index */}
-              <div className={`w-12 h-10 flex items-center justify-center rounded-lg border-2 font-mono font-black text-sm transition-all duration-300
-                ${isActive ? 'border-primary bg-primary/20 text-text shadow-[2px_2px_0px_#111]' : 'border-text bg-background text-text/70'}`}>
+              <div className={`w-12 h-10 flex items-center justify-center rounded-lg border-2 font-mono font-bold text-sm transition-all duration-300
+                ${isActive ? 'border-primary bg-primary/20 text-text shadow-soft' : 'border-text bg-background text-text/70'}`}>
                 [{slotIdx}]
               </div>
 
@@ -198,12 +198,12 @@ export default function HashTableVisualizer() {
                     const isFoundI = foundItem === val;
 
                     let cls = 'border-text bg-background text-text';
-                    if (isFoundI) cls = 'border-success bg-success/20 text-success shadow-[2px_2px_0px_#111]';
-                    else if (isActiveI) cls = 'border-warning bg-warning/20 text-warning shadow-[2px_2px_0px_#111]';
+                    if (isFoundI) cls = 'border-success bg-success/20 text-success shadow-soft';
+                    else if (isActiveI) cls = 'border-warning bg-warning/20 text-warning shadow-soft';
 
                     return (
                       <React.Fragment key={chainIdx}>
-                        <div className={`px-4 py-2 rounded-lg border-2 font-mono font-black text-sm transition-all duration-300 ${cls}`}>
+                        <div className={`px-4 py-2 rounded-lg border-2 font-mono font-bold text-sm transition-all duration-300 ${cls}`}>
                           {val}
                         </div>
                         {chainIdx < chain.length - 1 && (

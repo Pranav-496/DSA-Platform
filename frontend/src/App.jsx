@@ -22,6 +22,7 @@ import {
   Moon,
   FileSearch,
   Swords,
+  ChevronRight,
 } from "lucide-react";
 import { AuthContext } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
@@ -40,7 +41,7 @@ import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import ResumeScreener from "./pages/ResumeScreener";
 import AlgorithmRace from "./pages/AlgorithmRace";
-
+import CustomVisualizer from "./pages/CustomVisualizer";
 function MainLayout() {
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -48,7 +49,7 @@ function MainLayout() {
   const location = useLocation();
 
   const [theme, setTheme] = React.useState(() => {
-    return localStorage.getItem("theme") || "light";
+    return localStorage.getItem("theme") || "dark";
   });
 
   React.useEffect(() => {
@@ -99,34 +100,48 @@ function MainLayout() {
   const shouldShowSidebar = !hideSidebarRoutes.includes(location.pathname);
 
   return (
-    <div className="flex flex-col bg-background h-[100dvh] w-full max-w-[100vw] overflow-hidden text-text font-geist">
-      {/* Sticky Top Navbar */}
+    <div className="flex flex-col bg-background h-[100dvh] w-full max-w-[100vw] overflow-hidden text-text font-inter">
+      {/* Top Navbar */}
       {shouldShowSidebar && (
-        <header className="sticky top-0 z-30 bg-surface border-b-2 border-text shadow-[0px_2px_0px_var(--text-color)] flex items-center justify-between px-3 md:px-4 py-1.5 shrink-0">
+        <header className="sticky top-0 z-30 glass border-b border-border flex items-center justify-between px-4 md:px-6 py-2.5 shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="px-2 py-1 bg-primary border-2 border-text rounded shadow-[2px_2px_0px_var(--text-color)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_var(--text-color)] transition-all flex items-center gap-1.5"
+              className="p-2 rounded-xl hover:bg-surface-alt transition-colors"
             >
-              <Menu size={18} className="text-text" />
-              <span className="text-xs font-bold uppercase tracking-wider hidden md:inline">Menu</span>
+              <Menu size={20} className="text-text" />
             </button>
-            <h1 className="font-black text-lg tracking-tighter uppercase hidden lg:block ml-2">
-              AlgoNova
-            </h1>
+            <Link to="/dashboard" className="flex items-center gap-2">
+              <img src="/favicon.svg" alt="Logo" className="w-7 h-7" />
+              <h1 className="font-geist font-extrabold text-lg tracking-tight hidden lg:block">
+                AlgoNova
+              </h1>
+            </Link>
           </div>
-          <button
-            onClick={toggleTheme}
-            className="px-2 py-1 bg-primary border-2 border-text rounded shadow-[2px_2px_0px_var(--text-color)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_var(--text-color)] transition-all flex items-center gap-1.5"
-            title="Toggle Theme"
-          >
-            {theme === "light" ? (
-              <Moon size={18} className="text-text" />
-            ) : (
-              <Sun size={18} className="text-text" />
-            )}
-            <span className="text-xs font-bold uppercase tracking-wider hidden md:inline">Theme</span>
-          </button>
+
+          <div className="flex items-center gap-2">
+            {/* Search trigger */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-alt border border-border text-text-muted text-sm hover:border-primary/40 transition-colors"
+            >
+              <Search size={15} />
+              <span>Search...</span>
+              <kbd className="ml-4 text-[10px] font-mono bg-background px-1.5 py-0.5 rounded border border-border">⌘K</kbd>
+            </button>
+
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl hover:bg-surface-alt transition-colors"
+              title="Toggle Theme"
+            >
+              {theme === "light" ? (
+                <Moon size={18} className="text-text-muted" />
+              ) : (
+                <Sun size={18} className="text-text-muted" />
+              )}
+            </button>
+          </div>
         </header>
       )}
 
@@ -136,47 +151,51 @@ function MainLayout() {
 
       {/* Search Overlay */}
       {searchOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-start justify-center pt-20 p-4">
-          <div className="w-full max-w-2xl mx-auto brutal-card bg-surface p-6 shadow-brutal-lg">
-            <div className="flex items-center gap-4 mb-6 border-b-4 border-text pb-4">
-              <Search className="text-text" size={28} />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-start justify-center pt-[12vh] p-4">
+          <div className="w-full max-w-xl mx-auto bg-surface rounded-2xl border border-border shadow-glass overflow-hidden animate-fade-in">
+            <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
+              <Search className="text-text-muted" size={20} />
               <input
                 type="text"
-                placeholder="Search algorithms, problems, quizzes... (Ctrl+K)"
+                placeholder="Search algorithms, problems, quizzes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 bg-transparent text-xl font-bold placeholder-text/50 outline-none"
+                className="flex-1 bg-transparent text-base font-medium placeholder-text-muted/50 outline-none"
                 autoFocus
               />
-              <button onClick={() => { setSearchOpen(false); setSearchQuery(""); setSidebarOpen(false); }} className="text-text hover:bg-danger hover:text-surface border-2 border-transparent hover:border-text p-1 transition-all">
-                <X size={28} />
+              <button onClick={() => { setSearchOpen(false); setSearchQuery(""); setSidebarOpen(false); }}
+                className="text-text-muted hover:text-text p-1 transition-colors">
+                <X size={18} />
               </button>
             </div>
-            <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+            <div className="max-h-80 overflow-y-auto p-2">
               {searchResults.map((result, i) => (
                 <Link
                   key={i}
                   to={result.path}
                   onClick={() => { setSearchOpen(false); setSearchQuery(""); setSidebarOpen(false); }}
-                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-primary border-4 border-transparent hover:border-text transition-all group shadow-sm hover:shadow-brutal-sm"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-alt transition-colors group"
                 >
-                  <result.icon size={24} className="text-text" />
-                  <div>
-                    <p className="font-black text-lg uppercase tracking-tight">{result.title}</p>
-                    <p className="font-bold text-sm opacity-80">{result.type}</p>
+                  <div className="p-2 rounded-lg bg-surface-alt group-hover:bg-primary/10 transition-colors">
+                    <result.icon size={16} className="text-text-muted group-hover:text-primary" />
                   </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm">{result.title}</p>
+                    <p className="text-xs text-text-muted">{result.type}</p>
+                  </div>
+                  <ChevronRight size={14} className="text-text-muted/40 group-hover:text-primary" />
                 </Link>
               ))}
               {searchQuery && searchResults.length === 0 && (
-                <p className="text-center py-8 font-bold text-lg border-4 border-dashed border-text bg-background">No results found for "{searchQuery}"</p>
+                <p className="text-center py-8 text-text-muted text-sm">No results for "{searchQuery}"</p>
               )}
             </div>
           </div>
         </div>
       )}
 
-      {/* Main Content Pane */}
-      <main className="flex-1 p-2 md:p-4 relative overflow-y-auto h-full w-full transition-all">
+      {/* Main Content */}
+      <main className="flex-1 p-3 md:p-5 relative overflow-y-auto h-full w-full transition-all">
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -185,6 +204,7 @@ function MainLayout() {
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/visualize" element={<Visualizer />} />
+          <Route path="/custom-visualizer" element={<CustomVisualizer />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/interview" element={<InterviewPrep />} />
           <Route path="/system-design" element={<SystemDesign />} />
@@ -221,6 +241,7 @@ function Sidebar({ setSearchOpen, sidebarOpen, setSidebarOpen }) {
     { to: "/leaderboard", icon: Trophy, label: "Global Arena" },
     { to: "/learn", icon: BookOpen, label: "Learn Path" },
     { to: "/visualize", icon: BarChart3, label: "Visualizer" },
+    { to: "/custom-visualizer", icon: Code, label: "Code Visualizer" },
     { to: "/race", icon: Swords, label: "Algorithm Race" },
     { to: "/practice", icon: Terminal, label: "Practice HQ" },
     { to: "/interview", icon: Mic, label: "Interview Prep" },
@@ -237,95 +258,100 @@ function Sidebar({ setSearchOpen, sidebarOpen, setSidebarOpen }) {
       {/* Backdrop */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Drawer */}
-      <aside className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition duration-200 ease-in-out w-64 bg-surface border-r-8 border-text flex flex-col items-center py-6 z-50 shadow-[4px_0_0_#111] h-screen`}>
+      <aside className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition duration-300 ease-out w-72 bg-surface border-r border-border flex flex-col z-50 shadow-glass h-screen`}>
         
-        {/* Close Button */}
-        <button 
-          onClick={() => setSidebarOpen(false)}
-          className="absolute top-4 right-4 p-1 hover:bg-danger hover:text-surface border-2 border-transparent hover:border-text transition-all rounded"
-        >
-          <X size={24} />
-        </button>
-      <div className="flex items-center gap-3 mb-10 px-6 w-full">
-        <img src="/favicon.svg" alt="AlgoNova Logo" className="w-10 h-10" />
-        <h1 className="text-2xl font-black uppercase tracking-tighter">
-          AlgoNova
-        </h1>
-      </div>
-
-      <nav className="w-full flex-1 px-4 space-y-2 overflow-y-auto min-h-0">
-        {/* Search Button */}
-        <button
-          onClick={handleSearchClick}
-          className="w-full text-left px-4 py-3 rounded-lg border-4 border-text bg-background hover:bg-primary transition-all shadow-brutal-sm hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#111] mb-6"
-        >
-          <div className="flex items-center gap-3">
-            <Search size={20} className="text-text" />
-            <span className="font-bold text-sm tracking-wide">
-              Search (Ctrl+K)
-            </span>
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-5">
+          <div className="flex items-center gap-2.5">
+            <img src="/favicon.svg" alt="AlgoNova Logo" className="w-8 h-8" />
+            <h1 className="text-xl font-geist font-extrabold tracking-tight">
+              AlgoNova
+            </h1>
           </div>
-        </button>
-
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = item.matchExact
-            ? location.pathname === item.to
-            : location.pathname.startsWith(item.to);
-
-          return (
-            <Link
-              key={item.to}
-              to={item.to}
-              onClick={() => setSidebarOpen(false)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg border-4 transition-all group relative
-                ${
-                  isActive
-                    ? "bg-primary border-text shadow-[4px_4px_0px_#111] -translate-y-1"
-                    : "bg-transparent border-transparent hover:border-text hover:bg-background"
-                }`}
-            >
-              <Icon size={20} className="text-text" />
-              <span className="font-bold text-sm uppercase tracking-wide">
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Bottom section */}
-      <div className="px-4 w-full mt-auto pt-4 border-t-4 border-text flex flex-col gap-3">
-        {user && (
-          <Link to="/profile" className="flex items-center gap-3 p-3 bg-surface border-4 border-text rounded-lg shadow-brutal-sm hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111] transition-all cursor-pointer block">
-            <div className="w-10 h-10 rounded-full bg-warning border-4 border-text flex items-center justify-center flex-shrink-0">
-              <User size={20} className="text-text" />
-            </div>
-            <div className="min-w-0">
-               <p className="text-sm font-black truncate uppercase">{user.name || "Operator"}</p>
-               <p className="text-xs font-bold opacity-70 truncate">{user.email}</p>
-            </div>
-          </Link>
-        )}
-        <div className="p-2.5 bg-background border-2 border-text rounded-lg text-center text-xs font-bold shadow-brutal-sm">
-          <span className="opacity-90">Designed & Developed by <strong>Pranav Landge</strong></span>
-          <a 
-            href="https://pranavlandge.in" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-primary hover:underline font-extrabold block mt-1"
+          <button 
+            onClick={() => setSidebarOpen(false)}
+            className="p-1.5 rounded-lg hover:bg-surface-alt text-text-muted hover:text-text transition-colors"
           >
-            Explore on pranavlandge.in ↗
-          </a>
+            <X size={18} />
+          </button>
         </div>
-      </div>
-    </aside>
+
+        {/* Search */}
+        <div className="px-4 mb-2">
+          <button
+            onClick={handleSearchClick}
+            className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface-alt border border-border text-text-muted text-sm hover:border-primary/40 transition-colors"
+          >
+            <Search size={15} />
+            <span>Search...</span>
+            <kbd className="ml-auto text-[10px] font-mono bg-background px-1.5 py-0.5 rounded border border-border">⌘K</kbd>
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto min-h-0">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = item.matchExact
+              ? location.pathname === item.to
+              : location.pathname.startsWith(item.to);
+
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-150 group relative text-sm
+                  ${
+                    isActive
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-text-muted hover:text-text hover:bg-surface-alt"
+                  }`}
+              >
+                {isActive && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full" />
+                )}
+                <Icon size={18} className={isActive ? 'text-primary' : 'text-text-muted group-hover:text-text'} />
+                <span className="font-medium">
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Bottom */}
+        <div className="px-4 py-4 mt-auto border-t border-border space-y-3">
+          {user && (
+            <Link to="/profile" onClick={() => setSidebarOpen(false)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-alt transition-colors">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
+                <User size={16} className="text-white" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold truncate">{user.name || "User"}</p>
+                <p className="text-xs text-text-muted truncate">{user.email}</p>
+              </div>
+            </Link>
+          )}
+          <div className="px-3 py-2 text-center text-[11px] text-text-muted">
+            <span>Built by <strong className="text-text font-semibold">Pranav Landge</strong></span>
+            <a 
+              href="https://pranavlandge.in" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-medium block mt-0.5"
+            >
+              pranavlandge.in ↗
+            </a>
+          </div>
+        </div>
+      </aside>
     </>
   );
 }

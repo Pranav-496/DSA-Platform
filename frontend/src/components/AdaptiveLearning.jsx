@@ -58,8 +58,8 @@ export default function AdaptiveLearning({ quizScores = {}, problemsSolved = 0, 
   }
 
   return (
-    <div className="bg-surface border-4 border-text p-5 shadow-[4px_4px_0px_#111]">
-      <h3 className="font-geist font-black uppercase text-text text-sm mb-4 flex items-center gap-2 tracking-wider pb-2 border-b-4 border-text">
+    <div className="bg-surface border border-border p-5 shadow-card">
+      <h3 className="font-geist font-bold uppercase text-text text-sm mb-4 flex items-center gap-2 tracking-wider pb-2 border-b border-border">
         <TrendingUp size={18} className="text-primary" /> ADAPTIVE LEARNING
       </h3>
 
@@ -68,7 +68,7 @@ export default function AdaptiveLearning({ quizScores = {}, problemsSolved = 0, 
           {recommendations.slice(0, 4).map((rec, i) => (
             <div
               key={i}
-              className={`p-3 border-2 border-text flex items-center justify-between gap-3 hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_#111] transition-all ${
+              className={`p-3 border border-border flex items-center justify-between gap-3 hover:-translate-y-0.5 hover:shadow-soft transition-all ${
                 rec.priority === "critical"
                   ? "bg-danger text-surface"
                   : "bg-warning text-text"
@@ -80,21 +80,21 @@ export default function AdaptiveLearning({ quizScores = {}, problemsSolved = 0, 
                     size={14}
                     className={rec.priority === "critical" ? "text-surface" : "text-text"}
                   />
-                  <span className="text-sm font-black uppercase tracking-wider truncate">{rec.topic}</span>
+                  <span className="text-sm font-bold uppercase tracking-wider truncate">{rec.topic}</span>
                   {rec.score > 0 && (
                     <span className="text-[10px] font-bold bg-background text-text px-1 border border-text shadow-inner">{rec.score}%</span>
                   )}
                 </div>
                 <p className="text-xs font-bold opacity-90 truncate">{rec.reason}</p>
                 {rec.action.problems.length > 0 && (
-                  <p className="text-xs font-black uppercase mt-2 bg-background/20 inline-block px-1 border border-text/20">
+                  <p className="text-xs font-bold uppercase mt-2 bg-background/20 inline-block px-1 border border-text/20">
                     → Try: {rec.action.problems.slice(0, 2).join(", ")}
                   </p>
                 )}
               </div>
               <Link
                 to={rec.action.path}
-                className={`flex-shrink-0 p-2 border-2 border-text transition-all hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_#111] ${
+                className={`flex-shrink-0 p-2 border border-border transition-all hover:-translate-y-0.5 hover:shadow-soft ${
                   rec.priority === "critical" ? "bg-surface text-text hover:bg-background" : "bg-surface text-text hover:bg-primary"
                 }`}
               >
@@ -106,15 +106,15 @@ export default function AdaptiveLearning({ quizScores = {}, problemsSolved = 0, 
       ) : generalTips.length > 0 ? (
         <div className="space-y-3">
           {generalTips.map((tip, i) => (
-            <div key={i} className="flex items-center gap-3 p-3 bg-background border-2 border-text hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_#111] transition-all">
+            <div key={i} className="flex items-center gap-3 p-3 bg-background border border-border hover:-translate-y-0.5 hover:shadow-soft transition-all">
               <tip.icon size={16} className={tip.color} />
               <p className="text-sm font-bold text-text">{tip.text}</p>
             </div>
           ))}
         </div>
       ) : (
-        <div className="text-center py-6 bg-success border-4 border-text shadow-[4px_4px_0px_#111]">
-          <p className="text-surface text-lg font-black uppercase mb-1 tracking-wider">🎉 All topics on track!</p>
+        <div className="text-center py-6 bg-success border border-border shadow-card">
+          <p className="text-surface text-lg font-bold uppercase mb-1 tracking-wider">🎉 All topics on track!</p>
           <p className="text-surface/80 text-xs font-bold font-mono">KEEP PRACTICING TO MAINTAIN YOUR SKILLS</p>
         </div>
       )}

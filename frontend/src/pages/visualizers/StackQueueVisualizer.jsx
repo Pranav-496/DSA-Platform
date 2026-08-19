@@ -121,29 +121,29 @@ export default function StackQueueVisualizer() {
       <div className="flex flex-wrap items-center gap-2">
         {[['stack', 'Stack (LIFO)'], ['queue', 'Queue (FIFO)']].map(([key, label]) => (
           <button key={key} onClick={() => { setMode(key); resetHighlights(); setItems([10, 20, 30]); }}
-            className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-wider transition-all border-2
-              ${mode === key ? 'bg-primary text-text border-text shadow-[2px_2px_0px_#111]'
-                : 'bg-surface text-text/70 border-text hover:text-text hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_#111]'}`}>
+            className={`px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-all border-2
+              ${mode === key ? 'bg-primary text-text border-text shadow-soft'
+                : 'bg-surface text-text/70 border-text hover:text-text hover:-translate-y-0.5 hover:shadow-soft'}`}>
             {label}
           </button>
         ))}
         <div className="ml-auto flex items-center gap-2">
           <input type="number" value={inputVal} onChange={(e) => setInputVal(e.target.value)}
-            placeholder="Value" className="w-20 bg-surface border-2 border-text text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-[2px_2px_0px_#111]" />
-          <button onClick={push} className="flex items-center gap-1 px-3 py-1.5 bg-success text-text border-2 border-text rounded-lg text-sm font-bold uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111] shadow-[2px_2px_0px_#111] transition-all">
+            placeholder="Value" className="w-20 bg-surface border border-border text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-soft" />
+          <button onClick={push} className="flex items-center gap-1 px-3 py-1.5 bg-success text-text border border-border rounded-lg text-sm font-bold uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-card shadow-soft transition-all">
             <Plus size={14} /> {mode === 'stack' ? 'Push' : 'Enqueue'}
           </button>
-          <button onClick={pop} className="flex items-center gap-1 px-3 py-1.5 bg-danger text-text border-2 border-text rounded-lg text-sm font-bold uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111] shadow-[2px_2px_0px_#111] transition-all">
+          <button onClick={pop} className="flex items-center gap-1 px-3 py-1.5 bg-danger text-text border border-border rounded-lg text-sm font-bold uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-card shadow-soft transition-all">
             <Minus size={14} /> {mode === 'stack' ? 'Pop' : 'Dequeue'}
           </button>
-          <button onClick={peek} className="px-3 py-1.5 bg-primary text-text border-2 border-text rounded-lg text-sm font-bold uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111] shadow-[2px_2px_0px_#111] transition-all">
+          <button onClick={peek} className="px-3 py-1.5 bg-primary text-text border border-border rounded-lg text-sm font-bold uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-card shadow-soft transition-all">
             Peek
           </button>
         </div>
       </div>
 
       {/* Description */}
-      <div className="bg-surface border-2 border-text rounded-lg px-4 py-2 flex items-center justify-between shadow-brutal-sm">
+      <div className="bg-surface border border-border rounded-lg px-4 py-2 flex items-center justify-between shadow-soft">
         <p className="text-text/70 text-sm font-geist">
           {mode === 'stack' ? 'Stack — Last In, First Out. Push/Pop from the top.' : 'Queue — First In, First Out. Enqueue at back, dequeue from front.'}
         </p>
@@ -155,7 +155,7 @@ export default function StackQueueVisualizer() {
       </div>
 
       {/* Visualization */}
-      <div className="flex-1 bg-surface border-4 border-text shadow-brutal rounded-lg p-8 flex items-center justify-center min-h-[150px] relative overflow-hidden">
+      <div className="flex-1 bg-surface border border-border shadow-card rounded-lg p-8 flex items-center justify-center min-h-[150px] relative overflow-hidden">
         <div className="absolute top-3 left-4 text-xs text-text/70 font-mono font-bold">{statusMessage}</div>
         <div className="absolute top-3 right-4 text-xs text-text/50 font-mono font-bold">Size: {items.length}</div>
 
@@ -174,14 +174,14 @@ export default function StackQueueVisualizer() {
 
               let cls = 'border-text bg-background text-text';
               if (isRemoving) cls = 'border-danger bg-danger/20 text-danger opacity-50 scale-90';
-              else if (isActive) cls = 'border-primary bg-primary/20 text-text shadow-[4px_4px_0px_#111]';
+              else if (isActive) cls = 'border-primary bg-primary/20 text-text shadow-card';
               else if (isTop && highlightTop) cls = 'border-warning bg-warning/20 text-warning';
 
               return (
                 <div key={idx} className={`w-48 py-3 rounded-lg border-4 font-mono font-bold text-center transition-all duration-300 text-lg relative ${cls}`}>
                   {item}
-                  {isTop && <span className="absolute -right-16 top-1/2 -translate-y-1/2 text-[10px] text-warning font-mono font-black uppercase">← TOP</span>}
-                  {idx === 0 && <span className="absolute -right-20 top-1/2 -translate-y-1/2 text-[10px] text-text/50 font-mono font-black uppercase">← BOTTOM</span>}
+                  {isTop && <span className="absolute -right-16 top-1/2 -translate-y-1/2 text-[10px] text-warning font-mono font-bold uppercase">← TOP</span>}
+                  {idx === 0 && <span className="absolute -right-20 top-1/2 -translate-y-1/2 text-[10px] text-text/50 font-mono font-bold uppercase">← BOTTOM</span>}
                 </div>
               );
             })}
@@ -190,14 +190,14 @@ export default function StackQueueVisualizer() {
         ) : (
           /* QUEUE: horizontal, front at left */
           <div className="flex items-center gap-2">
-            <span className="text-success text-xs font-mono font-black uppercase mr-2 -rotate-90">FRONT</span>
+            <span className="text-success text-xs font-mono font-bold uppercase mr-2 -rotate-90">FRONT</span>
             {items.map((item, idx) => {
               const isActive = activeIndex === idx;
               const isRemoving = removingIndex === idx;
 
               let cls = 'border-text bg-background text-text';
               if (isRemoving) cls = 'border-danger bg-danger/20 text-danger opacity-50 scale-90';
-              else if (isActive) cls = 'border-primary bg-primary/20 text-text shadow-[4px_4px_0px_#111]';
+              else if (isActive) cls = 'border-primary bg-primary/20 text-text shadow-card';
 
               return (
                 <div key={idx} className={`w-16 h-20 rounded-lg border-4 font-mono font-bold flex flex-col items-center justify-center transition-all duration-300 ${cls}`}>
@@ -211,7 +211,7 @@ export default function StackQueueVisualizer() {
                 {addingValue}
               </div>
             )}
-            <span className="text-primary text-xs font-mono font-black uppercase ml-2 -rotate-90">BACK</span>
+            <span className="text-primary text-xs font-mono font-bold uppercase ml-2 -rotate-90">BACK</span>
             {items.length === 0 && <div className="text-text/50 text-sm font-bold">Empty Queue</div>}
           </div>
         )}

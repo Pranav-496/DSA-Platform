@@ -233,7 +233,7 @@ export default function Practice() {
         <>
       {/* Problem List Sidebar */}
       <div className="w-full md:w-64 flex-shrink-0 flex flex-col gap-2 overflow-y-auto brutal-card bg-surface p-4">
-        <h3 className="text-sm font-black uppercase tracking-wider mb-2 font-geist">
+        <h3 className="text-sm font-bold uppercase tracking-wider mb-2 font-geist">
           Problems
         </h3>
         {problems.map((p) => (
@@ -241,14 +241,14 @@ export default function Practice() {
             key={p.id}
             onClick={() => setSelectedId(p.id)}
             className={`w-full text-left px-3 py-3 rounded-lg border-4 transition-all font-bold text-sm
-              ${selectedId === p.id ? "bg-primary border-text shadow-brutal-sm -translate-y-0.5" : "bg-background border-border hover:border-text hover:bg-[#E2E8F0]"}`}
+              ${selectedId === p.id ? "bg-primary border-text shadow-soft -translate-y-0.5" : "bg-background border-border hover:border-text hover:bg-[#E2E8F0]"}`}
           >
             <div className="flex flex-col gap-2">
               <span className="truncate">
                 {p.id}. {p.title}
               </span>
               <span
-                className={`text-[10px] uppercase tracking-wider font-black w-fit px-2 py-0.5 border-2 ${diffColors[p.difficulty]} rounded`}
+                className={`text-[10px] uppercase tracking-wider font-bold w-fit px-2 py-0.5 border-2 ${diffColors[p.difficulty]} rounded`}
               >
                 {p.difficulty}
               </span>
@@ -259,19 +259,19 @@ export default function Practice() {
 
       {/* Problem Description */}
       <div className="w-full md:w-96 flex-shrink-0 brutal-card bg-surface p-6 overflow-y-auto">
-        <h2 className="text-2xl font-black font-geist uppercase tracking-tight mb-4 border-b-4 border-text pb-4">
+        <h2 className="text-2xl font-bold font-geist uppercase tracking-tight mb-4 border-b border-border pb-4">
           {problem.id}. {problem.title}
         </h2>
         <div className="flex gap-2 mb-6 flex-wrap">
           <span
-            className={`text-xs px-2 py-1 rounded border-2 font-black uppercase tracking-wider ${diffColors[problem.difficulty]}`}
+            className={`text-xs px-2 py-1 rounded border-2 font-bold uppercase tracking-wider ${diffColors[problem.difficulty]}`}
           >
             {problem.difficulty}
           </span>
           {problem.tags.map((tag, i) => (
             <span
               key={i}
-              className="text-xs px-2 py-1 bg-background text-text rounded border-2 border-text font-bold flex items-center gap-1 uppercase tracking-wider"
+              className="text-xs px-2 py-1 bg-background text-text rounded border border-border font-bold flex items-center gap-1 uppercase tracking-wider"
             >
               <Tag size={12} />
               {tag}
@@ -285,9 +285,9 @@ export default function Practice() {
           {problem.examples.map((ex, i) => (
             <div
               key={i}
-              className="bg-background border-4 border-text p-4 rounded-lg space-y-2 shadow-brutal-sm"
+              className="bg-background border border-border p-4 rounded-lg space-y-2 shadow-soft"
             >
-              <p className="font-black uppercase tracking-wide">
+              <p className="font-bold uppercase tracking-wide">
                 Example {i + 1}:
               </p>
               <p className="font-mono text-sm">
@@ -309,14 +309,14 @@ export default function Practice() {
       {/* Editor + Console */}
       <div className="flex-1 flex flex-col gap-4 min-w-0">
         <div className="brutal-card bg-surface overflow-hidden flex-1 flex flex-col">
-          <div className="flex items-center justify-between px-4 py-3 bg-background border-b-4 border-text">
+          <div className="flex items-center justify-between px-4 py-3 bg-background border-b border-border">
             <div className="flex gap-2">
               {LANGS.map((lang) => (
                 <button
                   key={lang}
                   onClick={() => setLanguage(lang)}
                   className={`px-3 py-1.5 rounded text-sm font-bold border-2 transition-all uppercase tracking-wider
-                    ${language === lang ? "bg-primary border-text shadow-[2px_2px_0px_#111] -translate-y-0.5" : "bg-surface border-transparent hover:border-text"}`}
+                    ${language === lang ? "bg-primary border-text shadow-soft -translate-y-0.5" : "bg-surface border-transparent hover:border-text"}`}
                 >
                   {lang === "cpp"
                     ? "C++"
@@ -350,7 +350,7 @@ export default function Practice() {
           className={`brutal-card bg-surface p-4 flex flex-col gap-4 transition-all ${showVoice ? "h-auto" : "max-h-[400px]"}`}
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <h3 className="font-geist font-black uppercase tracking-wider text-lg">
+            <h3 className="font-geist font-bold uppercase tracking-wider text-lg">
               Terminal
             </h3>
             <div className="flex gap-3">
@@ -383,7 +383,7 @@ export default function Practice() {
 
           {/* Results Display */}
           {results && (
-            <div className="bg-background p-4 rounded-lg border-4 border-text max-h-[200px] overflow-y-auto space-y-3 font-mono shadow-inner">
+            <div className="bg-background p-4 rounded-lg border border-border max-h-[200px] overflow-y-auto space-y-3 font-mono shadow-inner">
               {results.mode === "run" && (
                 <>
                   <div
@@ -448,7 +448,7 @@ export default function Practice() {
                     results.results.map((r, i) => (
                       <div
                         key={i}
-                        className={`flex items-center gap-2 py-2 px-3 border-b-2 border-text last:border-0 ${r.passed ? "bg-success/20" : "bg-danger/20"}`}
+                        className={`flex items-center gap-2 py-2 px-3 border-b border-border last:border-0 ${r.passed ? "bg-success/20" : "bg-danger/20"}`}
                       >
                         {r.passed ? (
                           <CheckCircle size={14} className="text-success" />
@@ -483,9 +483,9 @@ export default function Practice() {
 
           {/* Voice AI Section */}
           {showVoice && (
-            <div className="mt-4 p-6 bg-surface border-4 border-primary rounded-lg flex flex-col gap-4 shadow-brutal-sm">
-              <div className="flex flex-wrap justify-between items-center gap-4 border-b-4 border-text pb-4">
-                <h4 className="font-black uppercase text-lg flex items-center gap-2 font-geist">
+            <div className="mt-4 p-6 bg-surface border-4 border-primary rounded-lg flex flex-col gap-4 shadow-soft">
+              <div className="flex flex-wrap justify-between items-center gap-4 border-b border-border pb-4">
+                <h4 className="font-bold uppercase text-lg flex items-center gap-2 font-geist">
                   <Mic size={20} /> Explain Approach
                 </h4>
                 <button
@@ -504,20 +504,20 @@ export default function Practice() {
                 />
               )}
               {voiceResults && (
-                <div className="p-4 bg-background border-4 border-text rounded-lg mt-2 shadow-brutal-sm">
-                  <p className="font-black uppercase tracking-wider mb-2 text-lg">
+                <div className="p-4 bg-background border border-border rounded-lg mt-2 shadow-soft">
+                  <p className="font-bold uppercase tracking-wider mb-2 text-lg">
                     AI Score:{" "}
-                    <span className="bg-primary px-2 border-2 border-text ml-2">
+                    <span className="bg-primary px-2 border border-border ml-2">
                       {Math.round(voiceResults.score || 0)}%
                     </span>
                   </p>
-                  <p className="font-medium text-base mb-4 bg-surface p-3 border-2 border-text rounded">
+                  <p className="font-medium text-base mb-4 bg-surface p-3 border border-border rounded">
                     {voiceResults.feedback}
                   </p>
                   {voiceResults.missedSteps &&
                     voiceResults.missedSteps.length > 0 && (
                       <div className="mt-4 border-t-2 border-dashed border-text pt-4">
-                        <strong className="uppercase font-black flex items-center gap-2 text-danger">
+                        <strong className="uppercase font-bold flex items-center gap-2 text-danger">
                           <XCircle size={16} /> Missed Concepts
                         </strong>
                         <ul className="list-disc pl-6 mt-2 font-medium">
@@ -531,31 +531,31 @@ export default function Practice() {
               )}
               {/* Speech Quality Analysis */}
               {speechData && (
-                <div className="p-4 bg-surface border-4 border-text rounded-lg mt-2 shadow-brutal-sm">
-                  <p className="font-black uppercase tracking-wider flex items-center gap-2 text-lg mb-4">
+                <div className="p-4 bg-surface border border-border rounded-lg mt-2 shadow-soft">
+                  <p className="font-bold uppercase tracking-wider flex items-center gap-2 text-lg mb-4">
                     <Zap size={20} className="text-warning" /> Speech Quality
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="text-center p-3 bg-background rounded-lg border-2 border-text shadow-[2px_2px_0px_#111]">
+                    <div className="text-center p-3 bg-background rounded-lg border border-border shadow-soft">
                       <p className="font-bold uppercase tracking-wider text-xs mb-1">Clarity</p>
                       <p
-                        className={`font-black text-2xl ${speechData.clarityScore >= 70 ? "text-success" : "text-warning"}`}
+                        className={`font-bold text-2xl ${speechData.clarityScore >= 70 ? "text-success" : "text-warning"}`}
                       >
                         {speechData.clarityScore}%
                       </p>
                     </div>
-                    <div className="text-center p-3 bg-background rounded-lg border-2 border-text shadow-[2px_2px_0px_#111]">
+                    <div className="text-center p-3 bg-background rounded-lg border border-border shadow-soft">
                       <p className="font-bold uppercase tracking-wider text-xs mb-1">Structure</p>
                       <p
-                        className={`font-black text-2xl ${speechData.structureScore >= 60 ? "text-success" : "text-warning"}`}
+                        className={`font-bold text-2xl ${speechData.structureScore >= 60 ? "text-success" : "text-warning"}`}
                       >
                         {speechData.structureScore}%
                       </p>
                     </div>
-                    <div className="text-center p-3 bg-background rounded-lg border-2 border-text shadow-[2px_2px_0px_#111]">
+                    <div className="text-center p-3 bg-background rounded-lg border border-border shadow-soft">
                       <p className="font-bold uppercase tracking-wider text-xs mb-1">Fillers</p>
                       <p
-                        className={`font-black text-2xl ${speechData.totalFillers <= 2 ? "text-success" : "text-danger"}`}
+                        className={`font-bold text-2xl ${speechData.totalFillers <= 2 ? "text-success" : "text-danger"}`}
                       >
                         {speechData.totalFillers}
                       </p>
@@ -566,7 +566,7 @@ export default function Practice() {
                       <div className="space-y-2 mt-6 border-t-2 border-dashed border-text pt-4">
                         {speechData.suggestions.map((s, i) => (
                           <p key={i} className="font-medium text-sm flex items-start gap-2">
-                            <span className="font-black text-primary text-base">→</span> {s}
+                            <span className="font-bold text-primary text-base">→</span> {s}
                           </p>
                         ))}
                       </div>

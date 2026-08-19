@@ -669,14 +669,14 @@ export default function CodeTracer({ algorithm, statusMessage, comparing, swappi
   }, [activeLineIndex]);
 
   return (
-    <div className="flex flex-col h-full bg-[#1a1a2e] border-4 border-text rounded overflow-hidden shadow-brutal-sm min-h-0">
+    <div className="flex flex-col h-full bg-[#1a1a2e] border border-border rounded overflow-hidden shadow-soft min-h-0">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-2.5 bg-[#16213e] border-b-4 border-text flex-shrink-0">
+      <div className="flex items-center justify-between px-3 py-2.5 bg-[#16213e] border-b border-border flex-shrink-0">
         <div className="flex items-center gap-2">
-          <div className="bg-primary p-1 border-2 border-text shadow-[2px_2px_0px_#111]">
+          <div className="bg-primary p-1 border border-border shadow-soft">
             <Code2 size={14} className="text-text" />
           </div>
-          <span className="text-xs font-black uppercase tracking-widest text-white">Code Trace</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-white">Code Trace</span>
         </div>
       </div>
 
@@ -686,9 +686,9 @@ export default function CodeTracer({ algorithm, statusMessage, comparing, swappi
           <button
             key={l.key}
             onClick={() => setLang(l.key)}
-            className={`px-3 py-1 text-[11px] font-black uppercase tracking-wider border-2 transition-all whitespace-nowrap
+            className={`px-3 py-1 text-[11px] font-bold uppercase tracking-wider border-2 transition-all whitespace-nowrap
               ${lang === l.key
-                ? 'bg-primary text-text border-text shadow-[2px_2px_0px_#111] -translate-y-px'
+                ? 'bg-primary text-text border-text shadow-soft -translate-y-px'
                 : 'bg-transparent text-white/50 border-transparent hover:text-white hover:border-white/20'
               }`}
           >
@@ -713,7 +713,7 @@ export default function CodeTracer({ algorithm, statusMessage, comparing, swappi
             >
               {/* Line Number */}
               <span className={`w-8 flex-shrink-0 text-right pr-1.5 py-[2px] select-none text-[10px] border-r border-white/10
-                ${isActive ? 'text-primary font-black bg-primary/10' : 'text-white/25'}`}>
+                ${isActive ? 'text-primary font-bold bg-primary/10' : 'text-white/25'}`}>
                 {idx + 1}
               </span>
 

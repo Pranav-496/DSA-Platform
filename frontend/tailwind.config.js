@@ -9,8 +9,10 @@ export default {
     extend: {
       colors: {
         primary: 'var(--primary)',
+        'primary-light': 'var(--primary-light)',
         background: 'var(--bg-color)',
         surface: 'var(--surface-color)',
+        'surface-alt': 'var(--surface-alt)',
         text: {
           DEFAULT: 'var(--text-color)',
           muted: 'var(--text-muted)'
@@ -19,6 +21,7 @@ export default {
         warning: 'var(--warning)',
         danger: 'var(--danger)',
         border: 'var(--border-color)',
+        accent: 'var(--accent)',
       },
       fontFamily: {
         geist: ['Geist', 'sans-serif'],
@@ -26,9 +29,17 @@ export default {
         mono: ['Fira Code', 'Monaco', 'monospace']
       },
       boxShadow: {
-        'brutal': '2px 2px 0px 0px rgba(17,17,17,1)',
-        'brutal-lg': '4px 4px 0px 0px rgba(17,17,17,1)',
-        'brutal-sm': '1px 1px 0px 0px rgba(17,17,17,1)',
+        'soft': '0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)',
+        'card': '0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.1)',
+        'elevated': '0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.06)',
+        'glass': '0 8px 32px rgba(0,0,0,0.12)',
+        'glow': '0 0 20px rgba(249,115,22,0.15)',
+        'glow-primary': '0 0 24px var(--primary-glow)',
+      },
+      borderRadius: {
+        'xl': '0.875rem',
+        '2xl': '1rem',
+        '3xl': '1.25rem',
       }
     },
   },

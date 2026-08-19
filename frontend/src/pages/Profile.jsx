@@ -139,7 +139,7 @@ export default function Profile() {
   return (
     <div className="text-text h-full">
       {toast && (
-        <div className={`fixed top-20 right-4 z-50 p-4 border-4 border-text shadow-brutal font-bold text-sm max-w-sm animate-slide-in ${
+        <div className={`fixed top-20 right-4 z-50 p-4 border border-border shadow-card font-bold text-sm max-w-sm animate-slide-in ${
           toast.type === 'error' ? 'bg-danger text-surface' : 'bg-success text-surface'
         }`}>
           {toast.type === 'error' ? '✕ ' : '✓ '}{toast.message}
@@ -147,34 +147,34 @@ export default function Profile() {
       )}
       <div className="flex flex-col md:flex-row justify-between md:items-start mb-8 gap-4">
         {isEditing ? (
-          <div className="flex-1 max-w-xl brutal-card bg-surface p-6 shadow-[4px_4px_0px_#111]">
+          <div className="flex-1 max-w-xl brutal-card bg-surface p-6 shadow-card">
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest mb-1">Display Name</label>
+                <label className="block text-xs font-bold uppercase tracking-widest mb-1">Display Name</label>
                 <input
                   type="text"
                   value={editForm.name}
                   onChange={(e) => setEditForm({...editForm, name: e.target.value})}
-                  className="w-full bg-background border-4 border-text px-3 py-2 font-bold focus:outline-none focus:ring-4 focus:ring-primary shadow-brutal-sm"
+                  className="w-full bg-background border border-border px-3 py-2 font-bold focus:outline-none focus:ring-4 focus:ring-primary shadow-soft"
                 />
               </div>
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest mb-1">Bio</label>
+                <label className="block text-xs font-bold uppercase tracking-widest mb-1">Bio</label>
                 <textarea
                   value={editForm.bio}
                   onChange={(e) => setEditForm({...editForm, bio: e.target.value})}
                   rows={2}
-                  className="w-full bg-background border-4 border-text px-3 py-2 font-medium focus:outline-none focus:ring-4 focus:ring-primary shadow-brutal-sm resize-none"
+                  className="w-full bg-background border border-border px-3 py-2 font-medium focus:outline-none focus:ring-4 focus:ring-primary shadow-soft resize-none"
                   placeholder="Tell us about yourself..."
                 />
               </div>
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest mb-1">Portfolio / LeetCode Link</label>
+                <label className="block text-xs font-bold uppercase tracking-widest mb-1">Portfolio / LeetCode Link</label>
                 <input
                   type="url"
                   value={editForm.website}
                   onChange={(e) => setEditForm({...editForm, website: e.target.value})}
-                  className="w-full bg-background border-4 border-text px-3 py-2 font-mono text-sm focus:outline-none focus:ring-4 focus:ring-primary shadow-brutal-sm"
+                  className="w-full bg-background border border-border px-3 py-2 font-mono text-sm focus:outline-none focus:ring-4 focus:ring-primary shadow-soft"
                   placeholder="https://..."
                 />
               </div>
@@ -191,12 +191,12 @@ export default function Profile() {
         ) : (
           <div className="flex-1">
             <div className="flex items-center gap-5">
-              <div className="w-16 h-16 rounded-full bg-primary border-4 border-text shadow-brutal-sm flex items-center justify-center flex-shrink-0">
-                <span className="text-2xl font-black text-text">{(userInfo.name || 'U').charAt(0).toUpperCase()}</span>
+              <div className="w-16 h-16 rounded-full bg-primary border border-border shadow-soft flex items-center justify-center flex-shrink-0">
+                <span className="text-2xl font-bold text-text">{(userInfo.name || 'U').charAt(0).toUpperCase()}</span>
               </div>
               <div>
                 <div className="flex items-center gap-4">
-                  <h2 className="text-4xl font-black font-geist uppercase tracking-tight">
+                  <h2 className="text-4xl font-bold font-geist uppercase tracking-tight">
                     {userInfo.name ? `${userInfo.name}` : "Operator"}
                   </h2>
                   <button onClick={() => setIsEditing(true)} className="p-2 border-4 border-transparent hover:border-text hover:bg-surface rounded transition-all text-text/50 hover:text-text shadow-none" title="Edit Profile">
@@ -212,7 +212,7 @@ export default function Profile() {
               <p className="mt-3 font-medium text-lg max-w-2xl border-l-4 border-primary pl-4">{userInfo.bio}</p>
             )}
             {userInfo.website && (
-              <a href={userInfo.website.startsWith('http') ? userInfo.website : `https://${userInfo.website}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 mt-3 text-sm font-bold bg-surface border-2 border-text px-3 py-1 shadow-brutal-sm hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#111] transition-all">
+              <a href={userInfo.website.startsWith('http') ? userInfo.website : `https://${userInfo.website}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 mt-3 text-sm font-bold bg-surface border border-border px-3 py-1 shadow-soft hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#111] transition-all">
                 <LinkIcon size={14} /> {userInfo.website.replace(/^https?:\/\//, '')}
               </a>
             )}
@@ -222,7 +222,7 @@ export default function Profile() {
         <div className="flex items-start self-start pt-2">
           <button
             onClick={handleLogout}
-            className="brutal-btn-secondary flex items-center gap-2 bg-danger text-surface border-4 border-text shadow-[2px_2px_0px_#111] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111]"
+            className="brutal-btn-secondary flex items-center gap-2 bg-danger text-surface border border-border shadow-soft hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111]"
           >
             <LogOut size={20} /> Disconnect
           </button>
@@ -235,7 +235,7 @@ export default function Profile() {
           <h3 className="font-bold text-sm uppercase tracking-wider mb-2 opacity-90">
             Global Rank
           </h3>
-          <p className="text-4xl font-black font-geist uppercase">
+          <p className="text-4xl font-bold font-geist uppercase">
             {gamify.rankTier}
           </p>
           <p className="font-bold mt-2 text-sm">{gamify.xp} Total XP</p>
@@ -246,7 +246,7 @@ export default function Profile() {
           <h3 className="font-bold text-sm uppercase tracking-wider mb-2 opacity-90">
             Problems Solved
           </h3>
-          <p className="text-4xl font-black font-geist">
+          <p className="text-4xl font-bold font-geist">
             {stats.problemsSolved}
           </p>
         </div>
@@ -256,7 +256,7 @@ export default function Profile() {
           <h3 className="font-bold text-sm uppercase tracking-wider mb-2 opacity-90">
             Accuracy Rate
           </h3>
-          <p className="text-4xl font-black font-geist">
+          <p className="text-4xl font-bold font-geist">
             {stats.accuracy}%
           </p>
         </div>
@@ -266,7 +266,7 @@ export default function Profile() {
           <h3 className="font-bold text-sm uppercase tracking-wider mb-2 opacity-90">
             Active Streak
           </h3>
-          <p className="text-4xl font-black font-geist">
+          <p className="text-4xl font-bold font-geist">
             {gamify.streak?.current || 0} Days
           </p>
         </div>
@@ -275,7 +275,7 @@ export default function Profile() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Achievements / Badges */}
         <div className="brutal-card bg-surface p-8">
-          <h3 className="text-2xl font-black uppercase font-geist mb-6 flex items-center gap-3">
+          <h3 className="text-2xl font-bold uppercase font-geist mb-6 flex items-center gap-3">
             <Medal className="w-8 h-8 text-primary" /> Earned Badges
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
@@ -287,15 +287,15 @@ export default function Profile() {
               gamify.badges.map((badge, i) => (
                 <div
                   key={i}
-                  className="bg-background border-4 border-border rounded-lg p-4 flex flex-col items-center justify-center text-center shadow-brutal-sm hover:-translate-y-1 transition-transform"
+                  className="bg-background border border-border rounded-lg p-4 flex flex-col items-center justify-center text-center shadow-soft hover:-translate-y-1 transition-transform"
                 >
                   <div
-                    className="w-16 h-16 rounded-full bg-primary border-4 border-text flex items-center justify-center mb-3"
+                    className="w-16 h-16 rounded-full bg-primary border border-border flex items-center justify-center mb-3"
                   >
                     <Award className="w-8 h-8 text-text" />
                   </div>
                   <div>
-                    <p className="font-black text-sm uppercase tracking-tight">
+                    <p className="font-bold text-sm uppercase tracking-tight">
                       {badge.name}
                     </p>
                     <p className="text-xs font-medium mt-1">
@@ -310,10 +310,10 @@ export default function Profile() {
 
         {/* Dynamic Weakness Radar / Suggestions */}
         <div className="brutal-card bg-surface p-8 flex flex-col">
-          <h3 className="text-2xl font-black uppercase font-geist mb-6 flex items-center gap-3">
+          <h3 className="text-2xl font-bold uppercase font-geist mb-6 flex items-center gap-3">
             <Activity className="w-8 h-8 text-primary" /> Optimization AI
           </h3>
-          <div className="bg-danger text-surface border-4 border-text p-6 rounded-lg shadow-brutal-sm mb-6">
+          <div className="bg-danger text-surface border border-border p-6 rounded-lg shadow-soft mb-6">
             <p className="font-bold mb-4 flex items-center gap-2 text-lg">
               <AlertTriangle className="w-6 h-6" /> Algorithmic Instability Detected
             </p>
@@ -322,23 +322,23 @@ export default function Profile() {
                 stats.weakAreas.map((area, i) => (
                   <li
                     key={i}
-                    className="font-black text-sm uppercase tracking-wider bg-surface text-danger px-3 py-1 rounded"
+                    className="font-bold text-sm uppercase tracking-wider bg-surface text-danger px-3 py-1 rounded"
                   >
                     {area}
                   </li>
                 ))
               ) : (
-                <li className="font-black text-sm uppercase tracking-wider bg-success text-surface px-3 py-1 rounded border-2 border-text">
+                <li className="font-bold text-sm uppercase tracking-wider bg-success text-surface px-3 py-1 rounded border border-border">
                   ALL SYSTEMS OPTIMAL
                 </li>
               )}
             </ul>
           </div>
           
-          <h4 className="font-black uppercase tracking-widest text-sm mb-4">
+          <h4 className="font-bold uppercase tracking-widest text-sm mb-4">
             Recommended Action
           </h4>
-          <div className="bg-background border-4 border-text p-4 rounded-lg flex items-center justify-between shadow-brutal-sm hover:-translate-y-1 transition-transform">
+          <div className="bg-background border border-border p-4 rounded-lg flex items-center justify-between shadow-soft hover:-translate-y-1 transition-transform">
             <div>
               <p className="font-bold uppercase text-lg">
                 Graph Traversal (BFS/DFS)
@@ -356,7 +356,7 @@ export default function Profile() {
 
       {/* GitHub-style Contribution Heatmap */}
       <div className="brutal-card bg-surface p-8 mb-8 col-span-full">
-        <h3 className="text-2xl font-black uppercase font-geist mb-6 flex items-center gap-3">
+        <h3 className="text-2xl font-bold uppercase font-geist mb-6 flex items-center gap-3">
           <TrendingUp className="w-8 h-8 text-primary" /> Activity Heatmap
         </h3>
         <div className="overflow-x-auto pb-4">
@@ -556,7 +556,7 @@ export function MonthSeparatedHeatmap({ heatmapObj }) {
                   <div
                     key={dIdx}
                     title={`${day.count} submissions on ${day.displayDate}`}
-                    className={`w-[14px] h-[14px] rounded-sm ${getColor(day.level)} hover:ring-2 hover:ring-text hover:scale-110 transition-all cursor-pointer shadow-brutal-sm`}
+                    className={`w-[14px] h-[14px] rounded-sm ${getColor(day.level)} hover:ring-2 hover:ring-text hover:scale-110 transition-all cursor-pointer shadow-soft`}
                   ></div>
                 );
               })}

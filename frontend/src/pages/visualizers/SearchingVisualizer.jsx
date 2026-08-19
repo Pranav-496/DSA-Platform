@@ -142,10 +142,10 @@ export default function SearchingVisualizer() {
           <button
             key={key}
             onClick={() => { setAlgorithm(key); resetVisualization(); }}
-            className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-wider transition-all border-4
+            className={`px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-all border-4
               ${algorithm === key
-                ? 'bg-primary text-text border-text shadow-[2px_2px_0px_#111]'
-                : 'bg-surface text-text/70 border-text/30 hover:text-text hover:border-text hover:shadow-[2px_2px_0px_#111]'}`}
+                ? 'bg-primary text-text border-text shadow-soft'
+                : 'bg-surface text-text/70 border-text/30 hover:text-text hover:border-text hover:shadow-soft'}`}
           >
             {val.name}
           </button>
@@ -153,40 +153,40 @@ export default function SearchingVisualizer() {
 
         <div className="ml-auto flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <label className="text-xs text-text/70 font-black uppercase tracking-wider">Target:</label>
+            <label className="text-xs text-text/70 font-bold uppercase tracking-wider">Target:</label>
             <input
               type="number"
               value={target}
               onChange={(e) => setTarget(e.target.value)}
               placeholder="e.g. 23"
-              className="w-20 bg-surface border-4 border-text text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-[2px_2px_0px_#111]"
+              className="w-20 bg-surface border border-border text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-soft"
             />
           </div>
-          <button onClick={handleNewArray} className="flex items-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-background text-text rounded-lg text-sm font-black uppercase tracking-wider border-4 border-text shadow-[2px_2px_0px_#111] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111] transition-all">
+          <button onClick={handleNewArray} className="flex items-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-background text-text rounded-lg text-sm font-bold uppercase tracking-wider border border-border shadow-soft hover:-translate-y-0.5 hover:shadow-card transition-all">
             <Shuffle size={14} /> New Array
           </button>
         </div>
       </div>
 
       {/* Description */}
-      <div className="bg-surface border-4 border-text rounded-lg px-4 py-2 flex items-center justify-between shadow-brutal-sm">
+      <div className="bg-surface border border-border rounded-lg px-4 py-2 flex items-center justify-between shadow-soft">
         <p className="text-text/70 text-sm">{info.description}</p>
         <div className="flex gap-4 text-xs">
-          <span className="text-text/70 font-black">Best: <span className="text-success font-mono">{info.best}</span></span>
-          <span className="text-text/70 font-black">Worst: <span className="text-warning font-mono">{info.time}</span></span>
+          <span className="text-text/70 font-bold">Best: <span className="text-success font-mono">{info.best}</span></span>
+          <span className="text-text/70 font-bold">Worst: <span className="text-warning font-mono">{info.time}</span></span>
         </div>
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-4 text-[10px] text-text/70 font-bold bg-surface border-4 border-text p-2 shadow-brutal-sm">
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-primary/10 border-2 border-text/30 inline-block"></span> In Range</span>
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-warning border-2 border-text inline-block"></span> Current</span>
+      <div className="flex items-center justify-center gap-4 text-[10px] text-text/70 font-bold bg-surface border border-border p-2 shadow-soft">
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-primary/10 border border-border/30 inline-block"></span> In Range</span>
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-warning border border-border inline-block"></span> Current</span>
         <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-surface border-2 border-dashed border-text/30 opacity-40 inline-block"></span> Eliminated</span>
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-success border-2 border-text inline-block"></span> Found</span>
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-success border border-border inline-block"></span> Found</span>
       </div>
 
       {/* Array Cells Visualization */}
-      <div className="flex-1 bg-background border-4 border-text shadow-brutal p-8 flex flex-col items-center justify-center min-h-[150px] relative overflow-hidden rounded-lg">
+      <div className="flex-1 bg-background border border-border shadow-card p-8 flex flex-col items-center justify-center min-h-[150px] relative overflow-hidden rounded-lg">
         <div className="absolute top-3 left-4 text-xs text-text/70 font-mono font-bold">{statusMessage}</div>
 
         {/* Binary Search Pointers */}
@@ -194,9 +194,9 @@ export default function SearchingVisualizer() {
           <div className="flex gap-[2px] mb-2 w-full justify-center">
             {array.map((_, idx) => (
               <div key={idx} className="flex flex-col items-center" style={{ width: `${Math.min(100/array.length, 5)}%`, minWidth: '30px', maxWidth: '60px' }}>
-                {idx === left && <span className="text-success text-[10px] font-mono font-black animate-bounce">L</span>}
-                {idx === mid && <span className="text-warning text-[10px] font-mono font-black animate-bounce">M</span>}
-                {idx === right && <span className="text-danger text-[10px] font-mono font-black animate-bounce">R</span>}
+                {idx === left && <span className="text-success text-[10px] font-mono font-bold animate-bounce">L</span>}
+                {idx === mid && <span className="text-warning text-[10px] font-mono font-bold animate-bounce">M</span>}
+                {idx === right && <span className="text-danger text-[10px] font-mono font-bold animate-bounce">R</span>}
                 {idx !== left && idx !== mid && idx !== right && <span className="text-transparent text-[10px]">-</span>}
               </div>
             ))}
@@ -214,8 +214,8 @@ export default function SearchingVisualizer() {
             const isInRange = algorithm === 'binary' && idx >= left && idx <= right && left >= 0;
 
             let cellClass = 'bg-surface border-text/30 text-text';
-            if (isFound) cellClass = 'bg-success border-text text-text shadow-[2px_2px_0px_#111] scale-110 border-4';
-            else if (isCurrent || isMid) cellClass = 'bg-warning border-text text-text shadow-[2px_2px_0px_#111] border-4';
+            if (isFound) cellClass = 'bg-success border-text text-text shadow-soft scale-110 border-4';
+            else if (isCurrent || isMid) cellClass = 'bg-warning border-text text-text shadow-soft border-4';
             else if (isEliminated) cellClass = 'bg-surface opacity-40 border-dashed border-text/30 text-text/50';
             else if (isVisited) cellClass = 'bg-primary/30 border-text/50 text-text';
             else if (isInRange) cellClass = 'bg-primary/10 border-text/30 text-text';
@@ -226,7 +226,7 @@ export default function SearchingVisualizer() {
                 className={`flex flex-col items-center justify-center border-2 rounded-lg transition-all duration-300 ${cellClass}`}
                 style={{ width: `${Math.min(100/array.length, 5)}%`, minWidth: '30px', maxWidth: '60px', height: '60px' }}
               >
-                <span className="font-mono font-black text-sm">{val}</span>
+                <span className="font-mono font-bold text-sm">{val}</span>
                 <span className="text-[9px] opacity-50">{idx}</span>
               </div>
             );

@@ -195,9 +195,9 @@ const MODULES = [
 ];
 
 const difficultyColors = {
-  Beginner: "bg-success text-surface border-2 border-text",
-  Intermediate: "bg-warning text-text border-2 border-text",
-  Advanced: "bg-danger text-surface border-2 border-text",
+  Beginner: "bg-success text-surface border border-border",
+  Intermediate: "bg-warning text-text border border-border",
+  Advanced: "bg-danger text-surface border border-border",
 };
 
 export default function Learn() {
@@ -206,10 +206,10 @@ export default function Learn() {
   return (
     <div className="space-y-8 w-full pb-12">
       <div className="flex items-center justify-between">
-        <h2 className="text-4xl font-geist font-black uppercase tracking-tight">
+        <h2 className="text-4xl font-geist font-bold uppercase tracking-tight">
           Learning Paths
         </h2>
-        <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-sm bg-surface border-4 border-text px-4 py-2 rounded-lg shadow-brutal-sm">
+        <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-sm bg-surface border border-border px-4 py-2 rounded-lg shadow-soft">
           <BookOpen size={20} />
           <span>{MODULES.length} modules</span>
         </div>
@@ -222,7 +222,7 @@ export default function Learn() {
             <div
               key={idx}
               className={`brutal-card bg-surface transition-all duration-200
-              ${isExpanded ? "shadow-brutal-lg -translate-y-1" : ""}`}
+              ${isExpanded ? "shadow-elevated -translate-y-1" : ""}`}
             >
               {/* Header */}
               <div
@@ -231,7 +231,7 @@ export default function Learn() {
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <div className="flex-shrink-0 bg-background border-4 border-text p-2 rounded-lg">
+                    <div className="flex-shrink-0 bg-background border border-border p-2 rounded-lg">
                       {isExpanded ? (
                         <ChevronDown size={24} className="text-text" />
                       ) : (
@@ -240,11 +240,11 @@ export default function Learn() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-3 mb-2">
-                        <h3 className="text-2xl font-black font-geist uppercase tracking-tight">
+                        <h3 className="text-2xl font-bold font-geist uppercase tracking-tight">
                           {mod.title}
                         </h3>
                         <span
-                          className={`text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-wider ${difficultyColors[mod.difficulty]}`}
+                          className={`text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider ${difficultyColors[mod.difficulty]}`}
                         >
                           {mod.difficulty}
                         </span>
@@ -254,12 +254,12 @@ export default function Learn() {
                   </div>
 
                   <div className="flex items-center gap-6 md:ml-4 flex-shrink-0">
-                    <div className="flex items-center gap-2 font-bold text-sm bg-background border-2 border-text px-3 py-1 rounded">
+                    <div className="flex items-center gap-2 font-bold text-sm bg-background border border-border px-3 py-1 rounded">
                       <Clock size={16} />
                       <span>{mod.estimatedTime}</span>
                     </div>
                     <div className="w-32">
-                      <div className="w-full bg-background border-2 border-text rounded-full h-4 overflow-hidden">
+                      <div className="w-full bg-background border border-border rounded-full h-4 overflow-hidden">
                         <div
                           className="bg-primary h-full border-r-2 border-text transition-all"
                           style={{ width: `${mod.progress}%` }}
@@ -275,14 +275,14 @@ export default function Learn() {
 
               {/* Expanded Content */}
               {isExpanded && (
-                <div className="border-t-4 border-text p-6 bg-background rounded-b-sm space-y-4">
+                <div className="border-t border-border p-6 bg-background rounded-b-sm space-y-4">
                   {mod.subtopics.map((sub, subIdx) => (
                     <div
                       key={subIdx}
-                      className="bg-surface border-4 border-text rounded-lg p-5 hover:-translate-y-1 transition-transform shadow-brutal-sm"
+                      className="bg-surface border border-border rounded-lg p-5 hover:-translate-y-1 transition-transform shadow-soft"
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="bg-primary border-2 border-text p-1.5 rounded">
+                        <div className="bg-primary border border-border p-1.5 rounded">
                           <Code size={18} className="text-text" />
                         </div>
                         <h4 className="font-bold text-lg uppercase tracking-tight">

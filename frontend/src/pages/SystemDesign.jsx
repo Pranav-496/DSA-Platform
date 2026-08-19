@@ -43,7 +43,7 @@ function ScoreRing({ score, size = 56, sw = 5, label }) {
           strokeDasharray={c} strokeDashoffset={off} strokeLinecap="round" className="transition-all duration-700"/>
       </svg>
       <span className="text-[9px] font-bold uppercase tracking-wider opacity-50">{label}</span>
-      <span className="text-xs font-black" style={{ color: col }}>{score}%</span>
+      <span className="text-xs font-bold" style={{ color: col }}>{score}%</span>
     </div>
   );
 }
@@ -319,7 +319,7 @@ export default function SystemDesign() {
     <div className="-m-2 md:-m-4 flex flex-col h-full overflow-hidden">
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-20 right-4 z-[100] px-4 py-2.5 border-4 border-text shadow-brutal font-bold text-sm max-w-xs animate-slide-in ${
+        <div className={`fixed top-20 right-4 z-[100] px-4 py-2.5 border border-border shadow-card font-bold text-sm max-w-xs animate-slide-in ${
           toast.t === 'ok' ? 'bg-success text-surface' : toast.t === 'warn' ? 'bg-warning text-text' : 'bg-danger text-surface'
         }`}>{toast.t === 'ok' ? '✓ ' : '⚠ '}{toast.m}</div>
       )}
@@ -335,7 +335,7 @@ export default function SystemDesign() {
         </button>
 
         <div className="hidden sm:flex items-center gap-1 mr-1">
-          <span className="font-black text-xs uppercase tracking-wider whitespace-nowrap">System Design</span>
+          <span className="font-bold text-xs uppercase tracking-wider whitespace-nowrap">System Design</span>
           {challenge && <span className="text-[10px] opacity-50 truncate max-w-[140px]">— {challenge.title}</span>}
         </div>
 
@@ -375,7 +375,7 @@ export default function SystemDesign() {
         <span className="w-px h-5 bg-border/30 shrink-0"/>
 
         <button onClick={doReview} disabled={analyzing}
-          className="flex items-center gap-1.5 px-3 py-1 bg-primary text-text font-black text-[11px] uppercase tracking-wider border-2 border-text rounded shadow-brutal-sm hover:translate-y-0.5 hover:shadow-none transition-all disabled:opacity-50 shrink-0">
+          className="flex items-center gap-1.5 px-3 py-1 bg-primary text-text font-bold text-[11px] uppercase tracking-wider border border-border rounded shadow-soft hover:translate-y-0.5 hover:shadow-none transition-all disabled:opacity-50 shrink-0">
           {analyzing ? <><Activity size={13} className="animate-spin"/> Analyzing...</> : <><Sparkles size={13}/> AI Review</>}
         </button>
 
@@ -416,7 +416,7 @@ export default function SystemDesign() {
           <div className="w-[260px] shrink-0 border-r-4 border-border bg-surface flex flex-col overflow-hidden">
             <div className="px-3 py-2 border-b-2 border-border bg-background/40 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="font-black text-[10px] uppercase tracking-widest">Challenges</span>
+                <span className="font-bold text-[10px] uppercase tracking-widest">Challenges</span>
                 <span className="text-[9px] font-bold opacity-40">{doneN}/{SYSTEM_DESIGN_CHALLENGES.length}</span>
               </div>
               <div className="w-16 bg-border/20 rounded-full h-1 overflow-hidden">
@@ -443,7 +443,7 @@ export default function SystemDesign() {
                 return (
                   <div key={lv}>
                     <div className="flex items-center gap-1.5 px-2 pt-3 pb-1">
-                      <span className={`text-[8px] font-black px-1.5 py-0.5 border-2 rounded ${DIFF_STYLE[lv]}`}>{lv}</span>
+                      <span className={`text-[8px] font-bold px-1.5 py-0.5 border-2 rounded ${DIFF_STYLE[lv]}`}>{lv}</span>
                       <span className="text-[9px] font-bold uppercase tracking-wider opacity-30">{DIFF_LABEL[lv]}</span>
                     </div>
                     {chs.map(ch => {
@@ -455,7 +455,7 @@ export default function SystemDesign() {
                           <div className="flex items-center gap-1.5">
                             {comp ? <Award size={12} className="text-success shrink-0"/> : <Circle size={12} className="opacity-15 shrink-0"/>}
                             <span className="font-bold text-[11px] leading-tight flex-1">{ch.title}</span>
-                            {comp && <span className={`text-[9px] font-black ${GRADE_COLOR[comp.grade]||''}`}>{comp.grade}</span>}
+                            {comp && <span className={`text-[9px] font-bold ${GRADE_COLOR[comp.grade]||''}`}>{comp.grade}</span>}
                           </div>
                           <div className="flex items-center gap-2 pl-[18px] mt-0.5">
                             <span className="text-[9px] opacity-30 flex items-center gap-0.5"><Clock size={8}/>{ch.estimatedMinutes}m</span>
@@ -477,7 +477,7 @@ export default function SystemDesign() {
             <div className="flex items-center justify-center h-full w-full">
               <div className="text-center">
                 <Activity className="w-8 h-8 animate-spin mx-auto mb-2 text-primary"/>
-                <p className="font-black uppercase tracking-widest text-xs">Loading Canvas...</p>
+                <p className="font-bold uppercase tracking-widest text-xs">Loading Canvas...</p>
               </div>
             </div>
           }>
@@ -495,7 +495,7 @@ export default function SystemDesign() {
 
           {/* Detection badge */}
           {challenge && detected.size > 0 && (
-            <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1.5 bg-success text-surface border-2 border-text rounded font-bold text-[10px] shadow-brutal-sm flex items-center gap-1.5 pointer-events-none">
+            <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1.5 bg-success text-surface border border-border rounded font-bold text-[10px] shadow-soft flex items-center gap-1.5 pointer-events-none">
               <CheckCircle size={12}/> {detected.size}/{challenge.keyComponents.length} found
             </div>
           )}
@@ -503,8 +503,8 @@ export default function SystemDesign() {
           {/* Getting started overlay for challenges */}
           {challenge && !review && detected.size === 0 && secs < 5 && (
             <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-              <div className="bg-surface/95 backdrop-blur-sm border-4 border-text shadow-brutal rounded-xl p-6 max-w-sm text-center pointer-events-auto animate-fade-in">
-                <h3 className="font-black text-lg uppercase tracking-wider mb-2">{challenge.title}</h3>
+              <div className="bg-surface/95 backdrop-blur-sm border border-border shadow-card rounded-xl p-6 max-w-sm text-center pointer-events-auto animate-fade-in">
+                <h3 className="font-bold text-lg uppercase tracking-wider mb-2">{challenge.title}</h3>
                 <p className="text-xs opacity-60 mb-4 leading-relaxed">
                   Use the toolbar above to draw rectangles, text labels, and arrows.
                   Label each component (e.g. "Load Balancer", "Database").
@@ -537,19 +537,19 @@ export default function SystemDesign() {
             <div className="flex border-b-2 border-border shrink-0 bg-background/20">
               {challenge && <>
                 <button onClick={() => setTab('req')}
-                  className={`flex-1 py-2 text-[9px] font-black uppercase tracking-wider transition-all border-b-2 ${
+                  className={`flex-1 py-2 text-[9px] font-bold uppercase tracking-wider transition-all border-b-2 ${
                     tab==='req' ? 'border-primary text-primary bg-surface' : 'border-transparent opacity-40 hover:opacity-80'}`}>
                   Requirements
                 </button>
                 <button onClick={() => setTab('eval')}
-                  className={`flex-1 py-2 text-[9px] font-black uppercase tracking-wider transition-all border-b-2 ${
+                  className={`flex-1 py-2 text-[9px] font-bold uppercase tracking-wider transition-all border-b-2 ${
                     tab==='eval' ? 'border-primary text-primary bg-surface' : 'border-transparent opacity-40 hover:opacity-80'}`}>
                   Eval Guide
                 </button>
               </>}
               {(review || analyzing) && (
                 <button onClick={() => setTab('review')}
-                  className={`flex-1 py-2 text-[9px] font-black uppercase tracking-wider transition-all border-b-2 flex items-center justify-center gap-1 ${
+                  className={`flex-1 py-2 text-[9px] font-bold uppercase tracking-wider transition-all border-b-2 flex items-center justify-center gap-1 ${
                     tab==='review' ? 'border-primary text-primary bg-surface' : 'border-transparent opacity-40 hover:opacity-80'}`}>
                   <Sparkles size={9}/> Review
                 </button>
@@ -564,15 +564,15 @@ export default function SystemDesign() {
               {tab === 'req' && challenge && <>
                 <div className="pb-2 border-b-2 border-border">
                   <div className="flex items-center gap-1.5 mb-1.5">
-                    <span className={`text-[8px] font-black px-1.5 py-0.5 border-2 rounded ${DIFF_STYLE[challenge.difficulty]}`}>{challenge.difficulty}</span>
+                    <span className={`text-[8px] font-bold px-1.5 py-0.5 border-2 rounded ${DIFF_STYLE[challenge.difficulty]}`}>{challenge.difficulty}</span>
                     <span className="text-[9px] px-1 border border-border rounded font-bold opacity-50">{challenge.category}</span>
                   </div>
-                  <h3 className="font-black text-sm leading-tight">{challenge.title}</h3>
+                  <h3 className="font-bold text-sm leading-tight">{challenge.title}</h3>
                   <p className="text-[11px] opacity-60 mt-1 leading-relaxed">{challenge.description}</p>
                 </div>
 
                 <div>
-                  <h4 className="text-[9px] font-black uppercase tracking-widest mb-1.5 text-success flex items-center gap-1"><CheckCircle size={10}/> Functional</h4>
+                  <h4 className="text-[9px] font-bold uppercase tracking-widest mb-1.5 text-success flex items-center gap-1"><CheckCircle size={10}/> Functional</h4>
                   <ul className="space-y-1">
                     {challenge.requirements.map((r,i) => (
                       <li key={i} className="text-[11px] flex gap-1.5 leading-relaxed"><ChevronRight size={9} className="text-success mt-0.5 shrink-0 opacity-40"/>{r}</li>
@@ -581,7 +581,7 @@ export default function SystemDesign() {
                 </div>
 
                 <div>
-                  <h4 className="text-[9px] font-black uppercase tracking-widest mb-1.5 text-warning flex items-center gap-1"><Shield size={10}/> Non-Functional</h4>
+                  <h4 className="text-[9px] font-bold uppercase tracking-widest mb-1.5 text-warning flex items-center gap-1"><Shield size={10}/> Non-Functional</h4>
                   <ul className="space-y-1">
                     {challenge.nonFunctional.map((r,i) => (
                       <li key={i} className="text-[11px] flex gap-1.5 leading-relaxed"><ChevronRight size={9} className="text-warning mt-0.5 shrink-0 opacity-40"/>{r}</li>
@@ -590,7 +590,7 @@ export default function SystemDesign() {
                 </div>
 
                 <div>
-                  <h4 className="text-[9px] font-black uppercase tracking-widest mb-1.5 text-primary flex items-center gap-1">
+                  <h4 className="text-[9px] font-bold uppercase tracking-widest mb-1.5 text-primary flex items-center gap-1">
                     <Gauge size={10}/> Components
                     <span className="ml-auto text-text opacity-30">{detected.size}/{challenge.keyComponents.length}</span>
                   </h4>
@@ -609,13 +609,13 @@ export default function SystemDesign() {
                 </div>
 
                 <div>
-                  <h4 className="text-[9px] font-black uppercase tracking-widest mb-1.5 text-warning flex items-center gap-1">
+                  <h4 className="text-[9px] font-bold uppercase tracking-widest mb-1.5 text-warning flex items-center gap-1">
                     <Lightbulb size={10}/> Hints
                     <span className="ml-auto text-text opacity-30">{hints}/{challenge.hints.length}</span>
                   </h4>
                   {challenge.hints.slice(0, hints).map((h,i) => (
                     <div key={i} className="text-[10px] p-2 bg-warning/5 border border-warning/15 rounded mb-1.5 leading-relaxed">
-                      <span className="font-black text-warning">#{i+1}</span> {h}
+                      <span className="font-bold text-warning">#{i+1}</span> {h}
                     </div>
                   ))}
                   {hints < challenge.hints.length && (
@@ -630,7 +630,7 @@ export default function SystemDesign() {
               {/* ── EVAL GUIDE ───────────────────── */}
               {tab === 'eval' && challenge?.evaluationCriteria && <>
                 <div className="p-2.5 bg-primary/5 border-2 border-primary/15 rounded">
-                  <h3 className="text-[10px] font-black uppercase tracking-wider mb-0.5 flex items-center gap-1"><Award size={10} className="text-primary"/> Interviewer Rubric</h3>
+                  <h3 className="text-[10px] font-bold uppercase tracking-wider mb-0.5 flex items-center gap-1"><Award size={10} className="text-primary"/> Interviewer Rubric</h3>
                   <p className="text-[9px] opacity-50">How a FAANG interviewer would score this design.</p>
                 </div>
                 {Object.entries(challenge.evaluationCriteria).map(([k, desc]) => {
@@ -641,7 +641,7 @@ export default function SystemDesign() {
                   }[k] || { I: Target, c: 'text-text', b: 'border-border' };
                   return (
                     <div key={k} className={`p-2.5 rounded border-2 ${cfg.b} bg-background/30`}>
-                      <div className="flex items-center gap-1.5 mb-1"><cfg.I size={12} className={cfg.c}/><span className="text-[10px] font-black uppercase tracking-wider capitalize">{k}</span></div>
+                      <div className="flex items-center gap-1.5 mb-1"><cfg.I size={12} className={cfg.c}/><span className="text-[10px] font-bold uppercase tracking-wider capitalize">{k}</span></div>
                       <p className="text-[10px] leading-relaxed opacity-65">{desc}</p>
                     </div>
                   );
@@ -655,13 +655,13 @@ export default function SystemDesign() {
               {tab === 'review' && analyzing && (
                 <div className="text-center py-12">
                   <Activity className="w-8 h-8 animate-spin mx-auto mb-2 text-primary"/>
-                  <p className="font-black text-xs uppercase tracking-wider">Analyzing...</p>
+                  <p className="font-bold text-xs uppercase tracking-wider">Analyzing...</p>
                 </div>
               )}
 
               {tab === 'review' && !analyzing && review && <>
                 <div className="text-center py-2">
-                  {review.grade && <div className={`text-4xl font-black mb-0.5 ${GRADE_COLOR[review.grade]||''}`}>{review.grade}</div>}
+                  {review.grade && <div className={`text-4xl font-bold mb-0.5 ${GRADE_COLOR[review.grade]||''}`}>{review.grade}</div>}
                   <ScoreRing score={review.overallScore} size={64} sw={6} label="Overall"/>
                 </div>
 
@@ -676,28 +676,28 @@ export default function SystemDesign() {
                 <div className="p-2.5 bg-background border-2 border-border rounded">
                   <div className="flex items-center gap-1 mb-1">
                     <Sparkles size={10} className="text-primary"/>
-                    <span className="text-[9px] font-black uppercase tracking-wider">Critique</span>
+                    <span className="text-[9px] font-bold uppercase tracking-wider">Critique</span>
                     <span className="text-[8px] px-1 bg-primary/10 border border-primary/15 rounded font-bold ml-auto capitalize">{review.source}</span>
                   </div>
                   <p className="text-[10px] leading-relaxed">{review.aiCritique}</p>
                 </div>
 
                 {review.foundComponents?.length > 0 && <div>
-                  <h3 className="text-[9px] font-black uppercase tracking-wider mb-1 text-success flex items-center gap-1"><CheckCircle size={9}/> Found ({review.foundComponents.length})</h3>
+                  <h3 className="text-[9px] font-bold uppercase tracking-wider mb-1 text-success flex items-center gap-1"><CheckCircle size={9}/> Found ({review.foundComponents.length})</h3>
                   <div className="flex flex-wrap gap-0.5">{review.foundComponents.map((c,i) =>
                     <span key={i} className="text-[9px] px-1.5 py-0.5 bg-success/10 border border-success/25 rounded-full font-bold capitalize">{c}</span>
                   )}</div>
                 </div>}
 
                 {review.missingComponents?.length > 0 && <div>
-                  <h3 className="text-[9px] font-black uppercase tracking-wider mb-1 text-danger flex items-center gap-1"><AlertTriangle size={9}/> Missing ({review.missingComponents.length})</h3>
+                  <h3 className="text-[9px] font-bold uppercase tracking-wider mb-1 text-danger flex items-center gap-1"><AlertTriangle size={9}/> Missing ({review.missingComponents.length})</h3>
                   <div className="flex flex-wrap gap-0.5">{review.missingComponents.map((c,i) =>
                     <span key={i} className="text-[9px] px-1.5 py-0.5 bg-danger/10 border border-danger/25 rounded-full font-bold capitalize">{c}</span>
                   )}</div>
                 </div>}
 
                 {review.suggestions?.length > 0 && <div>
-                  <h3 className="text-[9px] font-black uppercase tracking-wider mb-1 text-warning flex items-center gap-1"><Lightbulb size={9}/> Suggestions</h3>
+                  <h3 className="text-[9px] font-bold uppercase tracking-wider mb-1 text-warning flex items-center gap-1"><Lightbulb size={9}/> Suggestions</h3>
                   <ul className="space-y-1">{review.suggestions.map((s,i) =>
                     <li key={i} className="text-[10px] leading-relaxed flex gap-1.5 p-1.5 bg-warning/5 border border-warning/10 rounded">
                       <span className="text-warning font-bold shrink-0">→</span>{s}</li>
@@ -707,7 +707,7 @@ export default function SystemDesign() {
                 <div className="grid grid-cols-3 gap-1.5 pt-2 border-t-2 border-border">
                   {[['Shapes', review.stats?.componentCount], ['Arrows', review.stats?.connectionCount], ['Labels', review.stats?.textLabels]].map(([l,v]) => (
                     <div key={l} className="text-center p-1.5 bg-background rounded">
-                      <div className="text-sm font-black">{v||0}</div>
+                      <div className="text-sm font-bold">{v||0}</div>
                       <div className="text-[8px] opacity-40 uppercase font-bold">{l}</div>
                     </div>
                   ))}
@@ -737,9 +737,9 @@ export default function SystemDesign() {
       {/* ── Load Modal ──────────────────────────────── */}
       {loadModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setLoadModal(false)}>
-          <div className="bg-surface border-4 border-text shadow-brutal-lg rounded-xl w-full max-w-md overflow-hidden" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between p-3 border-b-4 border-text bg-background">
-              <h3 className="font-black text-base uppercase tracking-widest flex items-center gap-2"><FolderOpen size={16} className="text-primary"/> Load</h3>
+          <div className="bg-surface border border-border shadow-elevated rounded-xl w-full max-w-md overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-3 border-b border-border bg-background">
+              <h3 className="font-bold text-base uppercase tracking-widest flex items-center gap-2"><FolderOpen size={16} className="text-primary"/> Load</h3>
               <button onClick={() => setLoadModal(false)} className="p-1 hover:bg-danger hover:text-surface rounded transition-colors"><X size={18}/></button>
             </div>
             <div className="p-3 max-h-72 overflow-y-auto space-y-1.5">

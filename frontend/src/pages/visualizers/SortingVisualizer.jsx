@@ -442,100 +442,82 @@ export default function SortingVisualizer() {
   const info = ALGORITHMS[algorithm];
 
   return (
-    <div className="flex flex-col gap-4 h-full bg-surface p-4 text-text">
+    <div className="flex flex-col gap-3 h-full bg-surface p-4 text-text">
       {/* Algorithm Selector */}
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-2">
         {Object.entries(ALGORITHMS).map(([key, val]) => (
           <button
             key={key}
             onClick={() => { setAlgorithm(key); resetVisualization(); }}
-            className={`px-4 py-2 text-sm font-black uppercase tracking-wider transition-all border-4 shadow-brutal-sm
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all border
               ${algorithm === key
-                ? 'bg-primary text-text border-text -translate-y-0.5 shadow-[4px_4px_0px_#111]'
-                : 'bg-background text-text border-text hover:bg-surface hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111]'}`}
+                ? 'bg-primary/10 text-primary border-primary/30 shadow-soft'
+                : 'bg-surface-alt text-text-muted border-border hover:text-text hover:border-primary/20'}`}
           >
             {val.name}
           </button>
         ))}
 
-        <div className="ml-auto flex items-center gap-4 bg-background border-4 border-text p-2 rounded shadow-brutal-sm">
+        <div className="ml-auto flex items-center gap-3 bg-surface-alt border border-border p-2 rounded-xl">
           <div className="flex items-center gap-2">
-            <SlidersHorizontal size={18} className="text-text" />
-            <span className="text-sm font-bold uppercase">Size: {arraySize}</span>
+            <SlidersHorizontal size={14} className="text-text-muted" />
+            <span className="text-xs font-medium text-text-muted">Size: {arraySize}</span>
             <input
               type="range" min="5" max="60" value={arraySize}
               onChange={(e) => { setArraySize(Number(e.target.value)); }}
               onMouseUp={() => resetVisualization()}
-              className="w-24 accent-primary h-2 cursor-pointer border-2 border-text bg-surface"
+              className="w-20 accent-primary h-1.5 cursor-pointer rounded-full"
             />
           </div>
-          <div className="w-1 h-6 bg-text"></div>
-          <button onClick={handleNewArray} className="flex items-center gap-2 px-3 py-1 bg-warning hover:bg-warning/80 text-text font-black uppercase border-2 border-text transition-all shadow-[2px_2px_0px_#111] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111]">
-            <Shuffle size={16} /> Randomize
+          <div className="w-px h-5 bg-border"></div>
+          <button onClick={handleNewArray} className="flex items-center gap-1.5 px-2.5 py-1 bg-warning/10 hover:bg-warning/20 text-warning font-medium text-xs rounded-lg transition-colors">
+            <Shuffle size={13} /> Randomize
           </button>
-          <div className="w-1 h-6 bg-text"></div>
+          <div className="w-px h-5 bg-border"></div>
           <button 
             onClick={() => setShowCodePanel(!showCodePanel)}
-            className="flex items-center gap-2 px-3 py-1 bg-surface hover:bg-primary text-text font-black uppercase border-2 border-text transition-all shadow-[2px_2px_0px_#111] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111]"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-surface hover:bg-primary/10 text-text-muted hover:text-primary font-medium text-xs rounded-lg border border-border transition-colors"
             title={showCodePanel ? 'Hide Code Panel' : 'Show Code Panel'}
           >
-            {showCodePanel ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
-            <span className="hidden xl:inline text-xs">Code</span>
+            {showCodePanel ? <PanelRightClose size={13} /> : <PanelRightOpen size={13} />}
+            <span className="hidden xl:inline">Code</span>
           </button>
         </div>
       </div>
 
-      {/* Description */}
-      <div className="bg-background border-4 border-text rounded p-4 flex flex-wrap items-center justify-between gap-4 shadow-[4px_4px_0px_#111]">
-        <p className="text-text font-bold text-sm flex-1">{info.description}</p>
+      {/* Description + Complexity */}
+      <div className="bg-surface-alt border border-border rounded-xl p-3 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-text-muted text-sm flex-1">{info.description}</p>
         
-        {/* Time Complexity */}
-        <div className="flex items-center gap-6 bg-surface p-3 border-4 border-text shadow-inner">
-          <div className="flex flex-col gap-1 text-xs font-black uppercase tracking-wider">
-            <span className="text-text">Best: <span className="text-success font-mono bg-text px-1">{info.best}</span></span>
-            <span className="text-text">Avg/Worst: <span className="text-warning font-mono bg-text px-1">{info.time}</span></span>
-            <span className="text-text">Space: <span className="text-primary font-mono bg-text px-1">{info.space}</span></span>
-          </div>
-          <div className="relative w-12 h-10 border-l-4 border-b-4 border-text ml-2" title="Time Complexity Curve">
-             <span className="absolute -left-4 -top-3 text-[10px] font-black text-text">T</span>
-             <span className="absolute -bottom-4 right-0 text-[10px] font-black text-text">N</span>
-             <svg width="48" height="40" className="absolute bottom-0 left-0 overflow-visible">
-               <path 
-                 d={info.time.includes('n²') ? "M 0 40 Q 30 40 48 0" : "M 0 40 Q 35 25 48 10"} 
-                 fill="none" 
-                 stroke={info.time.includes('n²') ? "#ef4444" : "#000"} 
-                 strokeWidth="4" 
-                 strokeLinecap="square" 
-               />
-             </svg>
-          </div>
+        <div className="flex items-center gap-3 text-xs">
+          <span className="text-text-muted">Best: <span className="font-mono font-semibold text-success bg-success/10 px-1.5 py-0.5 rounded">{info.best}</span></span>
+          <span className="text-text-muted">Avg: <span className="font-mono font-semibold text-warning bg-warning/10 px-1.5 py-0.5 rounded">{info.time}</span></span>
+          <span className="text-text-muted">Space: <span className="font-mono font-semibold text-primary bg-primary/10 px-1.5 py-0.5 rounded">{info.space}</span></span>
         </div>
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center justify-center gap-4 bg-surface border-4 border-text p-2 shadow-[4px_4px_0px_#111]">
-        <span className="flex items-center gap-2 font-black text-[10px] uppercase"><span className="w-4 h-4 border-2 border-text bg-text shadow-[2px_2px_0px_#111]"></span> Default</span>
-        <span className="flex items-center gap-2 font-black text-[10px] uppercase"><span className="w-4 h-4 border-2 border-text bg-primary opacity-60 shadow-[2px_2px_0px_#111]"></span> Comparing</span>
-        <span className="flex items-center gap-2 font-black text-[10px] uppercase"><span className="w-4 h-4 border-2 border-text bg-danger shadow-[2px_2px_0px_#111]"></span> Swapping</span>
-        <span className="flex items-center gap-2 font-black text-[10px] uppercase"><span className="w-4 h-4 border-2 border-text bg-warning shadow-[2px_2px_0px_#111]"></span> Pivot</span>
-        <span className="flex items-center gap-2 font-black text-[10px] uppercase"><span className="w-4 h-4 border-2 border-text bg-success shadow-[2px_2px_0px_#111]"></span> Sorted</span>
+      <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-text-muted">
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-border"></span> Default</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-primary opacity-70"></span> Comparing</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-danger"></span> Swapping</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-warning"></span> Pivot</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-success"></span> Sorted</span>
       </div>
 
       {/* Main Content: Bars + Code Panel */}
-      <div className="flex-1 flex gap-4 min-h-[400px] lg:min-h-[500px]">
+      <div className="flex-1 flex gap-3 min-h-[400px] lg:min-h-[500px]">
         {/* Bar Visualization */}
-        <div className={`bg-background border-4 border-text flex items-end justify-center gap-1 p-6 pt-12 relative overflow-hidden shadow-brutal-md ${showCodePanel ? 'flex-1' : 'w-full'}`}>
-          {/* Thinking Overlay / AI Tooltip */}
+        <div className={`bg-surface-alt border border-border rounded-xl flex items-end justify-center gap-[2px] p-4 pt-14 relative overflow-hidden ${showCodePanel ? 'flex-1' : 'w-full'}`}>
+          {/* Status Tooltip */}
           {(anim.isPlaying || statusMessage) && statusMessage && (
-            <div className="absolute top-4 right-4 bg-surface border-4 border-text p-2 px-4 shadow-[4px_4px_0px_#111] animate-fade-in flex items-center gap-3 z-20 min-w-[250px] max-w-[350px]">
-               <div className="bg-primary border-2 border-text rounded-none p-1.5 flex-shrink-0 shadow-[2px_2px_0px_#111]">
-                  <BrainCircuit size={18} className="text-text animate-pulse" />
+            <div className="absolute top-3 right-3 bg-surface border border-border p-2.5 px-3.5 rounded-xl shadow-card animate-fade-in flex items-center gap-2.5 z-20 max-w-[320px]">
+               <div className="bg-primary/10 rounded-lg p-1.5 flex-shrink-0">
+                  <BrainCircuit size={16} className="text-primary animate-pulse" />
                </div>
                <div className="flex-1 overflow-hidden">
-                  <div className="flex justify-between items-center mb-0.5">
-                     <p className="text-[10px] font-black text-text uppercase tracking-widest border-b-2 border-text pb-0.5 inline-block">AI Thinking Trace</p>
-                  </div>
-                  <p className="text-sm font-bold break-words">{statusMessage}</p>
+                  <p className="text-[10px] font-medium text-text-muted uppercase tracking-wider mb-0.5">Trace</p>
+                  <p className="text-xs font-medium break-words">{statusMessage}</p>
                </div>
             </div>
           )}
@@ -546,27 +528,27 @@ export default function SortingVisualizer() {
             const isSwapping = swapping.includes(idx);
             const isActive = activeIndices.includes(idx);
             const isPivot = pivotIndex === idx;
-            const heightPercent = (val / maxVal) * 75; // Leave top 25% empty for AI trace
+            const heightPercent = (val / maxVal) * 78;
 
-            let barColor = 'bg-text';
+            let barColor = 'bg-border';
             if (isPivot) barColor = 'bg-warning';
             else if (isSwapping) barColor = 'bg-danger';
-            else if (isComparing) barColor = 'bg-primary opacity-60';
+            else if (isComparing) barColor = 'bg-primary opacity-70';
             else if (isActive) barColor = 'bg-primary';
             else if (isSorted) barColor = 'bg-success';
 
             return (
               <div
                 key={idx}
-                className={`transition-all duration-100 ${barColor} border-2 border-text relative group shadow-[2px_2px_0px_#111]`}
+                className={`transition-all duration-100 ${barColor} rounded-t relative group`}
                 style={{
                   height: `${heightPercent}%`,
-                  width: `${Math.max(100 / array.length - 1, 3)}%`,
-                  minWidth: '10px',
+                  width: `${Math.max(100 / array.length - 0.5, 2)}%`,
+                  minWidth: '6px',
                 }}
               >
                 {array.length <= 30 && (
-                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-black text-text">
+                  <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-text-muted">
                     {val}
                   </span>
                 )}

@@ -219,20 +219,20 @@ function generateArray(size) {
 function MiniBarChart({ frame, maxVal, algoName, color, totalSteps, finishOrder }) {
   const { array, comparing, sorted, cmp, sw, done } = frame;
   return (
-    <div className={`brutal-card bg-surface p-4 border-4 border-text shadow-brutal-sm relative transition-all ${done ? 'ring-4 ring-success' : ''}`}>
+    <div className={`brutal-card bg-surface p-4 border border-border shadow-soft relative transition-all ${done ? 'ring-4 ring-success' : ''}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-black uppercase text-sm tracking-tight">{algoName}</h3>
+        <h3 className="font-bold uppercase text-sm tracking-tight">{algoName}</h3>
         {done && finishOrder !== undefined && (
-          <div className={`flex items-center gap-1 px-2 py-0.5 border-2 border-text shadow-[2px_2px_0px_#111] ${finishOrder === 0 ? 'bg-primary' : finishOrder === 1 ? 'bg-warning' : 'bg-surface'}`}>
+          <div className={`flex items-center gap-1 px-2 py-0.5 border border-border shadow-soft ${finishOrder === 0 ? 'bg-primary' : finishOrder === 1 ? 'bg-warning' : 'bg-surface'}`}>
             <Trophy size={12} />
-            <span className="text-[10px] font-black uppercase">#{finishOrder + 1}</span>
+            <span className="text-[10px] font-bold uppercase">#{finishOrder + 1}</span>
           </div>
         )}
       </div>
 
       {/* Bars */}
-      <div className="flex items-end gap-[1px] h-[140px] bg-[#f0f0f0] dark:bg-[#1a1a2e] border-2 border-text p-2 rounded">
+      <div className="flex items-end gap-[1px] h-[140px] bg-[#f0f0f0] dark:bg-[#1a1a2e] border border-border p-2 rounded">
         {array.map((val, idx) => {
           const h = (val / maxVal) * 100;
           const isComparing = comparing.includes(idx);
@@ -251,7 +251,7 @@ function MiniBarChart({ frame, maxVal, algoName, color, totalSteps, finishOrder 
       </div>
 
       {/* Stats */}
-      <div className="flex items-center gap-4 mt-3 text-[10px] font-black uppercase tracking-widest">
+      <div className="flex items-center gap-4 mt-3 text-[10px] font-bold uppercase tracking-widest">
         <span className="flex items-center gap-1">
           <Footprints size={10} /> Steps <span className="font-mono bg-text text-surface px-1">{frame.stepIndex || 0}/{totalSteps}</span>
         </span>
@@ -372,13 +372,13 @@ export default function AlgorithmRace() {
   return (
     <div className="flex flex-col gap-6 h-full bg-surface p-4 md:p-6 text-text overflow-y-auto">
       {/* Hero Header */}
-      <div className="bg-primary border-4 border-text rounded p-6 shadow-brutal-md text-center">
+      <div className="bg-primary border border-border rounded p-6 shadow-card text-center">
         <div className="flex items-center justify-center gap-3 mb-2">
-          <div className="bg-text p-2 border-2 border-text shadow-[3px_3px_0px_#555]">
+          <div className="bg-text p-2 border border-border shadow-[3px_3px_0px_#555]">
             <Trophy size={28} className="text-primary" />
           </div>
         </div>
-        <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter">Algorithm Race</h1>
+        <h1 className="text-3xl md:text-4xl font-bold uppercase tracking-tighter">Algorithm Race</h1>
         <p className="text-sm font-bold uppercase tracking-wider mt-1 opacity-80">
           Pick algorithms, hit start, and watch them compete in real-time
         </p>
@@ -393,9 +393,9 @@ export default function AlgorithmRace() {
               key={key}
               onClick={() => toggleAlgo(key)}
               disabled={isRacing}
-              className={`px-4 py-2 text-sm font-black uppercase tracking-wider transition-all border-4 shadow-brutal-sm
+              className={`px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all border-4 shadow-soft
                 ${isSelected
-                  ? `${algo.color} text-text border-text -translate-y-0.5 shadow-[4px_4px_0px_#111]`
+                  ? `${algo.color} text-text border-text -translate-y-0.5 shadow-card`
                   : 'bg-background text-text border-text hover:bg-surface hover:-translate-y-0.5 opacity-60 hover:opacity-100'
                 }
                 ${isRacing ? 'cursor-not-allowed' : 'cursor-pointer'}`}
@@ -407,7 +407,7 @@ export default function AlgorithmRace() {
       </div>
 
       {/* Controls Bar */}
-      <div className="flex flex-wrap items-center gap-4 bg-background border-4 border-text shadow-brutal-sm p-4">
+      <div className="flex flex-wrap items-center gap-4 bg-background border border-border shadow-soft p-4">
         {/* Array Size */}
         <div className="flex items-center gap-2">
           <SlidersHorizontal size={18} />
@@ -416,7 +416,7 @@ export default function AlgorithmRace() {
             type="range" min="8" max="50" value={arraySize}
             onChange={(e) => { if (!isRacing) { setArraySize(Number(e.target.value)); } }}
             onMouseUp={() => { if (!isRacing) handleNewArray(); }}
-            className="w-28 accent-primary h-2 cursor-pointer border-2 border-text bg-surface"
+            className="w-28 accent-primary h-2 cursor-pointer border border-border bg-surface"
             disabled={isRacing}
           />
         </div>
@@ -430,7 +430,7 @@ export default function AlgorithmRace() {
           <input
             type="range" min="5" max="200" step="5" value={raceSpeed}
             onChange={(e) => setRaceSpeed(Number(e.target.value))}
-            className="w-24 accent-primary h-2 cursor-pointer border-2 border-text bg-surface"
+            className="w-24 accent-primary h-2 cursor-pointer border border-border bg-surface"
           />
           <div className="flex gap-1 text-[10px] font-bold uppercase tracking-widest">
             <span>Fast</span><span>—</span><span>Slow</span>
@@ -441,7 +441,7 @@ export default function AlgorithmRace() {
           <button
             onClick={handleNewArray}
             disabled={isRacing}
-            className="flex items-center gap-2 px-3 py-2 bg-warning hover:bg-warning/80 text-text font-black uppercase border-2 border-text transition-all shadow-[2px_2px_0px_#111] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111] disabled:opacity-50"
+            className="flex items-center gap-2 px-3 py-2 bg-warning hover:bg-warning/80 text-text font-bold uppercase border border-border transition-all shadow-soft hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111] disabled:opacity-50"
           >
             <RotateCcw size={16} /> New array
           </button>
@@ -450,14 +450,14 @@ export default function AlgorithmRace() {
             <button
               onClick={startRace}
               disabled={selectedAlgos.length < 2}
-              className="flex items-center gap-2 px-5 py-2 bg-success text-surface font-black uppercase tracking-wider border-2 border-text transition-all shadow-[2px_2px_0px_#111] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-5 py-2 bg-success text-surface font-bold uppercase tracking-wider border border-border transition-all shadow-soft hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Play size={16} /> Start race
             </button>
           ) : (
             <button
               onClick={stopRace}
-              className="flex items-center gap-2 px-5 py-2 bg-danger text-surface font-black uppercase tracking-wider border-2 border-text transition-all shadow-[2px_2px_0px_#111] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111]"
+              className="flex items-center gap-2 px-5 py-2 bg-danger text-surface font-bold uppercase tracking-wider border border-border transition-all shadow-soft hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#111]"
             >
               <Flag size={16} /> Stop
             </button>
@@ -488,8 +488,8 @@ export default function AlgorithmRace() {
 
       {/* Results Banner */}
       {raceComplete && finishOrder.length > 0 && (
-        <div className="bg-primary border-4 border-text rounded p-5 shadow-brutal-md">
-          <h2 className="font-black uppercase text-lg tracking-tight mb-3 border-b-4 border-text pb-2 flex items-center gap-2">
+        <div className="bg-primary border border-border rounded p-5 shadow-card">
+          <h2 className="font-bold uppercase text-lg tracking-tight mb-3 border-b border-border pb-2 flex items-center gap-2">
             <Trophy size={20} /> Race Results
           </h2>
           <div className="flex flex-wrap gap-4">
@@ -498,12 +498,12 @@ export default function AlgorithmRace() {
               const frames = raceFrames[key];
               const lastFrame = frames[frames.length - 1];
               return (
-                <div key={key} className="flex items-center gap-3 bg-surface border-4 border-text p-3 rounded shadow-brutal-sm">
-                  <div className={`w-8 h-8 flex items-center justify-center font-black text-lg border-2 border-text ${idx === 0 ? 'bg-primary' : idx === 1 ? 'bg-warning' : 'bg-surface'} shadow-[2px_2px_0px_#111]`}>
+                <div key={key} className="flex items-center gap-3 bg-surface border border-border p-3 rounded shadow-soft">
+                  <div className={`w-8 h-8 flex items-center justify-center font-bold text-lg border border-border ${idx === 0 ? 'bg-primary' : idx === 1 ? 'bg-warning' : 'bg-surface'} shadow-soft`}>
                     {idx + 1}
                   </div>
                   <div>
-                    <p className="font-black uppercase text-sm">{algo.name}</p>
+                    <p className="font-bold uppercase text-sm">{algo.name}</p>
                     <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">
                       {lastFrame.cmp} cmp · {lastFrame.sw} swaps · {frames.length} steps
                     </p>
@@ -517,7 +517,7 @@ export default function AlgorithmRace() {
 
       {/* Min selection warning */}
       {selectedAlgos.length < 2 && (
-        <div className="bg-warning/20 border-4 border-warning text-text p-4 rounded shadow-brutal-sm text-center font-bold uppercase text-sm">
+        <div className="bg-warning/20 border-4 border-warning text-text p-4 rounded shadow-soft text-center font-bold uppercase text-sm">
           <Zap size={16} className="inline mr-2" />
           Select at least 2 algorithms to start a race
         </div>

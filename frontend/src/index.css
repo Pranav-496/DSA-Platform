@@ -1,116 +1,198 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Geist:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ========== Color System ========== */
 :root {
-  --bg-color: #FAFAFA;
-  --surface-color: #FFFFFF;
-  --text-color: #111111;
-  --border-color: #111111;
-  --text-muted: #666666;
-  --primary: #FFD600;
-  --success: #22C55E;
-  --warning: #F59E0B;
-  --danger: #EF4444;
+  --bg-color: #f8f9fc;
+  --surface-color: #ffffff;
+  --surface-alt: #f1f3f8;
+  --text-color: #1a1d2e;
+  --border-color: #e2e5f0;
+  --text-muted: #6b7194;
+  --primary: #f97316; /* Orange-500 */
+  --primary-light: #fdba74; /* Orange-300 */
+  --primary-glow: rgba(249, 115, 22, 0.25);
+  --accent: #f59e0b; /* Amber-500 */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
 .dark {
-  --bg-color: #121212;
-  --surface-color: #1E1E1E;
-  --text-color: #F3F4F6;
-  --border-color: #333333;
-  --text-muted: #9CA3AF;
-  --primary: #FFD600;
-  --success: #22C55E;
-  --warning: #F59E0B;
-  --danger: #EF4444;
+  --bg-color: #0f1117;
+  --surface-color: #181a27;
+  --surface-alt: #1e2035;
+  --text-color: #e8eaf0;
+  --border-color: #2a2d42;
+  --text-muted: #7c82a8;
+  --primary: #fb923c; /* Orange-400 */
+  --primary-light: #fdba74; /* Orange-300 */
+  --primary-glow: rgba(251, 146, 60, 0.2);
+  --accent: #fbbf24; /* Amber-400 */
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
 }
 
+/* ========== Base Layer ========== */
 @layer base {
   html {
-    font-size: 13px;
+    font-size: 15px;
     touch-action: manipulation;
     -webkit-text-size-adjust: 100%;
     overflow-x: hidden;
     max-width: 100vw;
+    scroll-behavior: smooth;
   }
   body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    @apply font-inter;
+    @apply font-inter antialiased;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
     max-width: 100vw;
     position: relative;
     -webkit-tap-highlight-color: transparent;
+    letter-spacing: -0.01em;
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-geist font-bold text-text;
+    letter-spacing: -0.02em;
   }
+
+  h1 { @apply text-2xl md:text-3xl; }
+  h2 { @apply text-xl md:text-2xl; }
+  h3 { @apply text-lg; }
 }
 
-/* ========== Neo-Brutalism Core Utilities ========== */
+/* ========== Card System ========== */
+.card {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.875rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
 
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.dark .card {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.dark .card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* Legacy class mapping so existing components don't break */
 .brutal-card {
-  @apply bg-surface border-2 border-border rounded-lg shadow-brutal transition-transform duration-200;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.875rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .brutal-card:hover {
-  @apply -translate-y-0.5 shadow-brutal-lg;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
+.dark .brutal-card {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ========== Button System ========== */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl px-4 py-2 transition-all duration-200 cursor-pointer text-sm;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary {
+  @apply bg-primary text-white hover:brightness-110;
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 4px 16px var(--primary-glow);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Legacy class mapping */
 .brutal-btn {
-  @apply bg-primary text-text font-bold border-2 border-border rounded-lg shadow-brutal px-4 py-2 transition-all duration-200 uppercase tracking-wide cursor-pointer;
+  @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl px-4 py-2 transition-all duration-200 cursor-pointer text-sm;
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 2px 8px var(--primary-glow);
 }
 
 .brutal-btn:hover {
-  @apply -translate-y-1 shadow-brutal-lg bg-[#F0C800];
+  box-shadow: 0 4px 16px var(--primary-glow);
+  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 .brutal-btn:active {
-  @apply translate-y-1 shadow-none;
+  transform: translateY(0px);
 }
 
 .brutal-btn-secondary {
-  @apply bg-surface text-text font-bold border-4 border-border rounded-lg shadow-brutal px-6 py-3 transition-all duration-200 uppercase tracking-wide cursor-pointer;
+  @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl px-5 py-2.5 transition-all duration-200 cursor-pointer text-sm;
+  background: var(--surface-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
 }
 
 .brutal-btn-secondary:hover {
-  @apply -translate-y-1 shadow-brutal-lg bg-gray-100;
+  background: var(--surface-alt);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .brutal-btn-secondary:active {
-  @apply translate-y-1 shadow-none;
+  transform: translateY(0px);
 }
 
+/* ========== Input System ========== */
 .brutal-input {
-  @apply bg-surface border-4 border-border rounded-lg px-4 py-3 text-text font-medium outline-none transition-all duration-200;
+  @apply rounded-xl px-4 py-2.5 text-text font-medium outline-none transition-all duration-200 text-sm;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
 }
 
 .brutal-input:focus {
-  @apply shadow-brutal border-primary;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
 }
 
-/* ========== Custom Scrollbar ========== */
+/* ========== Scrollbar ========== */
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-background border-l-4 border-border;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary border-4 border-border;
+  background: var(--border-color);
+  border-radius: 100px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-[#E6C200];
+  background: var(--text-muted);
 }
 
-/* ========== Range Input Styling ========== */
+/* ========== Range Input ========== */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -118,47 +200,50 @@ input[type="range"] {
   cursor: pointer;
 }
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 8px;
-  border: 2px solid var(--text-color);
-  border-radius: 4px;
-  background: var(--surface);
+  height: 4px;
+  border-radius: 100px;
+  background: var(--border-color);
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  border: 4px solid var(--text-color);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid white;
   background: var(--primary);
-  margin-top: -10px;
-  box-shadow: 2px 2px 0px #111;
+  margin-top: -7px;
+  box-shadow: 0 2px 6px var(--primary-glow);
 }
 
-/* ========== Monaco Editor Overrides ========== */
+/* ========== Monaco Editor ========== */
 .monaco-editor {
-  border: 4px solid var(--text-color) !important;
-  border-radius: 8px !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
   overflow: hidden;
 }
 .monaco-editor .margin {
-  background: #f0f0f0 !important;
+  background: var(--surface-alt) !important;
 }
 
 /* ========== Selection ========== */
 ::selection {
   background: var(--primary);
-  color: var(--text-color);
+  color: white;
 }
 
 /* ========== Animations ========== */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(100%); }
   to { opacity: 1; transform: translateX(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out forwards;
@@ -167,31 +252,48 @@ input[type="range"]::-webkit-slider-thumb {
   animation: slideIn 0.3s ease-out forwards;
 }
 
+/* ========== Glass Effect ========== */
+.glass {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass {
+  background: rgba(24, 26, 39, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 /* ─── Excalidraw Overrides (v0.18.1) ───────────────────────── */
-/* Hide the library sidebar trigger button in toolbar */
 .excalidraw .sidebar-trigger,
 .excalidraw .default-sidebar-trigger {
   display: none !important;
 }
-/* Hide the entire sidebar panel (library) */
 .excalidraw .sidebar,
 .excalidraw .default-sidebar,
 .excalidraw .layer-ui__library {
   display: none !important;
 }
-/* Hide the welcome screen overlay */
 .excalidraw .welcome-screen-center,
 .excalidraw .WelcomeScreen-logo,
 .excalidraw [class*="welcome-screen"] {
   display: none !important;
 }
-/* Hide the properties panel (Stroke, Background, etc.) */
 .excalidraw .App-menu__left {
   display: none !important;
 }
-/* Ensure Excalidraw fills its container properly */
 .excalidraw,
 .excalidraw .excalidraw-container {
   height: 100% !important;
   width: 100% !important;
 }
+
+/* ========== Legacy Shadow Compat ========== */
+/* Maps old brutal shadows to new soft shadows so nothing breaks */
+.shadow-brutal-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.shadow-brutal { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.shadow-brutal-lg { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.dark .shadow-brutal-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.dark .shadow-brutal { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.dark .shadow-brutal-lg { box-shadow: 0 4px 16px rgba(0,0,0,0.4); }

@@ -161,26 +161,26 @@ export default function HeapVisualizer() {
         {[['min', 'Min-Heap'], ['max', 'Max-Heap']].map(([key, label]) => (
           <button key={key} onClick={() => { setHeapType(key); resetHighlights(); 
             setHeap(key === 'min' ? [5, 10, 15, 20, 30, 25, 35] : [35, 25, 30, 20, 15, 10, 5]); }}
-            className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-wider transition-all border-2
-              ${heapType === key ? 'bg-primary text-text border-text shadow-[2px_2px_0px_#111]'
+            className={`px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-all border-2
+              ${heapType === key ? 'bg-primary text-text border-text shadow-soft'
                 : 'bg-surface text-text/70 border-text/30 hover:text-text hover:border-text'}`}>
             {label}
           </button>
         ))}
         <div className="ml-auto flex items-center gap-2">
           <input type="number" value={inputVal} onChange={(e) => setInputVal(e.target.value)}
-            placeholder="Value" className="w-20 bg-surface border-2 border-text text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-[2px_2px_0px_#111]" />
-          <button onClick={insertValue} className="flex items-center gap-1 px-3 py-1.5 bg-success text-text border-2 border-text rounded-lg text-sm font-black uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111] shadow-[2px_2px_0px_#111] transition-all">
+            placeholder="Value" className="w-20 bg-surface border border-border text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-soft" />
+          <button onClick={insertValue} className="flex items-center gap-1 px-3 py-1.5 bg-success text-text border border-border rounded-lg text-sm font-bold uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-card shadow-soft transition-all">
             <Plus size={14} /> Insert
           </button>
-          <button onClick={extractRoot} className="flex items-center gap-1 px-3 py-1.5 bg-danger text-text border-2 border-text rounded-lg text-sm font-black uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111] shadow-[2px_2px_0px_#111] transition-all">
+          <button onClick={extractRoot} className="flex items-center gap-1 px-3 py-1.5 bg-danger text-text border border-border rounded-lg text-sm font-bold uppercase tracking-wider hover:-translate-y-0.5 hover:shadow-card shadow-soft transition-all">
             <Minus size={14} /> Extract {heapType === 'min' ? 'Min' : 'Max'}
           </button>
         </div>
       </div>
 
       {/* Description */}
-      <div className="bg-surface border-2 border-text rounded-lg px-4 py-2 flex items-center justify-between shadow-brutal-sm">
+      <div className="bg-surface border border-border rounded-lg px-4 py-2 flex items-center justify-between shadow-soft">
         <p className="text-text/70 text-sm font-geist">{heapType === 'min' ? 'Min-Heap: parent ≤ children' : 'Max-Heap: parent ≥ children'}. Stored as a complete binary tree in an array.</p>
         <div className="flex gap-4 text-xs">
           <span className="text-text/70">Insert: <span className="text-warning font-mono font-bold">O(log n)</span></span>
@@ -192,7 +192,7 @@ export default function HeapVisualizer() {
       {/* Split View: Tree + Array */}
       <div className="flex-1 flex flex-col gap-3">
         {/* Tree View */}
-        <div className="flex-1 bg-surface border-4 border-text shadow-brutal rounded-lg relative min-h-[150px] overflow-hidden">
+        <div className="flex-1 bg-surface border border-border shadow-card rounded-lg relative min-h-[150px] overflow-hidden">
           <div className="absolute top-3 left-4 text-xs text-text/70 font-mono z-10">{statusMessage}</div>
 
           <svg width="100%" height="100%" viewBox="0 0 800 400" className="absolute inset-0">
@@ -236,15 +236,15 @@ export default function HeapVisualizer() {
         </div>
 
         {/* Array Representation */}
-        <div className="bg-surface border-2 border-text rounded-lg px-4 py-3 shadow-brutal-sm">
+        <div className="bg-surface border border-border rounded-lg px-4 py-3 shadow-soft">
           <div className="flex items-center gap-2">
             <span className="text-xs text-text/70 font-mono font-bold mr-2 uppercase">Array:</span>
             {heap.map((val, idx) => {
               const isActive = activeIndices.includes(idx);
               const isSwap = swapping.includes(idx);
               let cls = 'border-text/30 bg-background text-text';
-              if (isSwap) cls = 'border-warning bg-warning/20 text-text font-black';
-              else if (isActive) cls = 'border-text bg-primary/30 text-text font-black';
+              if (isSwap) cls = 'border-warning bg-warning/20 text-text font-bold';
+              else if (isActive) cls = 'border-text bg-primary/30 text-text font-bold';
               return (
                 <div key={idx} className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg border-2 font-mono text-xs transition-all duration-300 ${cls}`}>
                   <span className="font-bold">{val}</span>

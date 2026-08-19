@@ -228,22 +228,22 @@ export default function BSTVisualizer() {
       <div className="flex flex-wrap items-center gap-2">
         {Object.entries(operations).map(([key, op]) => (
           <button key={key} onClick={() => { setOperation(key); resetHighlights(); }}
-            className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-wider transition-all border-2
-              ${operation === key ? 'bg-primary text-text border-text shadow-[2px_2px_0px_#111]'
-                : 'bg-surface text-text/70 border-text hover:text-text hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_#111]'}`}>
+            className={`px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-all border-2
+              ${operation === key ? 'bg-primary text-text border-text shadow-soft'
+                : 'bg-surface text-text/70 border-text hover:text-text hover:-translate-y-0.5 hover:shadow-soft'}`}>
             {op.label}
           </button>
         ))}
         {operations[operation].needsInput && (
           <div className="ml-auto flex items-center gap-2">
             <input type="number" value={inputVal} onChange={(e) => setInputVal(e.target.value)}
-              placeholder="Value" className="w-20 bg-surface border-2 border-text text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-[2px_2px_0px_#111]" />
+              placeholder="Value" className="w-20 bg-surface border border-border text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-soft" />
           </div>
         )}
       </div>
 
       {/* Description */}
-      <div className="bg-surface border-2 border-text rounded-lg px-4 py-2 flex items-center justify-between shadow-brutal-sm">
+      <div className="bg-surface border border-border rounded-lg px-4 py-2 flex items-center justify-between shadow-soft">
         <p className="text-text/70 text-sm font-geist">Binary Search Tree — left subtree {"<"} root {"<"} right subtree.</p>
         <div className="flex gap-4 text-xs">
           <span className="text-text/70">Search: <span className="text-success font-mono font-bold">O(log n)</span></span>
@@ -253,7 +253,7 @@ export default function BSTVisualizer() {
       </div>
 
       {/* Tree SVG */}
-      <div className="flex-1 bg-surface border-4 border-text shadow-brutal rounded-lg relative min-h-[150px] overflow-hidden">
+      <div className="flex-1 bg-surface border border-border shadow-card rounded-lg relative min-h-[150px] overflow-hidden">
         <div className="absolute top-3 left-4 text-xs text-text/70 font-mono font-bold z-10">{statusMessage}</div>
 
         {traversalOrder.length > 0 && (

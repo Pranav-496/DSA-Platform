@@ -262,7 +262,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 pb-12">
-      <h2 className="text-4xl font-geist font-black uppercase tracking-tight">
+      <h2 className="text-4xl font-geist font-bold uppercase tracking-tight">
         Dashboard
       </h2>
 
@@ -280,7 +280,7 @@ export default function Dashboard() {
               {stat.icon}
             </div>
             <div>
-              <p className="text-4xl font-geist font-black">
+              <p className="text-4xl font-geist font-bold">
                 <AnimatedCounter end={stat.value} suffix={stat.suffix} />
               </p>
             </div>
@@ -302,7 +302,7 @@ export default function Dashboard() {
                   key={i}
                   className="flex items-center gap-4 p-4 border-2 border-border rounded-lg bg-background hover:bg-[#E2E8F0] transition-colors"
                 >
-                  <div className="p-3 bg-primary border-2 border-border rounded-lg shadow-brutal-sm">
+                  <div className="p-3 bg-primary border-2 border-border rounded-lg shadow-soft">
                     <Icon className="w-6 h-6 text-text" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -329,7 +329,7 @@ export default function Dashboard() {
           </h3>
           <RadarChart data={radarData} />
 
-          <div className="w-full mt-8 bg-warning border-4 border-border p-6 rounded-lg shadow-brutal-sm">
+          <div className="w-full mt-8 bg-warning border border-border p-6 rounded-lg shadow-soft">
             <h4 className="text-lg font-geist font-bold mb-3 uppercase flex items-center gap-2">
               <ShieldAlert className="w-6 h-6" /> Alerts
             </h4>
@@ -337,18 +337,18 @@ export default function Dashboard() {
               {(userData?.progress?.weakAreas || []).length > 0 ? (
                 userData.progress.weakAreas.map((area, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <span className="font-black">→</span>
+                    <span className="font-bold">→</span>
                     <span>Needs improvement: <strong>{area}</strong> (Below 60%)</span>
                   </li>
                 ))
               ) : codingScore === 0 && avgQuizScore === 0 ? (
                 <li className="flex items-start gap-2">
-                  <span className="font-black">→</span>
+                  <span className="font-bold">→</span>
                   No data yet. Complete quizzes to unlock insights.
                 </li>
               ) : (
                 <li className="flex items-start gap-2">
-                  <span className="font-black text-success">✓</span>
+                  <span className="font-bold text-success">✓</span>
                   No weak areas detected!
                 </li>
               )}
@@ -397,7 +397,7 @@ export default function Dashboard() {
                   {recent.map((h, i) => (
                     <div key={i} className="flex-1 flex flex-col items-center justify-end h-full">
                       <div
-                        className={`w-full border-4 border-border border-b-0 rounded-t-lg shadow-brutal-sm transition-all
+                        className={`w-full border border-border border-b-0 rounded-t-lg shadow-soft transition-all
                           ${h.finalScore >= 70 ? "bg-success" : h.finalScore >= 40 ? "bg-warning" : "bg-danger"}`}
                         style={{
                           height: `${Math.max(10, h.finalScore)}%`,
@@ -425,9 +425,9 @@ export default function Dashboard() {
                   )}
                 </p>
               </div>
-              <div className="text-center p-6 bg-primary border-4 border-border rounded-lg shadow-brutal-sm min-w-[150px]">
+              <div className="text-center p-6 bg-primary border border-border rounded-lg shadow-soft min-w-[150px]">
                 <p className="font-bold uppercase tracking-wider mb-2">Sessions</p>
-                <p className="text-5xl font-black font-geist">
+                <p className="text-5xl font-bold font-geist">
                   {history.length}
                 </p>
               </div>

@@ -25,12 +25,11 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
   const [violations, setViolations] = useState([]);
   const [integrityScore, setIntegrityScore] = useState(100);
   const [currentStatus, setCurrentStatus] = useState("Initializing...");
-  const [statusColor, setStatusColor] = useState("text-text/60");
+  const [statusColor, setStatusColor] = useState("text-text-muted");
   const [faceCount, setFaceCount] = useState(0);
   const [showTimeline, setShowTimeline] = useState(false);
   const [recordedUrl, setRecordedUrl] = useState(null);
 
-  // Load face-api models
   useEffect(() => {
     const loadModels = async () => {
       const MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model/";
@@ -50,7 +49,6 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
     loadModels();
   }, []);
 
-  // Tab visibility detection
   useEffect(() => {
     if (!isActive) return;
 
@@ -115,7 +113,6 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
     });
   }, [onViolation, onScoreUpdate]);
 
-  // Start camera + recording
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -130,7 +127,6 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
       setCurrentStatus("Camera active — Monitoring...");
       setStatusColor("text-success");
 
-      // Start recording
       try {
         const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
         chunksRef.current = [];
@@ -147,7 +143,6 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
         console.warn("Recording not supported:", recErr);
       }
 
-      // Start face detection loop
       startDetection();
     } catch (err) {
       console.error("Camera error:", err);
@@ -166,7 +161,7 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
     }
     setCameraOn(false);
     setCurrentStatus("Camera stopped");
-    setStatusColor("text-text/60");
+    setStatusColor("text-text-muted");
   };
 
   const startDetection = () => {
@@ -180,7 +175,6 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
 
       setFaceCount(detections.length);
 
-      // Draw detections on canvas
       if (canvasRef.current && videoRef.current) {
         const dims = faceapi.matchDimensions(canvasRef.current, videoRef.current, true);
         const resized = faceapi.resizeResults(detections, dims);
@@ -198,7 +192,6 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
         setStatusColor("text-danger");
         logViolation("multiple_faces", `${detections.length} faces detected`);
       } else {
-        // Check if looking away using landmarks
         const landmarks = detections[0].landmarks;
         const nose = landmarks.getNose();
         const jaw = landmarks.getJawOutline();
@@ -221,7 +214,7 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
           setStatusColor("text-success");
         }
       }
-    }, 3000); // Check every 3 seconds
+    }, 3000);
   };
 
   useEffect(() => {
@@ -229,12 +222,6 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
       stopCamera();
     };
   }, []);
-
-  const getScoreColor = (s) => {
-    if (s >= 80) return "text-surface";
-    if (s >= 50) return "text-text";
-    return "text-surface";
-  };
 
   const getScoreBg = (s) => {
     if (s >= 80) return "bg-success";
@@ -252,20 +239,20 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
   };
 
   return (
-    <div className="bg-surface border-4 border-text flex flex-col h-full overflow-hidden shadow-[4px_4px_0px_#111]">
+    <div className="bg-surface border border-border rounded-xl flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div className="p-3 bg-background border-b-4 border-text flex items-center justify-between">
-        <h3 className="text-text text-sm font-black font-geist uppercase flex items-center gap-2 tracking-wider">
-          <Shield size={16} className="text-primary" /> PROCTORING
+      <div className="px-3 py-2.5 border-b border-border flex items-center justify-between flex-shrink-0">
+        <h3 className="text-xs font-semibold uppercase flex items-center gap-2 tracking-wider text-text-muted">
+          <Shield size={14} className="text-primary" /> Proctoring
         </h3>
-        <div className="flex items-center gap-2">
-          <div className={`w-3 h-3 rounded-none border-2 border-text shadow-[2px_2px_0px_#111] ${cameraOn ? "bg-danger animate-pulse" : "bg-text/30"}`} />
-          <span className="text-xs text-text font-black uppercase">{cameraOn ? "REC" : "OFF"}</span>
+        <div className="flex items-center gap-1.5">
+          <div className={`w-2 h-2 rounded-full ${cameraOn ? "bg-danger animate-pulse" : "bg-border"}`} />
+          <span className="text-[10px] font-medium text-text-muted uppercase">{cameraOn ? "REC" : "OFF"}</span>
         </div>
       </div>
 
       {/* Video Feed */}
-      <div className="relative bg-text aspect-video w-full overflow-hidden border-b-4 border-text">
+      <div className="relative bg-background aspect-video w-full overflow-hidden flex-shrink-0">
         <video
           ref={videoRef}
           autoPlay
@@ -280,63 +267,63 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
           style={{ transform: "scaleX(-1)" }}
         />
         {!cameraOn && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background">
-            <VideoOff size={40} className="text-text/40" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-alt">
+            <VideoOff size={28} className="text-text-muted opacity-40" />
             <button
               onClick={startCamera}
-              className="px-6 py-2 bg-primary text-text border-4 border-text text-sm font-black font-geist uppercase hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111] transition-all shadow-[2px_2px_0px_#111]"
+              className="px-4 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:brightness-110 transition-all shadow-soft"
             >
-              START PROCTORING
+              Start Proctoring
             </button>
           </div>
         )}
         {cameraOn && (
           <button
             onClick={stopCamera}
-            className="absolute top-2 right-2 p-2 bg-surface border-2 border-text shadow-[2px_2px_0px_#111] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#111] transition-all"
+            className="absolute top-2 right-2 p-1.5 bg-surface border border-border rounded-lg shadow-soft hover:bg-surface-alt transition-colors"
           >
-            <VideoOff size={16} className="text-danger" />
+            <VideoOff size={14} className="text-danger" />
           </button>
         )}
       </div>
 
-      {/* Status Bar */}
-      <div className="px-4 py-3 border-b-4 border-text flex items-center justify-between bg-surface">
-        <span className={`text-xs font-black uppercase ${statusColor}`}>{currentStatus}</span>
+      {/* Status */}
+      <div className="px-3 py-2 border-b border-border flex items-center justify-between flex-shrink-0">
+        <span className={`text-[11px] font-medium ${statusColor}`}>{currentStatus}</span>
         {cameraOn && (
-          <span className="text-xs text-text font-black uppercase">Faces: {faceCount}</span>
+          <span className="text-[10px] text-text-muted font-medium">Faces: {faceCount}</span>
         )}
       </div>
 
       {/* Integrity Score */}
-      <div className="px-4 py-3 flex items-center justify-between bg-surface">
-        <span className="text-xs text-text font-black uppercase tracking-widest">Integrity</span>
-        <div className={`px-3 py-1 border-2 border-text text-sm font-black font-geist shadow-[2px_2px_0px_#111] ${getScoreBg(integrityScore)} ${getScoreColor(integrityScore)}`}>
+      <div className="px-3 py-2 flex items-center justify-between flex-shrink-0">
+        <span className="text-[11px] text-text-muted font-medium uppercase tracking-wider">Integrity</span>
+        <div className={`px-2 py-0.5 rounded text-xs font-semibold text-white ${getScoreBg(integrityScore)}`}>
           {integrityScore}/100
         </div>
       </div>
 
       {/* Integrity Bar */}
-      <div className="px-4 pb-4 bg-surface">
-        <div className="w-full bg-background border-2 border-text h-3 overflow-hidden shadow-inner">
+      <div className="px-3 pb-2 flex-shrink-0">
+        <div className="w-full bg-surface-alt rounded-full h-1.5 overflow-hidden">
           <div
-            className={`h-full border-r-2 border-text transition-all duration-500 ${integrityScore >= 80 ? "bg-success" : integrityScore >= 50 ? "bg-warning" : "bg-danger"}`}
+            className={`h-full rounded-full transition-all duration-500 ${integrityScore >= 80 ? "bg-success" : integrityScore >= 50 ? "bg-warning" : "bg-danger"}`}
             style={{ width: `${integrityScore}%` }}
           />
         </div>
       </div>
 
-      {/* Violations Count + Toggle */}
-      <div className="px-4 py-3 border-t-4 border-text bg-background">
+      {/* Violations */}
+      <div className="px-3 py-2 border-t border-border flex-shrink-0">
         <button
           onClick={() => setShowTimeline(!showTimeline)}
-          className="w-full flex items-center justify-between text-sm font-black uppercase tracking-wider text-text transition-all hover:text-primary"
+          className="w-full flex items-center justify-between text-xs font-medium text-text-muted transition-all hover:text-text"
         >
-          <span className="flex items-center gap-2">
-            <AlertTriangle size={16} className={violations.length > 0 ? "text-danger" : "text-text/50"} />
+          <span className="flex items-center gap-1.5">
+            <AlertTriangle size={13} className={violations.length > 0 ? "text-danger" : "text-text-muted opacity-50"} />
             {violations.length} Violation{violations.length !== 1 ? "s" : ""}
           </span>
-          <span className="text-xs bg-surface px-2 py-1 border-2 border-text shadow-[2px_2px_0px_#111]">{showTimeline ? "▲ HIDE" : "▼ SHOW"}</span>
+          <span className="text-[10px] bg-surface-alt px-2 py-0.5 rounded border border-border">{showTimeline ? "▲ Hide" : "▼ Show"}</span>
         </button>
       </div>
 
@@ -347,24 +334,24 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="border-t-4 border-text overflow-hidden bg-surface"
+            className="border-t border-border overflow-hidden bg-surface"
           >
-            <div className="max-h-[200px] overflow-y-auto p-4 space-y-3">
+            <div className="max-h-[150px] overflow-y-auto p-3 space-y-2">
               {violations.length === 0 ? (
-                <p className="text-xs font-bold uppercase text-text/60 text-center py-4 bg-background border-2 border-text border-dashed">No violations recorded</p>
+                <p className="text-[11px] text-text-muted text-center py-3">No violations recorded</p>
               ) : (
                 violations.map((v, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-3 p-3 bg-background border-2 border-text shadow-[2px_2px_0px_#111] text-xs"
+                    className="flex items-start gap-2 p-2 bg-surface-alt border border-border rounded-lg text-xs"
                   >
-                    <div className="text-danger mt-1 bg-surface p-1 border-2 border-text">{violationIcons[v.type]}</div>
+                    <div className="text-danger mt-0.5">{violationIcons[v.type]}</div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-text font-bold truncate">{v.details}</p>
-                      <div className="flex items-center gap-2 mt-2 font-black text-text/70 uppercase">
-                        <Clock size={10} />
+                      <p className="text-text font-medium truncate text-[11px]">{v.details}</p>
+                      <div className="flex items-center gap-2 mt-1 text-text-muted text-[10px]">
+                        <Clock size={9} />
                         <span>{v.timeStr}</span>
-                        <span className="text-danger bg-surface px-1 border border-text">-{v.weight}pts</span>
+                        <span className="text-danger font-medium">-{v.weight}pts</span>
                       </div>
                     </div>
                   </div>
@@ -377,13 +364,13 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
 
       {/* Download Recording */}
       {recordedUrl && (
-        <div className="px-4 py-4 border-t-4 border-text bg-background">
+        <div className="px-3 py-2 border-t border-border">
           <a
             href={recordedUrl}
             download="interview_recording.webm"
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-warning text-text border-4 border-text text-sm font-black font-geist uppercase shadow-[4px_4px_0px_#111] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#111] transition-all"
+            className="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-primary text-white rounded-lg text-xs font-semibold hover:brightness-110 transition-all"
           >
-            <Video size={16} /> DOWNLOAD RECORDING
+            <Video size={14} /> Download Recording
           </a>
         </div>
       )}

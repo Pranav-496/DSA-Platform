@@ -36,7 +36,7 @@ export default function Leaderboard() {
 
   if (loading) {
     return (
-      <div className="p-8 text-text font-black uppercase tracking-wider animate-pulse">
+      <div className="p-8 text-text font-bold uppercase tracking-wider animate-pulse">
         Loading Global Rankings...
       </div>
     );
@@ -44,12 +44,12 @@ export default function Leaderboard() {
 
   const getRankStyle = (displayRank) => {
     if (displayRank === 1)
-      return "bg-primary border-4 border-text text-text shadow-[4px_4px_0px_#111] translate-y-[-2px]";
+      return "bg-primary border border-border text-text shadow-card translate-y-[-2px]";
     if (displayRank === 2)
-      return "bg-background border-4 border-text text-text shadow-[4px_4px_0px_#111] translate-y-[-1px]";
+      return "bg-background border border-border text-text shadow-card translate-y-[-1px]";
     if (displayRank === 3)
-      return "bg-warning border-4 border-text text-text shadow-[4px_4px_0px_#111] translate-y-[-1px]";
-    return "bg-surface border-4 border-text text-text shadow-[2px_2px_0px_#111]";
+      return "bg-warning border border-border text-text shadow-card translate-y-[-1px]";
+    return "bg-surface border border-border text-text shadow-soft";
   };
 
   const getTierIcon = (tier) => {
@@ -69,14 +69,14 @@ export default function Leaderboard() {
 
   return (
     <div className="h-full overflow-y-auto pr-4 text-text">
-      <div className="flex flex-col items-center justify-center py-12 mb-8 border-4 border-text bg-primary shadow-[8px_8px_0px_#111]">
-        <div className="bg-surface border-4 border-text p-4 rounded-none shadow-[4px_4px_0px_#111] mb-6">
+      <div className="flex flex-col items-center justify-center py-12 mb-8 border border-border bg-primary shadow-[8px_8px_0px_#111]">
+        <div className="bg-surface border border-border p-4 rounded-none shadow-card mb-6">
           <Trophy size={56} className="text-text" />
         </div>
-        <h2 className="text-5xl font-black font-geist uppercase tracking-widest text-text">
+        <h2 className="text-5xl font-bold font-geist uppercase tracking-widest text-text">
           Global Arena
         </h2>
-        <p className="text-text font-bold text-sm mt-4 bg-surface px-4 py-1 border-2 border-text shadow-[2px_2px_0px_#111]">
+        <p className="text-text font-bold text-sm mt-4 bg-surface px-4 py-1 border border-border shadow-soft">
           TOP 100 HACKERS ALL-TIME
         </p>
       </div>
@@ -84,33 +84,33 @@ export default function Leaderboard() {
       <div className="max-w-5xl mx-auto mb-8 flex flex-wrap justify-center gap-4">
         <button
           onClick={() => setSortBy("xp")}
-          className={`flex items-center gap-2 px-6 py-3 font-black uppercase tracking-wider border-4 border-text transition-all ${
-            sortBy === "xp" ? "bg-text text-surface shadow-[4px_4px_0px_#111] -translate-y-1" : "bg-surface text-text hover:bg-primary shadow-[2px_2px_0px_#111]"
+          className={`flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-wider border border-border transition-all ${
+            sortBy === "xp" ? "bg-text text-surface shadow-card -translate-y-1" : "bg-surface text-text hover:bg-primary shadow-soft"
           }`}
         >
           <Trophy size={20} /> Total XP
         </button>
         <button
           onClick={() => setSortBy("problems")}
-          className={`flex items-center gap-2 px-6 py-3 font-black uppercase tracking-wider border-4 border-text transition-all ${
-            sortBy === "problems" ? "bg-text text-surface shadow-[4px_4px_0px_#111] -translate-y-1" : "bg-surface text-text hover:bg-primary shadow-[2px_2px_0px_#111]"
+          className={`flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-wider border border-border transition-all ${
+            sortBy === "problems" ? "bg-text text-surface shadow-card -translate-y-1" : "bg-surface text-text hover:bg-primary shadow-soft"
           }`}
         >
           <Target size={20} /> Problems Solved
         </button>
         <button
           onClick={() => setSortBy("streak")}
-          className={`flex items-center gap-2 px-6 py-3 font-black uppercase tracking-wider border-4 border-text transition-all ${
-            sortBy === "streak" ? "bg-text text-surface shadow-[4px_4px_0px_#111] -translate-y-1" : "bg-surface text-text hover:bg-primary shadow-[2px_2px_0px_#111]"
+          className={`flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-wider border border-border transition-all ${
+            sortBy === "streak" ? "bg-text text-surface shadow-card -translate-y-1" : "bg-surface text-text hover:bg-primary shadow-soft"
           }`}
         >
           <Flame size={20} /> Active Streak
         </button>
       </div>
 
-      <div className="max-w-5xl mx-auto bg-surface border-4 border-text p-4 md:p-8 shadow-[8px_8px_0px_#111] mb-12">
+      <div className="max-w-5xl mx-auto bg-surface border border-border p-4 md:p-8 shadow-[8px_8px_0px_#111] mb-12">
         {/* Table Header */}
-        <div className="grid grid-cols-12 gap-4 p-4 border-b-4 border-text text-sm font-black uppercase tracking-widest text-text bg-background mb-6 shadow-[2px_2px_0px_#111]">
+        <div className="grid grid-cols-12 gap-4 p-4 border-b border-border text-sm font-bold uppercase tracking-widest text-text bg-background mb-6 shadow-soft">
           <div className="col-span-2 text-center">Rank</div>
           <div className="col-span-5">Operator ID</div>
           <div className="col-span-2 text-right">Value</div>
@@ -126,17 +126,17 @@ export default function Leaderboard() {
                 key={leader.id}
                 className={`grid grid-cols-12 gap-4 p-4 items-center transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_#111] ${getRankStyle(displayRank)}`}
               >
-                <div className="col-span-2 text-center font-geist font-black text-2xl">
+                <div className="col-span-2 text-center font-geist font-bold text-2xl">
                   #{displayRank}
                 </div>
                 <div className="col-span-5 flex items-center gap-4">
-                  <div className="w-10 h-10 bg-surface border-2 border-text flex items-center justify-center shadow-[2px_2px_0px_#111]">
-                    <span className="text-sm font-black uppercase text-text">
+                  <div className="w-10 h-10 bg-surface border border-border flex items-center justify-center shadow-soft">
+                    <span className="text-sm font-bold uppercase text-text">
                       {leader.identity.substring(0, 2).toUpperCase()}
                     </span>
                   </div>
                   <div>
-                    <p className="font-black text-lg text-text uppercase tracking-wide">
+                    <p className="font-bold text-lg text-text uppercase tracking-wide">
                       {leader.identity}
                     </p>
                     <p className="text-xs font-bold text-text/80 hidden sm:block mt-1">
@@ -144,13 +144,13 @@ export default function Leaderboard() {
                     </p>
                   </div>
                 </div>
-                <div className="col-span-2 text-right font-geist font-black text-xl text-text">
+                <div className="col-span-2 text-right font-geist font-bold text-xl text-text">
                   {sortBy === "xp" && `${leader.xp.toLocaleString()} XP`}
                   {sortBy === "problems" && `${leader.problems} Problems`}
                   {sortBy === "streak" && `${leader.streak} Days`}
                 </div>
                 <div className="col-span-3 hidden sm:flex items-center justify-end gap-3 font-bold uppercase tracking-wider text-sm text-text">
-                  <div className="bg-surface p-1 border-2 border-text shadow-[2px_2px_0px_#111]">
+                  <div className="bg-surface p-1 border border-border shadow-soft">
                     {getTierIcon(leader.tier)}
                   </div>
                   <span className="truncate">{leader.tier}</span>
@@ -160,7 +160,7 @@ export default function Leaderboard() {
           })}
 
           {leaders.length === 0 && (
-            <div className="p-8 text-center text-text font-black uppercase tracking-wider bg-warning border-4 border-text shadow-[4px_4px_0px_#111]">
+            <div className="p-8 text-center text-text font-bold uppercase tracking-wider bg-warning border border-border shadow-card">
               No signal found. Be the first to execute code.
             </div>
           )}

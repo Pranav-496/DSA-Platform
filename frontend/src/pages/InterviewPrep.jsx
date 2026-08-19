@@ -356,7 +356,7 @@ export default function InterviewPrep() {
     <div className="h-full flex flex-col gap-4 text-text p-4 relative overflow-hidden">
       {/* Clipboard Warning Toast */}
       {clipboardWarning && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-danger text-surface border-4 border-text shadow-brutal font-bold text-sm animate-fade-in">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-danger text-surface border border-border shadow-card font-bold text-sm animate-fade-in">
           ⚠ {clipboardWarning}
         </div>
       )}
@@ -371,19 +371,19 @@ export default function InterviewPrep() {
             onClick={(e) => e.stopPropagation()}
           >
             <AlertTriangle size={80} className="mx-auto text-danger mb-6" />
-            <h2 className="text-4xl font-geist font-black text-danger mb-4 uppercase">
+            <h2 className="text-4xl font-geist font-bold text-danger mb-4 uppercase">
               TAB SWITCH DETECTED
             </h2>
             <p className="font-bold mb-2 text-lg">
               Switching tabs during an interview is a{" "}
-              <strong className="bg-danger text-surface px-2 border-2 border-text uppercase">serious violation</strong>.
+              <strong className="bg-danger text-surface px-2 border border-border uppercase">serious violation</strong>.
             </p>
             <p className="font-medium mb-6">
               This has been logged. Total tab switches:{" "}
-              <span className="text-danger font-black text-xl">{tabSwitchCount}</span>
+              <span className="text-danger font-bold text-xl">{tabSwitchCount}</span>
             </p>
-            <div className="bg-background border-4 border-text rounded p-4 mb-6 shadow-brutal-sm">
-              <p className="font-black text-lg uppercase tracking-wider">
+            <div className="bg-background border border-border rounded p-4 mb-6 shadow-soft">
+              <p className="font-bold text-lg uppercase tracking-wider">
                 Integrity Impact:{" "}
                 <span className="text-danger">-5 points per switch</span>
               </p>
@@ -399,9 +399,9 @@ export default function InterviewPrep() {
       )}
 
       {/* Header */}
-      <div className="flex flex-wrap justify-between items-center gap-3 bg-surface p-2.5 border-2 border-text shadow-[2px_2px_0px_#111] rounded-lg">
+      <div className="flex flex-wrap justify-between items-center gap-3 bg-surface p-2.5 border border-border shadow-soft rounded-lg">
         <div className="flex flex-wrap items-center gap-3">
-          <h2 className="text-lg font-geist font-black uppercase tracking-tight">
+          <h2 className="text-lg font-geist font-bold uppercase tracking-tight">
             Interview Sim
           </h2>
           <select
@@ -413,7 +413,7 @@ export default function InterviewPrep() {
               setThinkingTime(0);
               setIsThinking(true);
             }}
-            className="bg-background border-2 border-text px-2.5 py-1 text-xs font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-primary shadow-[2px_2px_0px_#111] cursor-pointer"
+            className="bg-background border border-border px-2.5 py-1 text-xs font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-primary shadow-soft cursor-pointer"
           >
             {Object.keys(QUESTIONS).map((q) => (
               <option key={q} value={q}>
@@ -424,7 +424,7 @@ export default function InterviewPrep() {
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="bg-background border-2 border-text px-2.5 py-1 text-xs font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-primary shadow-[2px_2px_0px_#111] cursor-pointer"
+            className="bg-background border border-border px-2.5 py-1 text-xs font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-primary shadow-soft cursor-pointer"
           >
             <option value="javascript">JavaScript</option>
             <option value="python">Python</option>
@@ -433,23 +433,23 @@ export default function InterviewPrep() {
           </select>
         </div>
         <div className="flex flex-wrap gap-3 items-center">
-          <div className={`flex items-center gap-1.5 px-2 py-1 border-2 border-text rounded font-black text-xs uppercase shadow-[2px_2px_0px_#111] ${getBgColor(integrityScore)}`}>
+          <div className={`flex items-center gap-1.5 px-2 py-1 border border-border rounded font-bold text-xs uppercase shadow-soft ${getBgColor(integrityScore)}`}>
             <Shield size={14} />
             <span>{integrityScore}% Integrity</span>
           </div>
           {tabSwitchCount > 0 && (
-            <span className="text-[10px] font-black text-danger uppercase tracking-wider bg-surface px-2 py-1 border-2 border-danger flex items-center gap-1 shadow-[2px_2px_0px_#ef4444]">
+            <span className="text-[10px] font-bold text-danger uppercase tracking-wider bg-surface px-2 py-1 border-2 border-danger flex items-center gap-1 shadow-[2px_2px_0px_#ef4444]">
               <AlertTriangle size={12} /> {tabSwitchCount} switch{tabSwitchCount !== 1 ? "es" : ""}
             </span>
           )}
           {hasStarted ? (
-            <span className="text-xs font-black uppercase tracking-wider bg-background px-2.5 py-1.5 border-2 border-text shadow-[2px_2px_0px_#111]">
+            <span className="text-xs font-bold uppercase tracking-wider bg-background px-2.5 py-1.5 border border-border shadow-soft">
               Time: {(thinkingTime / 1000).toFixed(0)}s
             </span>
           ) : (
             <button
               onClick={() => setHasStarted(true)}
-              className="bg-primary px-3 py-1.5 border-2 border-text text-xs font-black uppercase tracking-wider shadow-[2px_2px_0px_#111] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#111] transition-all"
+              className="bg-primary px-3 py-1.5 border border-border text-xs font-bold uppercase tracking-wider shadow-soft hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#111] transition-all"
             >
               START INTERVIEW
             </button>
@@ -457,28 +457,28 @@ export default function InterviewPrep() {
         </div>
       </div>
 
-      {/* Main Grid — 4 columns: Problem | Editor | Voice | Proctor */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-4 min-h-0">
+      {/* Main Grid — Problem | Editor | Voice+Proctor */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_2fr_1.2fr] gap-3 min-h-0">
         {/* Left Panel: Problem Statement */}
-        <div className="brutal-card bg-surface p-6 flex flex-col overflow-y-auto h-full">
-          <h3 className="text-xl font-black font-geist uppercase border-b-4 border-text pb-2 mb-4">
+        <div className="bg-surface border border-border rounded-xl p-5 flex flex-col overflow-y-auto h-full">
+          <h3 className="text-base font-bold font-geist border-b border-border pb-2 mb-3">
             {QUESTIONS[topic].title}
           </h3>
-          <p className="font-medium text-sm mb-6 leading-relaxed">
+          <p className="text-sm text-text-muted mb-4 leading-relaxed">
             {QUESTIONS[topic].description}
           </p>
-          <div className="bg-background border-4 border-text p-4 rounded mb-4 shadow-brutal-sm">
-            <p className="text-xs font-black uppercase tracking-wider mb-2">Example</p>
-            <p className="font-mono text-sm mb-1">
-              <strong className="bg-primary px-1">Input:</strong> {QUESTIONS[topic].exampleInput}
+          <div className="bg-surface-alt border border-border p-3 rounded-lg mb-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-1.5">Example</p>
+            <p className="font-mono text-xs mb-1">
+              <strong className="text-primary">Input:</strong> {QUESTIONS[topic].exampleInput}
             </p>
-            <p className="font-mono text-sm">
-              <strong className="bg-primary px-1">Output:</strong> {QUESTIONS[topic].exampleOutput}
+            <p className="font-mono text-xs">
+              <strong className="text-primary">Output:</strong> {QUESTIONS[topic].exampleOutput}
             </p>
           </div>
-          <div className="bg-background border-4 border-text p-4 rounded shadow-brutal-sm">
-            <p className="text-xs font-black uppercase tracking-wider mb-2">Constraints</p>
-            <ul className="text-sm font-medium list-disc pl-5">
+          <div className="bg-surface-alt border border-border p-3 rounded-lg">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-1.5">Constraints</p>
+            <ul className="text-xs text-text-muted list-disc pl-4 space-y-0.5">
               {QUESTIONS[topic].constraints.map((c, i) => (
                 <li key={i}>{c}</li>
               ))}
@@ -486,48 +486,48 @@ export default function InterviewPrep() {
           </div>
         </div>
 
-        {/* Center Panel: Editor + Console Stack */}
-        <div className="brutal-card bg-surface flex flex-col gap-0 lg:col-span-2 min-h-0 h-full overflow-hidden">
+        {/* Center Panel: Editor + Console */}
+        <div className="bg-surface border border-border rounded-xl flex flex-col gap-0 min-h-0 h-full overflow-hidden">
           {/* Tabs */}
-          <div className="flex bg-background border-b-4 border-text flex-shrink-0">
+          <div className="flex bg-surface-alt border-b border-border flex-shrink-0">
             <button
               onClick={() => setActiveTab("code")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 font-black font-geist uppercase border-r-4 border-text transition-colors ${
-                activeTab === "code" ? "bg-primary text-text" : "bg-surface text-text hover:bg-[#e2e8f0]"
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold transition-colors border-b-2 ${
+                activeTab === "code" ? "border-primary text-primary bg-surface" : "border-transparent text-text-muted hover:text-text"
               }`}
             >
-              <Code size={18} /> Code
+              <Code size={15} /> Code
             </button>
             <button
               onClick={() => setActiveTab("output")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 font-black font-geist uppercase transition-colors ${
-                activeTab === "output" ? "bg-primary text-text" : "bg-surface text-text hover:bg-[#e2e8f0]"
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold transition-colors border-b-2 ${
+                activeTab === "output" ? "border-primary text-primary bg-surface" : "border-transparent text-text-muted hover:text-text"
               }`}
             >
-              <Terminal size={18} /> Output Console
+              <Terminal size={15} /> Output
             </button>
           </div>
 
-          <div className="flex justify-between items-center p-3 bg-surface border-b-4 border-text flex-shrink-0">
-            <div className="flex gap-3 ml-auto">
+          <div className="flex justify-end items-center p-2 bg-surface border-b border-border flex-shrink-0">
+            <div className="flex gap-2">
               <button
-                className="brutal-btn-secondary px-3 py-1.5 text-sm flex items-center gap-1"
+                className="btn bg-surface-alt border border-border text-text text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:border-primary hover:text-primary transition-colors"
                 onClick={handleRunCode}
                 disabled={isRunning || isAnalyzing || !hasStarted}
               >
-                <Play size={16} /> {isRunning ? "Running..." : "Run"}
+                <Play size={13} /> {isRunning ? "Running..." : "Run"}
               </button>
               <button
-                className="brutal-btn bg-success px-4 py-1.5 text-sm flex items-center gap-2"
+                className="btn bg-success text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:brightness-110 transition-all shadow-soft"
                 onClick={handleAnalyze}
                 disabled={isAnalyzing || !hasStarted}
               >
-                <Send size={16} /> Submit & Analyze
+                <Send size={13} /> Submit & Analyze
               </button>
             </div>
           </div>
 
-          <div className="flex-1 relative overflow-hidden bg-white flex flex-col min-h-0">
+          <div className="flex-1 relative overflow-hidden flex flex-col min-h-0">
             <div 
               className={`flex-1 w-full min-h-0 ${activeTab === "code" ? "block" : "hidden"}`}
               onPaste={(e) => {
@@ -545,71 +545,70 @@ export default function InterviewPrep() {
                 height="100%"
                 language={language === "cpp" ? "cpp" : language}
                 value={code}
-                theme="vs-light"
+                theme="vs-dark"
                 onChange={handleEditorChange}
                 options={{
                   minimap: { enabled: false },
                   fontSize: 14,
-                  fontFamily: "Geist, Fira Code, monospace",
-                  padding: { top: 16 },
+                  fontFamily: "Fira Code, monospace",
+                  padding: { top: 12 },
+                  scrollBeyondLastLine: false,
+                  roundedSelection: true,
                 }}
               />
             </div>
             
-            <div className={`flex-1 overflow-y-auto p-4 bg-text text-surface font-mono text-sm ${activeTab === "output" ? "block" : "hidden"}`}>
+            <div className={`flex-1 overflow-y-auto p-4 bg-[#1e1e2e] text-[#cdd6f4] font-mono text-sm ${activeTab === "output" ? "block" : "hidden"}`}>
                 {!runResult && !result && (
-                  <div className="opacity-50 flex items-center justify-center h-full">
-                     Awaiting execution... Click Run or Submit to see output.
+                  <div className="opacity-40 flex items-center justify-center h-full text-sm">
+                     Awaiting execution... Click Run or Submit.
                   </div>
                 )}
                 
-                {/* Console Output for Run */}
                 {runResult && !result && (
                   <div className="animate-fade-in">
-                    <div className="flex items-center gap-3 mb-2 pb-2 border-b-2 border-surface/30">
-                      <span className={`px-2 py-0.5 font-bold uppercase rounded ${runResult.status === 'passed' ? 'bg-success text-surface' : runResult.status === 'error' ? 'bg-danger text-surface' : 'bg-warning text-text'}`}>
+                    <div className="flex items-center gap-3 mb-2 pb-2 border-b border-white/10">
+                      <span className={`px-2 py-0.5 font-semibold uppercase rounded text-xs ${runResult.status === 'passed' ? 'bg-success text-white' : runResult.status === 'error' ? 'bg-danger text-white' : 'bg-warning text-white'}`}>
                          {runResult.status === 'passed' ? 'ACCEPTED' : runResult.status === 'error' ? 'ERROR' : 'WRONG ANSWER'}
                       </span>
-                      {runResult.runtime > 0 && <span className="opacity-70">{runResult.runtime}ms</span>}
+                      {runResult.runtime > 0 && <span className="opacity-60 text-xs">{runResult.runtime}ms</span>}
                     </div>
                     {runResult.expected && (
-                       <div className="mb-2">
+                       <div className="mb-2 text-xs">
                           <strong>Expected:</strong> {runResult.expected}
                        </div>
                     )}
-                    <pre className="whitespace-pre-wrap">{runResult.output || "Program finished with no output."}</pre>
+                    <pre className="whitespace-pre-wrap text-xs">{runResult.output || "Program finished with no output."}</pre>
                   </div>
                 )}
 
-                {/* Evaluation Results */}
                 {result && (
-                  <div className="animate-fade-in text-text bg-surface p-4 rounded -m-4 min-h-full">
-                    <div className="flex flex-wrap justify-between items-center mb-4 pb-2 border-b-4 border-text">
-                      <h3 className="font-geist font-black text-xl uppercase">Evaluation Report</h3>
+                  <div className="animate-fade-in text-text bg-surface p-4 rounded-xl -m-4 min-h-full">
+                    <div className="flex flex-wrap justify-between items-center mb-4 pb-2 border-b border-border">
+                      <h3 className="font-geist font-bold text-base">Evaluation Report</h3>
                       <div className="flex flex-wrap gap-2">
-                        <div className={`px-3 py-1 border-2 border-text rounded font-black uppercase text-sm shadow-[2px_2px_0px_#111] ${getBgColor(result.adjustedFinalScore)}`}>
+                        <div className={`px-2.5 py-1 rounded-lg font-semibold text-xs text-white ${getBgColor(result.adjustedFinalScore)}`}>
                           Adjusted: {result.adjustedFinalScore}
                         </div>
-                        <div className={`px-3 py-1 border-2 border-text rounded font-black uppercase text-sm shadow-[2px_2px_0px_#111] ${getBgColor(result.finalScore)}`}>
+                        <div className={`px-2.5 py-1 rounded-lg font-semibold text-xs text-white ${getBgColor(result.finalScore)}`}>
                           Raw: {result.finalScore}
                         </div>
                       </div>
                     </div>
 
-                    {/* Show actual execution tests if available */}
                     {result.executionResults && (
-                       <div className="mb-4 border-4 border-text rounded shadow-brutal-sm bg-background p-3">
-                          <strong className="text-sm font-black uppercase tracking-wider block mb-2">Test Execution:</strong>
+                       <div className="mb-3 border border-border rounded-lg bg-surface-alt p-3">
+                          <strong className="text-xs font-semibold uppercase tracking-wider block mb-1.5 text-text-muted">Test Execution:</strong>
                           <div className="flex items-center gap-2">
-                             <span className={`px-2 py-0.5 font-bold uppercase rounded text-sm ${result.executionResults.status === 'accepted' ? 'bg-success text-surface border-2 border-text' : 'bg-danger text-surface border-2 border-text'}`}>
+                             <span className={`px-2 py-0.5 font-semibold uppercase rounded text-xs text-white ${result.executionResults.status === 'accepted' ? 'bg-success' : 'bg-danger'}`}>
                                 {result.executionResults.status === 'accepted' ? 'ALL TESTS PASSED' : 'TESTS FAILED'}
                              </span>
-                             <span className="font-bold">{result.executionResults.passed}/{result.executionResults.total} Passed</span>
+                             <span className="font-semibold text-sm">{result.executionResults.passed}/{result.executionResults.total} Passed</span>
                           </div>
                        </div>
                     )}
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
                       {[
                         { label: "Code", val: result.codeScore, icon: Code },
                         { label: "Logic", val: result.logicScore, icon: Activity },
@@ -622,29 +621,25 @@ export default function InterviewPrep() {
                       ].map(({ label, val, icon: Icon }, idx) => (
                         <div
                           key={idx}
-                          className={`p-2 rounded border-2 border-text text-center shadow-[2px_2px_0px_#111] ${getBgColor(val)}`}
+                          className={`p-2 rounded-lg text-center text-white text-xs ${getBgColor(val)}`}
                         >
-                          <Icon size={16} className="mx-auto mb-1" />
-                          <p className="text-[10px] font-black uppercase tracking-wider mb-1">
-                            {label}
-                          </p>
-                          <p className="font-black text-lg">
-                            {val}
-                          </p>
+                          <Icon size={14} className="mx-auto mb-1" />
+                          <p className="text-[10px] font-medium uppercase mb-0.5">{label}</p>
+                          <p className="font-bold text-base">{val}</p>
                         </div>
                       ))}
                     </div>
 
-                    <div className="bg-background border-4 border-text p-4 rounded text-sm font-medium mb-3 shadow-brutal-sm">
-                      <strong className="text-primary font-black uppercase tracking-wider block mb-2 border-b-2 border-text pb-1">
-                        AI VERDICT:
+                    <div className="bg-surface-alt border border-border p-3 rounded-lg text-sm mb-2">
+                      <strong className="text-primary font-semibold text-xs uppercase tracking-wider block mb-1.5 border-b border-border pb-1">
+                        AI Verdict:
                       </strong>
-                      {result.feedback}
+                      <p className="text-text-muted text-xs leading-relaxed">{result.feedback}</p>
                     </div>
 
                     {result.followUpQuestion && (
-                      <div className="bg-primary text-surface border-4 border-text p-4 rounded text-sm font-medium shadow-brutal-sm">
-                        <strong className="block mb-2 font-black uppercase tracking-wider">💬 Follow-Up Question:</strong>
+                      <div className="bg-primary text-white border border-border p-3 rounded-lg text-xs">
+                        <strong className="block mb-1 font-semibold">💬 Follow-Up:</strong>
                         {result.followUpQuestion}
                       </div>
                     )}
@@ -654,9 +649,9 @@ export default function InterviewPrep() {
           </div>
         </div>
 
-        {/* Right Panel: Voice + Proctoring stacked */}
-        <div className="flex flex-col gap-4 min-h-0 overflow-hidden h-full">
-          <div className="flex-shrink-0 min-h-[220px]">
+        {/* Right Panel: Voice + Proctoring */}
+        <div className="flex flex-col gap-3 min-h-0 overflow-hidden h-full">
+          <div className="flex-shrink-0">
             <VoicePanel
               transcript={transcript}
               setTranscript={setTranscript}
@@ -664,7 +659,7 @@ export default function InterviewPrep() {
               isAnalyzing={isAnalyzing}
             />
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden brutal-card bg-surface">
+          <div className="flex-1 min-h-0 overflow-hidden">
             <ProctoringPanel
               isActive={hasStarted && proctorActive}
               onViolation={handleViolation}

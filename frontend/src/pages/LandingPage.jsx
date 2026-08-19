@@ -37,12 +37,12 @@ export default function LandingPage() {
     <div className="min-h-[100dvh] w-full max-w-[100vw] bg-background text-text overflow-x-hidden pt-16 md:pt-24 font-inter">
       
       {/* Top Navigation */}
-      <nav className="fixed top-0 w-full max-w-[100vw] bg-surface border-b-4 border-border z-50 px-4 sm:px-6 py-3.5 flex justify-between items-center shadow-brutal-sm">
+      <nav className="fixed top-0 w-full max-w-[100vw] bg-surface border-b-4 border-border z-50 px-4 sm:px-6 py-3.5 flex justify-between items-center shadow-soft">
         <div className="font-geist font-bold text-xl sm:text-2xl tracking-tight">ALGONOVA</div>
         <div className="flex items-center gap-3">
           <button
             onClick={toggleTheme}
-            className="px-2.5 py-1.5 bg-primary border-2 border-text rounded shadow-brutal-sm hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-1.5 font-bold text-xs uppercase cursor-pointer"
+            className="px-2.5 py-1.5 bg-primary border border-border rounded shadow-soft hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-1.5 font-bold text-xs uppercase cursor-pointer"
             title="Toggle Theme"
           >
             {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
@@ -156,7 +156,7 @@ export default function LandingPage() {
           <div className="opacity-80">
             © {new Date().getFullYear()} AlgoNova. All rights reserved.
           </div>
-          <div className="bg-surface text-text px-4 py-2 rounded-lg border-2 border-surface shadow-brutal-sm font-bold flex flex-wrap items-center justify-center gap-2">
+          <div className="bg-surface text-text px-4 py-2 rounded-lg border-2 border-surface shadow-soft font-bold flex flex-wrap items-center justify-center gap-2">
             <span>Designed & Developed by <strong className="text-primary">Pranav Landge</strong></span>
             <span className="hidden sm:inline">•</span>
             <a 
@@ -176,7 +176,7 @@ export default function LandingPage() {
 
 const FeatureCard = ({ icon, title, description, color }) => (
   <div className={`brutal-card p-8 ${color}`}>
-    <div className="bg-text text-surface w-14 h-14 flex items-center justify-center rounded-lg border-2 border-text mb-6 shadow-brutal-sm">
+    <div className="bg-text text-surface w-14 h-14 flex items-center justify-center rounded-lg border border-border mb-6 shadow-soft">
       {React.cloneElement(icon, { size: 28 })}
     </div>
     <h3 className="text-2xl font-geist font-bold mb-4 uppercase">{title}</h3>
@@ -190,7 +190,7 @@ const FAQItem = ({ question, answer }) => {
     <div className="brutal-card bg-surface p-6 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-bold uppercase">{question}</h3>
-        <span className="text-2xl font-black">{isOpen ? '−' : '+'}</span>
+        <span className="text-2xl font-bold">{isOpen ? '−' : '+'}</span>
       </div>
       {isOpen && (
         <p className="mt-4 font-medium opacity-80 pt-4 border-t-2 border-text leading-relaxed">

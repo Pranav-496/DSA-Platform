@@ -64,22 +64,22 @@ export default function SkillHeatmap({ quizScores = {}, problemData = {}, voiceS
   });
 
   return (
-    <div className="bg-surface border-4 border-text p-6 shadow-[4px_4px_0px_#111]">
-      <h3 className="font-geist font-black uppercase text-text text-sm mb-6 flex items-center gap-3 tracking-widest border-b-4 border-text pb-2">
-        <span className="w-4 h-4 bg-text border-2 border-text shadow-[2px_2px_0px_#111]" /> SKILL HEATMAP
+    <div className="bg-surface border border-border p-6 shadow-card">
+      <h3 className="font-geist font-bold uppercase text-text text-sm mb-6 flex items-center gap-3 tracking-widest border-b border-border pb-2">
+        <span className="w-4 h-4 bg-text border border-border shadow-soft" /> SKILL HEATMAP
       </h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {topicMastery.map(({ key, label, mastery }) => (
           <div
             key={key}
-            className={`relative p-4 border-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111] ${getColor(mastery)}`}
+            className={`relative p-4 border-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-card ${getColor(mastery)}`}
             title={`${label}: ${mastery}%`}
           >
-            <p className="text-xs font-black uppercase tracking-wider mb-2 truncate">{label}</p>
-            <p className={`text-2xl font-black font-geist ${getTextColor(mastery)}`}>
+            <p className="text-xs font-bold uppercase tracking-wider mb-2 truncate">{label}</p>
+            <p className={`text-2xl font-bold font-geist ${getTextColor(mastery)}`}>
               {mastery}%
             </p>
-            <div className="mt-3 w-full bg-background border-2 border-text h-2 overflow-hidden shadow-inner">
+            <div className="mt-3 w-full bg-background border border-border h-2 overflow-hidden shadow-inner">
               <div
                 className={`h-full border-r-2 border-text transition-all duration-700 ${mastery >= 60 ? "bg-text" : mastery >= 30 ? "bg-text" : "bg-text"}`}
                 style={{ width: `${mastery}%` }}
@@ -90,10 +90,10 @@ export default function SkillHeatmap({ quizScores = {}, problemData = {}, voiceS
       </div>
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-4 mt-6 text-xs font-bold text-text uppercase tracking-wider">
-        <span className="flex items-center gap-2"><span className="w-4 h-4 bg-success border-2 border-text shadow-[2px_2px_0px_#111]" /> 80%+</span>
-        <span className="flex items-center gap-2"><span className="w-4 h-4 bg-warning border-2 border-text shadow-[2px_2px_0px_#111]" /> 40-79%</span>
-        <span className="flex items-center gap-2"><span className="w-4 h-4 bg-danger border-2 border-text shadow-[2px_2px_0px_#111]" /> 1-39%</span>
-        <span className="flex items-center gap-2"><span className="w-4 h-4 bg-background border-2 border-text shadow-[2px_2px_0px_#111]" /> No data</span>
+        <span className="flex items-center gap-2"><span className="w-4 h-4 bg-success border border-border shadow-soft" /> 80%+</span>
+        <span className="flex items-center gap-2"><span className="w-4 h-4 bg-warning border border-border shadow-soft" /> 40-79%</span>
+        <span className="flex items-center gap-2"><span className="w-4 h-4 bg-danger border border-border shadow-soft" /> 1-39%</span>
+        <span className="flex items-center gap-2"><span className="w-4 h-4 bg-background border border-border shadow-soft" /> No data</span>
       </div>
     </div>
   );

@@ -235,9 +235,9 @@ export default function LinkedListVisualizer() {
       <div className="flex flex-wrap items-center gap-2">
         {Object.entries(operations).map(([key, op]) => (
           <button key={key} onClick={() => { setOperation(key); resetHighlights(); }}
-            className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-wider transition-all border-4
-              ${operation === key ? 'bg-primary text-text border-text shadow-[2px_2px_0px_#111]'
-                : 'bg-surface text-text/70 border-text/30 hover:text-text hover:border-text hover:shadow-[2px_2px_0px_#111]'}`}>
+            className={`px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-all border-4
+              ${operation === key ? 'bg-primary text-text border-text shadow-soft'
+                : 'bg-surface text-text/70 border-text/30 hover:text-text hover:border-text hover:shadow-soft'}`}>
             {op.label}
           </button>
         ))}
@@ -245,13 +245,13 @@ export default function LinkedListVisualizer() {
         {operations[operation].needsInput && (
           <div className="ml-auto flex items-center gap-2">
             <input type="number" value={inputVal} onChange={(e) => setInputVal(e.target.value)}
-              placeholder="Value" className="w-20 bg-surface border-4 border-text text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-[2px_2px_0px_#111]" />
+              placeholder="Value" className="w-20 bg-surface border border-border text-text px-2 py-1.5 rounded-lg text-sm font-mono focus:border-primary outline-none shadow-soft" />
           </div>
         )}
       </div>
 
       {/* Description */}
-      <div className="bg-surface border-4 border-text rounded-lg px-4 py-2 flex items-center justify-between shadow-brutal-sm">
+      <div className="bg-surface border border-border rounded-lg px-4 py-2 flex items-center justify-between shadow-soft">
         <p className="text-text/70 text-sm font-geist">Singly Linked List — each node stores a value and a pointer to the next node.</p>
         <div className="flex gap-4 text-xs">
           <span className="text-text/70">Access: <span className="text-warning font-mono font-bold">O(n)</span></span>
@@ -261,13 +261,13 @@ export default function LinkedListVisualizer() {
       </div>
 
       {/* Linked List Visualization */}
-      <div className="flex-1 bg-background border-4 border-text shadow-brutal rounded-lg p-8 flex items-center justify-start overflow-x-auto min-h-[150px] relative">
+      <div className="flex-1 bg-background border border-border shadow-card rounded-lg p-8 flex items-center justify-start overflow-x-auto min-h-[150px] relative">
         <div className="absolute top-3 left-4 text-xs text-text/70 font-mono">{statusMessage}</div>
 
         <div className="flex items-center gap-0 mx-auto">
           {/* HEAD pointer */}
           <div className="flex flex-col items-center mr-3">
-            <span className="text-primary text-xs font-mono font-black uppercase mb-1">HEAD</span>
+            <span className="text-primary text-xs font-mono font-bold uppercase mb-1">HEAD</span>
             <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[10px] border-t-primary"></div>
           </div>
 
@@ -281,12 +281,12 @@ export default function LinkedListVisualizer() {
             let borderClass = 'border-text/40';
             let bgClass = 'bg-surface';
             let textClass = 'text-text';
-            let shadow = 'shadow-[2px_2px_0px_#111]';
+            let shadow = 'shadow-soft';
 
-            if (isFound) { borderClass = 'border-success'; bgClass = 'bg-success/20'; textClass = 'text-success'; shadow = 'shadow-[4px_4px_0px_#111]'; }
-            else if (isDeleting) { borderClass = 'border-danger'; bgClass = 'bg-danger/20'; textClass = 'text-danger'; shadow = 'shadow-[4px_4px_0px_#111] animate-pulse'; }
-            else if (isNew) { borderClass = 'border-warning'; bgClass = 'bg-warning/20'; textClass = 'text-warning'; shadow = 'shadow-[4px_4px_0px_#111] animate-bounce'; }
-            else if (isActive) { borderClass = 'border-primary'; bgClass = 'bg-primary/20'; textClass = 'text-text'; shadow = 'shadow-[4px_4px_0px_#111]'; }
+            if (isFound) { borderClass = 'border-success'; bgClass = 'bg-success/20'; textClass = 'text-success'; shadow = 'shadow-card'; }
+            else if (isDeleting) { borderClass = 'border-danger'; bgClass = 'bg-danger/20'; textClass = 'text-danger'; shadow = 'shadow-card animate-pulse'; }
+            else if (isNew) { borderClass = 'border-warning'; bgClass = 'bg-warning/20'; textClass = 'text-warning'; shadow = 'shadow-card animate-bounce'; }
+            else if (isActive) { borderClass = 'border-primary'; bgClass = 'bg-primary/20'; textClass = 'text-text'; shadow = 'shadow-card'; }
             else if (isVisited) { borderClass = 'border-primary/50'; bgClass = 'bg-primary/10'; textClass = 'text-text'; }
 
             return (
@@ -294,7 +294,7 @@ export default function LinkedListVisualizer() {
                 <div className={`flex rounded-lg border-4 ${borderClass} ${bgClass} ${shadow} transition-all duration-300 overflow-hidden`}>
                   {/* Value */}
                   <div className={`px-5 py-4 flex flex-col items-center justify-center min-w-[60px] ${textClass}`}>
-                    <span className="font-mono font-black text-lg">{node.val}</span>
+                    <span className="font-mono font-bold text-lg">{node.val}</span>
                     <span className="text-[9px] text-text/50 mt-0.5">idx:{idx}</span>
                   </div>
                   {/* Next pointer section */}
@@ -316,7 +316,7 @@ export default function LinkedListVisualizer() {
           {/* NULL terminator */}
           <div className="ml-2 flex items-center">
             <div className="w-4 h-1 bg-text/30"></div>
-            <div className="px-3 py-2 border-4 border-text/40 rounded-lg bg-surface text-text/50 text-xs font-mono font-bold shadow-[2px_2px_0px_#111]">NULL</div>
+            <div className="px-3 py-2 border border-border/40 rounded-lg bg-surface text-text/50 text-xs font-mono font-bold shadow-soft">NULL</div>
           </div>
         </div>
 

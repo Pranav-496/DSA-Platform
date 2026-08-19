@@ -38,11 +38,11 @@ function ScoreRing({ score, size = 120, sw = 8, label, showGrade }) {
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {showGrade ? (
             <>
-              <span className="text-3xl font-black" style={{ color: col }}>{grade}</span>
+              <span className="text-3xl font-bold" style={{ color: col }}>{grade}</span>
               <span className="text-xs font-bold opacity-60">{score}/100</span>
             </>
           ) : (
-            <span className="text-2xl font-black" style={{ color: col }}>{score}%</span>
+            <span className="text-2xl font-bold" style={{ color: col }}>{score}%</span>
           )}
         </div>
       </div>
@@ -65,9 +65,9 @@ function ScoreBar({ label, score, max, icon: Icon }) {
           {Icon && <Icon size={14} className="opacity-60" />}
           <span className="text-xs font-bold uppercase tracking-wider">{label}</span>
         </div>
-        <span className="text-xs font-black">{score}/{max}</span>
+        <span className="text-xs font-bold">{score}/{max}</span>
       </div>
-      <div className="w-full h-2.5 bg-background border-2 border-text rounded-full overflow-hidden">
+      <div className="w-full h-2.5 bg-background border border-border rounded-full overflow-hidden">
         <div className={`h-full ${col} transition-all duration-1000 ease-out rounded-full`} style={{ width: `${pct}%` }} />
       </div>
     </div>
@@ -297,11 +297,11 @@ export default function ResumeScreener() {
         {/* ── Header ── */}
         <div className="brutal-card bg-surface p-4 md:p-6 mb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary border-4 border-text rounded-lg shadow-brutal-sm">
+            <div className="p-3 bg-primary border border-border rounded-lg shadow-soft">
               <FileSearch size={28} />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-geist font-black uppercase tracking-tight">
+              <h1 className="text-2xl md:text-3xl font-geist font-bold uppercase tracking-tight">
                 Resume ATS Screener
               </h1>
               <p className="text-sm font-medium opacity-70 mt-0.5">
@@ -318,7 +318,7 @@ export default function ResumeScreener() {
 
         {/* ── Error Display ── */}
         {error && (
-          <div className="brutal-card bg-danger border-4 border-text p-4 mb-4 text-surface font-bold text-sm flex items-center gap-3">
+          <div className="brutal-card bg-danger border border-border p-4 mb-4 text-surface font-bold text-sm flex items-center gap-3">
             <AlertTriangle size={20} />
             <span>ERROR: {error}</span>
           </div>
@@ -337,13 +337,13 @@ export default function ResumeScreener() {
                 <div className="flex gap-2 mb-4">
                   <button
                     onClick={() => setInputMode('upload')}
-                    className={`px-4 py-2 text-xs font-bold uppercase border-4 border-text rounded-lg transition-all ${inputMode === 'upload' ? 'bg-primary shadow-brutal-sm -translate-y-0.5' : 'bg-background hover:bg-primary/30'}`}
+                    className={`px-4 py-2 text-xs font-bold uppercase border border-border rounded-lg transition-all ${inputMode === 'upload' ? 'bg-primary shadow-soft -translate-y-0.5' : 'bg-background hover:bg-primary/30'}`}
                   >
                     <Upload size={14} className="inline mr-1.5 -mt-0.5" /> Upload File
                   </button>
                   <button
                     onClick={() => setInputMode('paste')}
-                    className={`px-4 py-2 text-xs font-bold uppercase border-4 border-text rounded-lg transition-all ${inputMode === 'paste' ? 'bg-primary shadow-brutal-sm -translate-y-0.5' : 'bg-background hover:bg-primary/30'}`}
+                    className={`px-4 py-2 text-xs font-bold uppercase border border-border rounded-lg transition-all ${inputMode === 'paste' ? 'bg-primary shadow-soft -translate-y-0.5' : 'bg-background hover:bg-primary/30'}`}
                   >
                     <FileText size={14} className="inline mr-1.5 -mt-0.5" /> Paste Text
                   </button>
@@ -376,7 +376,7 @@ export default function ResumeScreener() {
                     {fileName ? (
                       <div className="space-y-3">
                         <CheckCircle size={48} className="mx-auto text-success" />
-                        <p className="text-lg font-black uppercase">{fileName}</p>
+                        <p className="text-lg font-bold uppercase">{fileName}</p>
                         <p className="text-sm font-bold opacity-60">
                           {resumeText.split(/\s+/).length} words extracted • Ready to analyze
                         </p>
@@ -389,7 +389,7 @@ export default function ResumeScreener() {
                     ) : (
                       <div className="space-y-3">
                         <Upload size={48} className="mx-auto opacity-40" />
-                        <p className="text-lg font-black uppercase">Drop your resume here</p>
+                        <p className="text-lg font-bold uppercase">Drop your resume here</p>
                         <p className="text-sm font-medium opacity-60">
                           or click to browse • PDF, TXT supported • Max 5MB
                         </p>
@@ -430,7 +430,7 @@ export default function ResumeScreener() {
             {/* Right: Info Panel */}
             <div className="space-y-4">
               <div className="brutal-card bg-primary p-4 md:p-5">
-                <h3 className="text-lg font-black uppercase mb-3 flex items-center gap-2">
+                <h3 className="text-lg font-bold uppercase mb-3 flex items-center gap-2">
                   <Shield size={20} /> What We Analyze
                 </h3>
                 <ul className="space-y-2.5 text-sm font-bold">
@@ -454,7 +454,7 @@ export default function ResumeScreener() {
               </div>
 
               <div className="brutal-card bg-surface p-4 md:p-5">
-                <h3 className="text-sm font-black uppercase mb-2 flex items-center gap-2">
+                <h3 className="text-sm font-bold uppercase mb-2 flex items-center gap-2">
                   <Sparkles size={16} /> AI-Powered
                 </h3>
                 <p className="text-xs font-medium opacity-70 leading-relaxed">
@@ -477,7 +477,7 @@ export default function ResumeScreener() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Big Score Card */}
               <div className="brutal-card bg-surface p-6 flex flex-col items-center justify-center text-center">
-                <h2 className="text-xs font-black uppercase tracking-wider mb-4 opacity-50">ATS Score</h2>
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-4 opacity-50">ATS Score</h2>
                 <ScoreRing score={result.totalScore} size={140} sw={10} showGrade />
                 <div className="mt-4 flex items-center gap-2">
                   <span className="text-xs font-bold opacity-60">{result.wordCount} words</span>
@@ -491,7 +491,7 @@ export default function ResumeScreener() {
 
               {/* Score Breakdown */}
               <div className="md:col-span-2 brutal-card bg-surface p-5">
-                <h3 className="text-sm font-black uppercase tracking-wider mb-4 flex items-center gap-2">
+                <h3 className="text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
                   <BarChart3 size={16} /> Score Breakdown
                 </h3>
                 <div className="space-y-3">
@@ -510,7 +510,7 @@ export default function ResumeScreener() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Strengths */}
               <div className="brutal-card bg-success/10 border-success p-5">
-                <h3 className="text-sm font-black uppercase tracking-wider mb-3 flex items-center gap-2 text-success">
+                <h3 className="text-sm font-bold uppercase tracking-wider mb-3 flex items-center gap-2 text-success">
                   <Star size={16} /> Strengths
                 </h3>
                 <ul className="space-y-2">
@@ -525,7 +525,7 @@ export default function ResumeScreener() {
 
               {/* Improvements */}
               <div className="brutal-card bg-danger/10 border-danger p-5">
-                <h3 className="text-sm font-black uppercase tracking-wider mb-3 flex items-center gap-2 text-danger">
+                <h3 className="text-sm font-bold uppercase tracking-wider mb-3 flex items-center gap-2 text-danger">
                   <AlertTriangle size={16} /> Areas to Improve
                 </h3>
                 <ul className="space-y-2">
@@ -541,13 +541,13 @@ export default function ResumeScreener() {
 
             {/* ── Row 3: Keywords Found ── */}
             <div className="brutal-card bg-surface p-5">
-              <h3 className="text-sm font-black uppercase tracking-wider mb-3 flex items-center gap-2">
+              <h3 className="text-sm font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
                 <Target size={16} /> Keywords Detected ({result.keywords.totalFound})
               </h3>
               <div className="space-y-3">
                 {result.keywords.technical.length > 0 && (
                   <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider opacity-50 block mb-1.5">Technical Skills</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-50 block mb-1.5">Technical Skills</span>
                     <div className="flex flex-wrap gap-1.5">
                       {result.keywords.technical.map((kw, i) => <KeywordChip key={i} keyword={kw} type="technical" />)}
                     </div>
@@ -555,7 +555,7 @@ export default function ResumeScreener() {
                 )}
                 {result.keywords.impact.length > 0 && (
                   <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider opacity-50 block mb-1.5">Action Verbs</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-50 block mb-1.5">Action Verbs</span>
                     <div className="flex flex-wrap gap-1.5">
                       {result.keywords.impact.map((kw, i) => <KeywordChip key={i} keyword={kw} type="impact" />)}
                     </div>
@@ -563,7 +563,7 @@ export default function ResumeScreener() {
                 )}
                 {result.keywords.general.length > 0 && (
                   <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider opacity-50 block mb-1.5">Soft Skills</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-50 block mb-1.5">Soft Skills</span>
                     <div className="flex flex-wrap gap-1.5">
                       {result.keywords.general.map((kw, i) => <KeywordChip key={i} keyword={kw} type="general" />)}
                     </div>
@@ -571,7 +571,7 @@ export default function ResumeScreener() {
                 )}
                 {result.aiCritique?.missingKeywords && result.aiCritique.missingKeywords.length > 0 && (
                   <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider opacity-50 block mb-1.5">Missing Keywords (AI Suggested)</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-50 block mb-1.5">Missing Keywords (AI Suggested)</span>
                     <div className="flex flex-wrap gap-1.5">
                       {result.aiCritique.missingKeywords.map((kw, i) => <KeywordChip key={i} keyword={kw} type="missing" />)}
                     </div>
@@ -584,7 +584,7 @@ export default function ResumeScreener() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Contact Info */}
               <div className="brutal-card bg-surface p-5">
-                <h3 className="text-sm font-black uppercase tracking-wider mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
                   <User size={16} /> Contact Information
                 </h3>
                 <div className="space-y-2">
@@ -606,7 +606,7 @@ export default function ResumeScreener() {
 
               {/* Resume Sections */}
               <div className="brutal-card bg-surface p-5">
-                <h3 className="text-sm font-black uppercase tracking-wider mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
                   <FileText size={16} /> Section Detection
                 </h3>
                 <div className="space-y-2">
@@ -631,23 +631,23 @@ export default function ResumeScreener() {
             {/* ── Row 5: AI Critique & Bullet Rewrites ── */}
             {result.aiCritique && (
               <div className="brutal-card bg-primary/10 border-primary p-5">
-                <h3 className="text-sm font-black uppercase tracking-wider mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
                   <Sparkles size={16} className="text-primary" /> AI Deep Analysis
                   <span className="text-[10px] font-bold bg-primary px-2 py-0.5 rounded uppercase">Gemini</span>
                 </h3>
                 {result.aiCritique.overallImpression && (
-                  <p className="text-sm font-medium leading-relaxed mb-4 p-3 bg-surface border-2 border-text rounded-lg">
+                  <p className="text-sm font-medium leading-relaxed mb-4 p-3 bg-surface border border-border rounded-lg">
                     {result.aiCritique.overallImpression}
                   </p>
                 )}
                 {result.aiCritique.bulletRewrites && result.aiCritique.bulletRewrites.length > 0 && (
                   <div className="mt-4">
-                    <h4 className="text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <h4 className="text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
                       <Lightbulb size={14} /> Suggested Bullet Point Rewrites
                     </h4>
                     <div className="space-y-3">
                       {result.aiCritique.bulletRewrites.map((item, i) => (
-                        <div key={i} className="bg-surface border-2 border-text rounded-lg p-3">
+                        <div key={i} className="bg-surface border border-border rounded-lg p-3">
                           <div className="flex items-start gap-2 mb-2">
                             <XCircle size={12} className="text-danger mt-0.5 flex-shrink-0" />
                             <span className="text-xs font-medium opacity-60 line-through">{item.original}</span>
@@ -666,20 +666,20 @@ export default function ResumeScreener() {
 
             {/* ── Row 6: Quantification Stats ── */}
             <div className="brutal-card bg-surface p-5">
-              <h3 className="text-sm font-black uppercase tracking-wider mb-3 flex items-center gap-2">
+              <h3 className="text-sm font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
                 <Hash size={16} /> Quantification Analysis
               </h3>
               <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="p-3 bg-background border-2 border-text rounded-lg">
-                  <span className="text-2xl font-black block">{result.quantification.quantifiedLines}</span>
+                <div className="p-3 bg-background border border-border rounded-lg">
+                  <span className="text-2xl font-bold block">{result.quantification.quantifiedLines}</span>
                   <span className="text-[10px] font-bold uppercase tracking-wider opacity-50">Lines with Metrics</span>
                 </div>
-                <div className="p-3 bg-background border-2 border-text rounded-lg">
-                  <span className="text-2xl font-black block">{result.quantification.totalLines}</span>
+                <div className="p-3 bg-background border border-border rounded-lg">
+                  <span className="text-2xl font-bold block">{result.quantification.totalLines}</span>
                   <span className="text-[10px] font-bold uppercase tracking-wider opacity-50">Total Lines</span>
                 </div>
-                <div className="p-3 bg-background border-2 border-text rounded-lg">
-                  <span className={`text-2xl font-black block ${result.quantification.ratio >= 20 ? 'text-success' : result.quantification.ratio >= 10 ? 'text-warning' : 'text-danger'}`}>
+                <div className="p-3 bg-background border border-border rounded-lg">
+                  <span className={`text-2xl font-bold block ${result.quantification.ratio >= 20 ? 'text-success' : result.quantification.ratio >= 10 ? 'text-warning' : 'text-danger'}`}>
                     {result.quantification.ratio}%
                   </span>
                   <span className="text-[10px] font-bold uppercase tracking-wider opacity-50">Quantification Ratio</span>
@@ -692,7 +692,7 @@ export default function ResumeScreener() {
 
             {/* ── Pro Tips ── */}
             <div className="brutal-card bg-warning/10 border-warning p-5">
-              <h3 className="text-sm font-black uppercase tracking-wider mb-3 flex items-center gap-2 text-warning">
+              <h3 className="text-sm font-bold uppercase tracking-wider mb-3 flex items-center gap-2 text-warning">
                 <Lightbulb size={16} /> Pro Tips
               </h3>
               <ul className="space-y-2 text-sm font-medium">
