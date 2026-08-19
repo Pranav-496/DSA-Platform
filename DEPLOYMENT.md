@@ -77,3 +77,22 @@ This guide takes you step-by-step through deploying **AlgoNova** using **Vercel*
 4. Click **Save**.
 
 🎉 **Your frontend is now live on Vercel with zero cold starts!**
+
+---
+
+## 4️⃣ Step 4: Keep Render Backend Awake (Zero Cold Starts)
+
+Since Render's Free tier spins down your backend API after 15 minutes of inactivity, the first API request after a while can take up to 50 seconds to respond. 
+
+To prevent this, you should use **UptimeRobot** to ping the backend every 10 minutes:
+
+1. Go to [UptimeRobot](https://uptimerobot.com/) and create a free account.
+2. Click **"+ Add New Monitor"**.
+3. Configure the monitor:
+   - **Monitor Type**: `HTTP(s)`
+   - **Friendly Name**: `AlgoNova Backend API`
+   - **URL (or IP)**: `https://algonova-backend.onrender.com/api/health` *(Replace with your actual Render URL + `/api/health`)*
+   - **Monitoring Interval**: `10 minutes` (This prevents the 15-minute timeout).
+4. Click **Create Monitor**.
+
+✅ Your backend is now protected from going to sleep. UptimeRobot will ping the health check route we already built in `server.js`, and your app will remain lightning-fast 24/7!
