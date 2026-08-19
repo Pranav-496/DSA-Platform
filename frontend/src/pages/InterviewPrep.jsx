@@ -176,19 +176,46 @@ export default function InterviewPrep() {
   const [runResult, setRunResult] = useState(null);
   const [result, setResult] = useState(null);
   const [proctorActive, setProctorActive] = useState(true);
-  const [integrityScore, setIntegrityScore] = useState(100);
-  const [violationLog, setViolationLog] = useState([]);
-  const [tabSwitchWarning, setTabSwitchWarning] = useState(false);
-  const [tabSwitchCount, setTabSwitchCount] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [hasStarted, setHasStarted] = useState(() => JSON.parse(sessionStorage.getItem('interview_hasStarted')) || false);
   const [activeTab, setActiveTab] = useState("code");
   const [clipboardWarning, setClipboardWarning] = useState('');
   
   const [instructionsAccepted, setInstructionsAccepted] = useState(false);
-  const [assignedQuestions, setAssignedQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isDisqualified, setIsDisqualified] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(60 * 45); // 45 minutes
+  const [assignedQuestions, setAssignedQuestions] = useState(() => JSON.parse(sessionStorage.getItem('interview_assignedQuestions')) || []);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => Number(sessionStorage.getItem('interview_currentQuestionIndex')) || 0);
+  const [isDisqualified, setIsDisqualified] = useState(() => JSON.parse(sessionStorage.getItem('interview_isDisqualified')) || false);
+  const [timeRemaining, setTimeRemaining] = useState(() => {
+    const saved = sessionStorage.getItem('interview_timeRemaining');
+    return saved !== null ? Number(saved) : 60 * 45;
+  });
+  
+  // Replace these above ones to also load from session
+  const [integrityScore, setIntegrityScore] = useState(() => {
+    const saved = sessionStorage.getItem('interview_integrityScore');
+    return saved !== null ? Number(saved) : 100;
+  });
+  const [tabSwitchCount, setTabSwitchCount] = useState(() => Number(sessionStorage.getItem('interview_tabSwitchCount')) || 0);
+  const [violationLog, setViolationLog] = useState(() => JSON.parse(sessionStorage.getItem('interview_violationLog')) || []);
+  const [tabSwitchWarning, setTabSwitchWarning] = useState(false);
+
+  useEffect(() => {
+    sessionStorage.setItem('interview_hasStarted', JSON.stringify(hasStarted));
+    sessionStorage.setItem('interview_isDisqualified', JSON.stringify(isDisqualified));
+    sessionStorage.setItem('interview_timeRemaining', timeRemaining);
+    sessionStorage.setItem('interview_tabSwitchCount', tabSwitchCount);
+    sessionStorage.setItem('interview_assignedQuestions', JSON.stringify(assignedQuestions));
+    sessionStorage.setItem('interview_currentQuestionIndex', currentQuestionIndex);
+    sessionStorage.setItem('interview_integrityScore', integrityScore);
+    sessionStorage.setItem('interview_violationLog', JSON.stringify(violationLog));
+  }, [hasStarted, isDisqualified, timeRemaining, tabSwitchCount, assignedQuestions, currentQuestionIndex, integrityScore, violationLog]);
+
+  // Strict Disqualification on 0 Integrity
+  useEffect(() => {
+    if (hasStarted && !isDisqualified && integrityScore <= 0) {
+      setIsDisqualified(true);
+      setViolationLog(prev => [...prev, "Integrity Score reached 0%"]);
+    }
+  }, [integrityScore, hasStarted, isDisqualified]);
 
   const startInterview = () => {
     const EASY_Q = ["Binary Search", "Bubble Sort", "DFS", "Hash Map", "Two Pointers"];
@@ -205,6 +232,14 @@ export default function InterviewPrep() {
     setTopic(selected[0]);
     setHasStarted(true);
     setProctorActive(true); // Auto-start proctoring
+
+    try {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      }
+    } catch (e) {
+      console.warn("Fullscreen request failed", e);
+    }
   };
 
   // Timer logic
@@ -227,30 +262,70 @@ export default function InterviewPrep() {
     return () => clearInterval(timerRef.current);
   }, [hasStarted, isDisqualified, timeRemaining, isThinking]);
 
-  // Tab switch blocking
+  // Security monitoring
   useEffect(() => {
-    if (!hasStarted) return;
+    const handleKeyDown = (e) => {
+      if (
+        e.key === "F12" || 
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C" || e.key === "i" || e.key === "j" || e.key === "c")) || 
+        (e.ctrlKey && (e.key === "U" || e.key === "u"))
+      ) {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+
+    if (!hasStarted) return () => document.removeEventListener("keydown", handleKeyDown);
+
+    const handleViolation = (isStrict, reason) => {
+      if (isDisqualified) return;
+      if (isStrict) {
+        setIsDisqualified(true);
+        setViolationLog(logs => [...logs, reason]);
+      } else {
+        setTabSwitchCount((prev) => {
+          const newCount = prev + 1;
+          if (newCount >= 3) {
+            setIsDisqualified(true);
+            setViolationLog(logs => [...logs, "Maximum Strikes Reached (3)"]);
+          } else {
+            setTabSwitchWarning(true);
+            setViolationLog(logs => [...logs, reason]);
+          }
+          return newCount;
+        });
+      }
+    };
 
     const handleVisibility = () => {
-      if (document.hidden && !isDisqualified) {
-        setTabSwitchCount((prev) => prev + 1);
-        setTabSwitchWarning(true);
-        setViolationLog(prev => [...prev, "Tab Switching Detected"]);
-        setIsDisqualified(true);
+      if (document.hidden) handleViolation(false, "Tab Switching Detected");
+    };
+
+    const handleBlur = () => {
+      handleViolation(false, "Window Focus Lost (Split Screen)");
+    };
+
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && hasStarted) {
+        handleViolation(true, "Exited Fullscreen Mode");
       }
     };
 
     const handleBeforeUnload = (e) => {
       e.preventDefault();
-      e.returnValue =
-        "You are in an active interview session. Are you sure you want to leave?";
+      e.returnValue = "You are in an active interview session. Are you sure you want to leave?";
     };
 
     document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("blur", handleBlur);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
+      document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("blur", handleBlur);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [hasStarted, isDisqualified]);
@@ -384,7 +459,7 @@ export default function InterviewPrep() {
   };
 
   return (
-    <div className="h-full flex flex-col gap-4 text-text p-4 relative overflow-hidden">
+    <div className="h-full flex flex-col gap-4 text-text p-4 relative overflow-hidden select-none">
       {/* Disqualification Modal */}
       {isDisqualified && (
         <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
@@ -398,7 +473,12 @@ export default function InterviewPrep() {
             </p>
             <p className="text-text-muted mb-6">No further actions are permitted.</p>
             <button
-              onClick={() => window.location.href = '/'}
+              onClick={() => {
+                Object.keys(sessionStorage).forEach(k => {
+                  if (k.startsWith('interview_')) sessionStorage.removeItem(k);
+                });
+                window.location.href = '/';
+              }}
               className="btn bg-surface-alt border border-border px-6 py-2 rounded-lg font-bold hover:text-primary transition-colors"
             >
               Return to Dashboard
@@ -420,7 +500,8 @@ export default function InterviewPrep() {
               
               <ul className="list-disc pl-5 space-y-2 text-text-muted">
                 <li><strong>Proctoring is strict:</strong> Your webcam and microphone will be monitored. Ensure your face is clearly visible.</li>
-                <li><strong>No Tab Switching:</strong> Navigating away from this tab will result in immediate disqualification.</li>
+                <li><strong>No Tab Switching or Split Screen:</strong> Leaving the window or using split screen increments a strike. 3 strikes = disqualification.</li>
+                <li><strong>Fullscreen Required:</strong> Exiting fullscreen mode will result in immediate disqualification.</li>
                 <li><strong>No Copy/Paste:</strong> Copying code from external sources is strictly prohibited.</li>
                 <li><strong>Format:</strong> You will be assigned 3 random questions (Easy, Medium, Hard).</li>
                 <li><strong>Time Limit:</strong> You have 45 minutes to complete all questions.</li>
@@ -442,7 +523,12 @@ export default function InterviewPrep() {
             
             <div className="flex justify-end gap-3">
               <button 
-                onClick={() => window.location.href = '/'}
+                onClick={() => {
+                  Object.keys(sessionStorage).forEach(k => {
+                    if (k.startsWith('interview_')) sessionStorage.removeItem(k);
+                  });
+                  window.location.href = '/';
+                }}
                 className="btn bg-surface-alt border border-border px-4 py-2 rounded-lg text-sm font-semibold hover:bg-background transition-colors"
               >
                 Cancel
@@ -485,12 +571,15 @@ export default function InterviewPrep() {
             </p>
             <p className="font-medium mb-6">
               This has been logged. Total tab switches:{" "}
-              <span className="text-danger font-bold text-xl">{tabSwitchCount}</span>
+              <span className="text-danger font-bold text-xl">{tabSwitchCount} / 3</span>
             </p>
             <div className="bg-background border border-border rounded p-4 mb-6 shadow-soft">
               <p className="font-bold text-lg uppercase tracking-wider">
                 Integrity Impact:{" "}
                 <span className="text-danger">-5 points per switch</span>
+              </p>
+              <p className="text-sm font-semibold text-text-muted mt-2 uppercase">
+                3 Strikes = Automatic Disqualification
               </p>
             </div>
             <button

@@ -22,8 +22,16 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
 
   const [cameraOn, setCameraOn] = useState(false);
   const [modelsLoaded, setModelsLoaded] = useState(false);
-  const [violations, setViolations] = useState([]);
-  const [integrityScore, setIntegrityScore] = useState(100);
+  const [violations, setViolations] = useState(() => JSON.parse(sessionStorage.getItem('interview_proctorViolations')) || []);
+  const [integrityScore, setIntegrityScore] = useState(() => {
+    const saved = sessionStorage.getItem('interview_proctorIntegrity');
+    return saved !== null ? Number(saved) : 100;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem('interview_proctorViolations', JSON.stringify(violations));
+    sessionStorage.setItem('interview_proctorIntegrity', integrityScore);
+  }, [violations, integrityScore]);
   const [currentStatus, setCurrentStatus] = useState("Initializing...");
   const [statusColor, setStatusColor] = useState("text-text-muted");
   const [faceCount, setFaceCount] = useState(0);
