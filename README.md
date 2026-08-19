@@ -30,16 +30,16 @@ The platform is designed to be a "One-Stop Solution" for aspiring software engin
 ## 🏗️ Comprehensive Feature Breakdown
 
 ### 1. 🤖 AI-Powered Interview Simulation
-A fully immersive mock interview environment that simulates real-world technical screening.
+A fully immersive mock interview environment that simulates real-world technical screening with ultra-strict proctoring.
 * **Workflow:**
-  1. The user enters the interview room; proctoring is immediately initialized.
-  2. The user reads the prompt and writes the solution using the integrated Monaco Editor.
-  3. The user records their explanation using the browser's MediaRecorder API.
-  4. The code and audio transcript (via speech recognition) are sent to the backend.
-  5. The AI Engine evaluates time/space complexity, edge cases, and communication clarity.
-  6. The AI dynamically generates 3 targeted follow-up questions.
-* **APIs & Integration:** Google Gemini API (for code/speech analysis and follow-ups).
-* **Tools & Libraries:** `@monaco-editor/react`, Web Speech API (for speech-to-text), MediaRecorder.
+  1. The user must accept strict rules (No Tab Switching, No Split Screen, No Copy/Paste, No DevTools).
+  2. The system forces Fullscreen Mode and dynamically assigns 3 randomized questions (Easy, Medium, Hard) with a 45-minute countdown timer.
+  3. Real-time Proctoring initializes instantly in the background via `face-api.js` (tracking face presence, multiple faces, etc.).
+  4. Security triggers monitor for Window Blur (split-screen), Tab Switches, and Escaping Fullscreen, utilizing a strict "3 Strikes" disqualification logic.
+  5. The user writes their solution and records their explanation.
+  6. The AI Engine evaluates time/space complexity, edge cases, and communication clarity, and asks follow-up questions.
+* **APIs & Integration:** Google Gemini API, `face-api.js`.
+* **Tools & Libraries:** `@monaco-editor/react`, Web Speech API, MediaRecorder.
 
 ### 2. 📐 System Design Sandbox
 An interactive whiteboard for architecting scalable systems with instant AI feedback.
@@ -63,13 +63,14 @@ A professional-grade Applicant Tracking System (ATS) simulator to optimize resum
 * **APIs & Integration:** Google Gemini API (for linguistic critique).
 * **Tools & Libraries:** `pdfjs-dist` (local worker-based extraction), custom Regex-based ATS Rule Engine.
 
-### 4. 👁️ Interactive DSA Visualizer
-Step-by-step state visualization for complex algorithms to build intuition.
+### 4. 👁️ Interactive DSA Visualizer & "Bring Your Own Code"
+Step-by-step state visualization for complex algorithms to build intuition, featuring a custom execution tracer.
 * **Workflow:**
-  1. The user selects an algorithm category (Sorting, Searching, Trees, Graphs, DP).
-  2. The simulation control panel allows the user to step forward, step backward, or auto-play.
-  3. The React state engine maps algorithm states to animated DOM elements.
-* **Tools & Libraries:** Custom React state machines, Framer Motion (for fluid transitions).
+  1. The user selects pre-built algorithms or uses the **"Bring Your Own Code"** feature to paste custom Javascript, Python, Java, or C++ code.
+  2. The custom backend trace engine executes the code (using `sys.settrace` for Python, VM inspection for JS, and Gemini-assisted simulation for C++/Java) to extract line-by-line execution states.
+  3. The React state engine maps the executed algorithm states to animated DOM elements in real-time.
+  4. The simulation control panel allows the user to step forward, step backward, or auto-play.
+* **Tools & Libraries:** Custom React state machines, Framer Motion, Node `child_process`.
 
 ### 5. 💻 Practice HQ (Code Execution & Judging)
 A robust coding environment with immediate feedback.
@@ -200,6 +201,7 @@ npm run dev
 
 - **Frontend (Vercel):** The React application is deployed on Vercel's Edge Network for global low-latency delivery. It utilizes Vercel's automated CI/CD pipeline linked to the GitHub repository.
 - **Backend (Render):** The Express.js Node server is hosted on Render as a Web Service. It manages connections to MongoDB Atlas and handles all AI API interactions securely.
+- **Uptime Monitoring:** Configured with **UptimeRobot** pinging the custom `/api/health` route every 10 minutes to prevent the Render backend from entering sleep mode, ensuring zero cold-starts.
 
 ---
 
