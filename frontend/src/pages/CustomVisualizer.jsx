@@ -258,6 +258,9 @@ export default function CustomVisualizer() {
   const codeLines = code.split('\n');
   const currentStepData = steps[currentStep];
   const activeLine = currentStepData?.line || -1;
+  
+  const arrays = currentStepData ? Object.entries(currentStepData.variables || {})
+    .filter(([key, val]) => Array.isArray(val)) : [];
 
   return (
     <div className="h-full flex flex-col gap-3 p-4 text-text">
@@ -346,6 +349,38 @@ export default function CustomVisualizer() {
 
         {/* Right: Visualization */}
         <div className="flex flex-col gap-3 min-h-0">
+          
+          {/* Graphical Visualization */}
+          {arrays.length > 0 && (
+            <div className="bg-surface border border-border rounded-xl overflow-hidden flex-shrink-0 flex flex-col shadow-soft">
+              <div className="px-3 py-2 border-b border-border flex items-center gap-2">
+                <Eye size={14} className="text-primary" />
+                <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Graphical Visualizer</span>
+              </div>
+              <div className="p-4 flex-1 flex flex-col items-center justify-end gap-6 overflow-x-auto bg-[#0a0a0a]">
+                {arrays.map(([name, arr], idx) => {
+                  const maxVal = Math.max(...arr, 1);
+                  return (
+                    <div key={idx} className="w-full flex flex-col items-center">
+                      <p className="text-xs font-semibold text-text-muted mb-2 uppercase tracking-wider text-center">{name}</p>
+                      <div className="flex items-end justify-center gap-2 h-[120px] w-full">
+                        {arr.map((val, i) => (
+                          <div key={i} className="flex flex-col items-center gap-1 group">
+                            <div 
+                              className="w-6 sm:w-8 bg-primary/80 group-hover:bg-primary transition-all rounded-t-sm shadow-soft"
+                              style={{ height: `${Math.max((Number(val) / maxVal) * 100 || 5, 5)}%` }}
+                            />
+                            <span className="text-[10px] text-text-muted font-mono font-bold">{val}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Execution Trace */}
           <div className="flex-1 bg-surface border border-border rounded-xl flex flex-col overflow-hidden min-h-0">
             <div className="px-3 py-2 border-b border-border flex items-center justify-between flex-shrink-0">
