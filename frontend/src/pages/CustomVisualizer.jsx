@@ -1,6 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import Editor from '@monaco-editor/react';
 import { Play, RotateCcw, ChevronLeft, ChevronRight, Pause, FastForward, Eye, Code2, Braces, ArrowRight } from 'lucide-react';
+import API_BASE from '../config/api';
+
+const STARTER_CODES = {
+  javascript: `function bubbleSort(arr) {\n  let n = arr.length;\n  for (let i = 0; i < n - 1; i++) {\n    for (let j = 0; j < n - i - 1; j++) {\n      if (arr[j] > arr[j + 1]) {\n        let temp = arr[j];\n        arr[j] = arr[j + 1];\n        arr[j + 1] = temp;\n      }\n    }\n  }\n  return arr;\n}\nbubbleSort([5, 3, 8, 4, 2]);`,
+  python: `def bubble_sort(arr):\n    n = len(arr)\n    for i in range(n - 1):\n        for j in range(n - i - 1):\n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\n    return arr\n\nbubble_sort([5, 3, 8, 4, 2])`,
+  java: `class Main {\n    public static void main(String[] args) {\n        int[] arr = {5, 3, 8, 4, 2};\n        int n = arr.length;\n        for (int i = 0; i < n - 1; i++) {\n            for (int j = 0; j < n - i - 1; j++) {\n                if (arr[j] > arr[j + 1]) {\n                    int temp = arr[j];\n                    arr[j] = arr[j + 1];\n                    arr[j + 1] = temp;\n                }\n            }\n        }\n    }\n}`,
+  cpp: `#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> arr = {5, 3, 8, 4, 2};\n    int n = arr.size();\n    for (int i = 0; i < n - 1; i++) {\n        for (int j = 0; j < n - i - 1; j++) {\n            if (arr[j] > arr[j + 1]) {\n                swap(arr[j], arr[j + 1]);\n            }\n        }\n    }\n    return 0;\n}`
+};
 
 const EXAMPLE_SNIPPETS = {
   'Bubble Sort': `function bubbleSort(arr) {
@@ -198,7 +206,7 @@ export default function CustomVisualizer() {
     if (playRef.current) clearInterval(playRef.current);
 
     try {
-      const response = await fetch('http://localhost:5000/api/code/trace', {
+      const response = await fetch(`${API_BASE || 'http://localhost:5000'}/api/code/trace`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, language })
@@ -263,7 +271,10 @@ export default function CustomVisualizer() {
           <select
             value={language}
             onChange={(e) => {
-              setLanguage(e.target.value);
+              const newLang = e.target.value;
+              setLanguage(newLang);
+              setCode(STARTER_CODES[newLang] || '// Write code here');
+              setSelectedSnippet('Custom');
               setSteps([]);
               setCurrentStep(0);
               setError(null);
@@ -278,15 +289,19 @@ export default function CustomVisualizer() {
           <select
             value={selectedSnippet}
             onChange={(e) => {
-              setSelectedSnippet(e.target.value);
-              setCode(EXAMPLE_SNIPPETS[e.target.value]);
-              setLanguage('javascript');
+              const snippet = e.target.value;
+              setSelectedSnippet(snippet);
+              if (snippet !== 'Custom') {
+                setCode(EXAMPLE_SNIPPETS[snippet]);
+                setLanguage('javascript');
+              }
               setSteps([]);
               setCurrentStep(0);
               setError(null);
             }}
             className="bg-surface-alt border border-border rounded-lg px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
           >
+            <option value="Custom">Custom Code</option>
             {Object.keys(EXAMPLE_SNIPPETS).map(k => (
               <option key={k} value={k}>{k}</option>
             ))}
