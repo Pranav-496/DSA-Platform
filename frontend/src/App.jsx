@@ -339,17 +339,7 @@ function Sidebar({ setSearchOpen, sidebarOpen, setSidebarOpen }) {
               </div>
             </Link>
           )}
-          <div className="px-3 py-2 text-center text-[11px] text-text-muted">
-            <span>Built by <strong className="text-text font-semibold">Pranav Landge</strong></span>
-            <a 
-              href="https://pranavlandge.in" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-primary hover:underline font-medium block mt-0.5"
-            >
-              pranavlandge.in ↗
-            </a>
-          </div>
+
         </div>
       </aside>
     </>
