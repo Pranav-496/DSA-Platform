@@ -22,11 +22,11 @@
 }
 
 .dark {
-  --bg-color: #0f1117;
-  --surface-color: #181a27;
-  --surface-alt: #1e2035;
+  --bg-color: #000000;
+  --surface-color: #0a0a0a;
+  --surface-alt: #141414;
   --text-color: #e8eaf0;
-  --border-color: #2a2d42;
+  --border-color: #27272a;
   --text-muted: #7c82a8;
   --primary: #fb923c; /* Orange-400 */
   --primary-light: #fdba74; /* Orange-300 */

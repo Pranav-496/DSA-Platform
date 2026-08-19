@@ -53,6 +53,31 @@ console.log(JSON.stringify(listToArray(result)));`;
   }
 };
 
+const { traceCode } = require("../utils/tracer");
+
+/**
+ * POST /code/trace — Trace code step-by-step for the visualizer
+ */
+router.post("/trace", optionalAuth, async (req, res) => {
+  try {
+    const { code, language } = req.body;
+    if (!code || !language) {
+      return res.status(400).json({ error: "Code and language are required" });
+    }
+
+    const langConfig = LANGUAGE_CONFIG[language];
+    if (!langConfig) {
+      return res.status(400).json({ error: `Unsupported language: ${language}` });
+    }
+
+    const result = await traceCode(code, language);
+    res.json(result);
+  } catch (error) {
+    console.error("Tracing error:", error);
+    res.status(500).json({ error: "Failed to trace code" });
+  }
+});
+
 /**
  * POST /code/run — Run code against a single test case (quick feedback)
  */

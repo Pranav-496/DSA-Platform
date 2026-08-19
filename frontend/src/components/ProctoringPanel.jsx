@@ -50,6 +50,12 @@ export default function ProctoringPanel({ isActive, onViolation, onScoreUpdate }
   }, []);
 
   useEffect(() => {
+    if (isActive && modelsLoaded && !cameraOn) {
+      startCamera();
+    }
+  }, [isActive, modelsLoaded, cameraOn]);
+
+  useEffect(() => {
     if (!isActive) return;
 
     const handleVisibilityChange = () => {

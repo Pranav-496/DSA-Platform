@@ -183,6 +183,29 @@ export default function InterviewPrep() {
   const [hasStarted, setHasStarted] = useState(false);
   const [activeTab, setActiveTab] = useState("code");
   const [clipboardWarning, setClipboardWarning] = useState('');
+  
+  const [instructionsAccepted, setInstructionsAccepted] = useState(false);
+  const [assignedQuestions, setAssignedQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isDisqualified, setIsDisqualified] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(60 * 45); // 45 minutes
+
+  const startInterview = () => {
+    const EASY_Q = ["Binary Search", "Bubble Sort", "DFS", "Hash Map", "Two Pointers"];
+    const MED_Q = ["Merge Sort", "Quick Sort", "BFS"];
+    const HARD_Q = ["Merge Sort", "Quick Sort"]; // Mock hard
+
+    const selected = [
+      EASY_Q[Math.floor(Math.random() * EASY_Q.length)],
+      MED_Q[Math.floor(Math.random() * MED_Q.length)],
+      HARD_Q[Math.floor(Math.random() * HARD_Q.length)]
+    ];
+
+    setAssignedQuestions(selected);
+    setTopic(selected[0]);
+    setHasStarted(true);
+    setProctorActive(true); // Auto-start proctoring
+  };
 
   // Timer logic
   const [thinkingTime, setThinkingTime] = useState(0);
@@ -190,22 +213,30 @@ export default function InterviewPrep() {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    timerRef.current = setInterval(() => {
-      if (isThinking && hasStarted) {
-        setThinkingTime((prev) => prev + 1000);
-      }
-    }, 1000);
+    if (hasStarted && !isDisqualified && timeRemaining > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeRemaining(prev => prev - 1);
+        if (isThinking) {
+          setThinkingTime(prev => prev + 1000);
+        }
+      }, 1000);
+    } else if (timeRemaining === 0 && hasStarted && !isDisqualified) {
+      setIsDisqualified(true);
+      setViolationLog(prev => [...prev, "Time Out"]);
+    }
     return () => clearInterval(timerRef.current);
-  }, [isThinking, hasStarted]);
+  }, [hasStarted, isDisqualified, timeRemaining, isThinking]);
 
   // Tab switch blocking
   useEffect(() => {
     if (!hasStarted) return;
 
     const handleVisibility = () => {
-      if (document.hidden) {
+      if (document.hidden && !isDisqualified) {
         setTabSwitchCount((prev) => prev + 1);
         setTabSwitchWarning(true);
+        setViolationLog(prev => [...prev, "Tab Switching Detected"]);
+        setIsDisqualified(true);
       }
     };
 
@@ -222,7 +253,7 @@ export default function InterviewPrep() {
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [hasStarted]);
+  }, [hasStarted, isDisqualified]);
 
   const handleEditorChange = (value) => {
     setCode(value);
@@ -354,9 +385,83 @@ export default function InterviewPrep() {
 
   return (
     <div className="h-full flex flex-col gap-4 text-text p-4 relative overflow-hidden">
+      {/* Disqualification Modal */}
+      {isDisqualified && (
+        <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
+          <div className="bg-surface border border-danger rounded-xl p-8 max-w-lg text-center shadow-[0_0_50px_rgba(239,68,68,0.3)]">
+            <AlertTriangle size={80} className="mx-auto text-danger mb-6" />
+            <h2 className="text-3xl font-geist font-bold text-danger mb-4 uppercase">
+              INTERVIEW TERMINATED
+            </h2>
+            <p className="font-bold mb-2 text-lg">
+              Your interview has been terminated due to a strict violation (e.g. Tab Switching, Copy-Pasting) or Time out.
+            </p>
+            <p className="text-text-muted mb-6">No further actions are permitted.</p>
+            <button
+              onClick={() => window.location.href = '/'}
+              className="btn bg-surface-alt border border-border px-6 py-2 rounded-lg font-bold hover:text-primary transition-colors"
+            >
+              Return to Dashboard
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Pre-Interview Instructions */}
+      {!hasStarted && !isDisqualified && (
+        <div className="fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-surface border border-border rounded-xl p-6 max-w-2xl w-full">
+            <h2 className="text-2xl font-geist font-bold border-b border-border pb-4 mb-4 flex items-center gap-2">
+              <ShieldAlert className="text-primary" /> Interview Instructions
+            </h2>
+            
+            <div className="space-y-4 mb-6 text-sm">
+              <p>Welcome to the AlgoNova AI Interview Simulation. Please read the rules carefully before proceeding:</p>
+              
+              <ul className="list-disc pl-5 space-y-2 text-text-muted">
+                <li><strong>Proctoring is strict:</strong> Your webcam and microphone will be monitored. Ensure your face is clearly visible.</li>
+                <li><strong>No Tab Switching:</strong> Navigating away from this tab will result in immediate disqualification.</li>
+                <li><strong>No Copy/Paste:</strong> Copying code from external sources is strictly prohibited.</li>
+                <li><strong>Format:</strong> You will be assigned 3 random questions (Easy, Medium, Hard).</li>
+                <li><strong>Time Limit:</strong> You have 45 minutes to complete all questions.</li>
+              </ul>
+            </div>
+            
+            <div className="bg-surface-alt border border-border p-4 rounded-lg mb-6 flex items-start gap-3">
+              <input 
+                type="checkbox" 
+                id="acceptRules" 
+                className="mt-1 w-4 h-4 accent-primary cursor-pointer"
+                checked={instructionsAccepted}
+                onChange={(e) => setInstructionsAccepted(e.target.checked)}
+              />
+              <label htmlFor="acceptRules" className="text-sm font-medium cursor-pointer">
+                I have read and understand the instructions. I agree to be monitored and understand that violations will result in disqualification.
+              </label>
+            </div>
+            
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => window.location.href = '/'}
+                className="btn bg-surface-alt border border-border px-4 py-2 rounded-lg text-sm font-semibold hover:bg-background transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={startInterview}
+                disabled={!instructionsAccepted}
+                className="btn bg-primary text-white px-6 py-2 rounded-lg text-sm font-semibold hover:brightness-110 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-soft"
+              >
+                Start Interview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Clipboard Warning Toast */}
       {clipboardWarning && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-danger text-surface border border-border shadow-card font-bold text-sm animate-fade-in">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[60] px-6 py-3 bg-danger text-surface border border-border shadow-card font-bold text-sm animate-fade-in">
           ⚠ {clipboardWarning}
         </div>
       )}
@@ -404,23 +509,26 @@ export default function InterviewPrep() {
           <h2 className="text-lg font-geist font-bold uppercase tracking-tight">
             Interview Sim
           </h2>
-          <select
-            value={topic}
-            onChange={(e) => {
-              setTopic(e.target.value);
-              setResult(null);
-              setCode("// Write your solution here\n");
-              setThinkingTime(0);
-              setIsThinking(true);
-            }}
-            className="bg-background border border-border px-2.5 py-1 text-xs font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-primary shadow-soft cursor-pointer"
-          >
-            {Object.keys(QUESTIONS).map((q) => (
-              <option key={q} value={q}>
-                {q}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2">
+             {hasStarted && (
+               <select
+                 value={currentQuestionIndex}
+                 onChange={(e) => {
+                   const idx = Number(e.target.value);
+                   setCurrentQuestionIndex(idx);
+                   setTopic(assignedQuestions[idx]);
+                   setResult(null);
+                   setRunResult(null);
+                   setCode("// Write your solution here\n");
+                 }}
+                 className="bg-background border border-border px-2.5 py-1 text-xs font-bold uppercase shadow-soft cursor-pointer"
+               >
+                 {assignedQuestions.map((q, idx) => (
+                   <option key={idx} value={idx}>Q{idx + 1}: {q}</option>
+                 ))}
+               </select>
+             )}
+          </div>
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
@@ -442,17 +550,10 @@ export default function InterviewPrep() {
               <AlertTriangle size={12} /> {tabSwitchCount} switch{tabSwitchCount !== 1 ? "es" : ""}
             </span>
           )}
-          {hasStarted ? (
+          {hasStarted && (
             <span className="text-xs font-bold uppercase tracking-wider bg-background px-2.5 py-1.5 border border-border shadow-soft">
-              Time: {(thinkingTime / 1000).toFixed(0)}s
+              Time Left: {Math.floor(timeRemaining / 60)}:{timeRemaining % 60 < 10 ? "0" : ""}{timeRemaining % 60}
             </span>
-          ) : (
-            <button
-              onClick={() => setHasStarted(true)}
-              className="bg-primary px-3 py-1.5 border border-border text-xs font-bold uppercase tracking-wider shadow-soft hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#111] transition-all"
-            >
-              START INTERVIEW
-            </button>
           )}
         </div>
       </div>
@@ -532,13 +633,13 @@ export default function InterviewPrep() {
               className={`flex-1 w-full min-h-0 ${activeTab === "code" ? "block" : "hidden"}`}
               onPaste={(e) => {
                 e.preventDefault();
-                setClipboardWarning("Pasting restricted in Interview Mode.");
-                setTimeout(() => setClipboardWarning(''), 2500);
+                setViolationLog(prev => [...prev, "Copy-Pasting Detected"]);
+                setIsDisqualified(true);
               }}
               onCopy={(e) => {
                 e.preventDefault();
-                setClipboardWarning("Copying restricted in Interview Mode.");
-                setTimeout(() => setClipboardWarning(''), 2500);
+                setViolationLog(prev => [...prev, "Copying Detected"]);
+                setIsDisqualified(true);
               }}
             >
               <Editor

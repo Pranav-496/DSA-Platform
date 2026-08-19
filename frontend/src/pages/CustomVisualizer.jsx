@@ -180,29 +180,46 @@ function instrumentCode(code) {
 
 export default function CustomVisualizer() {
   const [code, setCode] = useState(EXAMPLE_SNIPPETS['Bubble Sort']);
+  const [language, setLanguage] = useState('javascript');
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isTracing, setIsTracing] = useState(false);
   const [speed, setSpeed] = useState(500);
   const [error, setError] = useState(null);
   const [selectedSnippet, setSelectedSnippet] = useState('Bubble Sort');
   const playRef = React.useRef(null);
 
-  const runTrace = useCallback(() => {
+  const runTrace = useCallback(async () => {
     setError(null);
     setIsPlaying(false);
     setCurrentStep(0);
+    setIsTracing(true);
     if (playRef.current) clearInterval(playRef.current);
 
-    const result = traceExecution(code);
-    if (result.error) {
-      setError(result.error);
+    try {
+      const response = await fetch('http://localhost:5000/api/code/trace', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, language })
+      });
+      
+      const result = await response.json();
+      
+      if (result.error) {
+        setError(result.error);
+        setSteps([]);
+      } else {
+        setSteps(result.steps || []);
+        setCurrentStep(0);
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to connect to tracing server');
       setSteps([]);
-    } else {
-      setSteps(result.steps);
-      setCurrentStep(0);
+    } finally {
+      setIsTracing(false);
     }
-  }, [code]);
+  }, [code, language]);
 
   const playAnimation = useCallback(() => {
     if (steps.length === 0) return;
@@ -240,14 +257,30 @@ export default function CustomVisualizer() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-geist font-bold tracking-tight">Code Visualizer</h2>
-          <p className="text-xs text-text-muted">Paste any JavaScript code and watch it execute step-by-step</p>
+          <p className="text-xs text-text-muted">Paste your code to trace execution step-by-step</p>
         </div>
         <div className="flex items-center gap-2">
+          <select
+            value={language}
+            onChange={(e) => {
+              setLanguage(e.target.value);
+              setSteps([]);
+              setCurrentStep(0);
+              setError(null);
+            }}
+            className="bg-surface-alt border border-border rounded-lg px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+          >
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="cpp">C++</option>
+          </select>
           <select
             value={selectedSnippet}
             onChange={(e) => {
               setSelectedSnippet(e.target.value);
               setCode(EXAMPLE_SNIPPETS[e.target.value]);
+              setLanguage('javascript');
               setSteps([]);
               setCurrentStep(0);
               setError(null);
@@ -260,9 +293,10 @@ export default function CustomVisualizer() {
           </select>
           <button
             onClick={runTrace}
-            className="flex items-center gap-1.5 bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-semibold hover:brightness-110 transition-all shadow-soft"
+            disabled={isTracing}
+            className="flex items-center gap-1.5 bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-semibold hover:brightness-110 transition-all shadow-soft disabled:opacity-50"
           >
-            <Eye size={14} /> Visualize
+            <Eye size={14} /> {isTracing ? 'Tracing...' : 'Visualize'}
           </button>
         </div>
       </div>
@@ -278,7 +312,7 @@ export default function CustomVisualizer() {
           <div className="flex-1 min-h-0">
             <Editor
               height="100%"
-              language="javascript"
+              language={language === 'cpp' ? 'cpp' : language}
               value={code}
               theme="vs-dark"
               onChange={(v) => setCode(v || '')}
