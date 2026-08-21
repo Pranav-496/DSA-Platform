@@ -277,7 +277,6 @@ Return ONLY the raw JSON object, no markdown formatting.` }] }],
   }
 });
 
-
 // ========================================
 // POST /api/resume/jobs
 // Matches resume skills → job recommendations
@@ -295,77 +294,74 @@ router.post('/jobs', protect, async (req, res) => {
       ? skills.join(', ')
       : 'general software engineering';
 
-    // Use Gemini AI to generate smart job title suggestions
     let jobTitles = [];
     let experienceLevel = 'entry';
+    let usedAI = false;
 
+    // ── Strategy 1: Gemini AI ──
     if (process.env.GEMINI_API_KEY) {
       try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
-        const prompt = `You are a career advisor. Based on these resume skills: ${skillsList}
+        
+        const prompt = `You are an expert career advisor and recruiter. A candidate has the following skills on their resume:
+Skills: ${skillsList}
 
-${resumeText ? `Resume snippet:\n"${resumeText.substring(0, 1500)}"` : ''}
+${resumeText ? `Full resume text (first 2000 chars):\n"""${resumeText.substring(0, 2000)}"""` : ''}
 
-Generate job recommendations in this EXACT JSON format (no markdown, no code fences):
-{
-  "experienceLevel": "intern" or "entry" or "mid" or "senior",
-  "recommendations": [
-    {
-      "title": "Exact job title to search for (e.g. React Developer)",
-      "matchScore": 85,
-      "matchedSkills": ["skill1", "skill2", "skill3"],
-      "missingSkills": ["skill1"],
-      "salaryRange": "$50K - $80K or ₹4L - ₹8L",
-      "demandLevel": "High" or "Medium" or "Low",
-      "description": "One sentence about why this role fits the candidate"
-    }
-  ]
-}
+TASK: Analyze this candidate's profile deeply and recommend exactly 6 job roles they should apply for. Each job must have a UNIQUE and REALISTIC match score based on how well their specific skills align.
 
-Generate exactly 6 diverse job recommendations. Sort by matchScore descending. Use Indian salary ranges (₹) if the resume seems India-based, otherwise use USD. Return ONLY the raw JSON.`;
+CRITICAL SCORING RULES:
+- Match scores MUST vary between 40 and 95. Never give the same score to two jobs.
+- A job that requires skills the candidate HAS should score 75-95.
+- A job that requires SOME skills the candidate has but is missing key ones should score 55-74.
+- A stretch role where the candidate only partially qualifies should score 40-54.
+- Include 2 high-match jobs, 2 medium-match jobs, and 2 stretch/aspirational jobs.
+
+Return ONLY this JSON (no markdown, no code fences, no extra text):
+{"experienceLevel":"intern or entry or mid or senior","recommendations":[{"title":"Job Title","matchScore":85,"matchedSkills":["skill1","skill2"],"missingSkills":["skill1"],"salaryRange":"₹4L - ₹8L","demandLevel":"High","description":"Why this fits"}]}`;
 
         const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.4, maxOutputTokens: 1200 }
+            generationConfig: { temperature: 0.7, maxOutputTokens: 1500 }
           })
         });
 
         const data = await response.json();
+        
         if (data.candidates && data.candidates[0]) {
-          const raw = data.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
+          let raw = data.candidates[0].content.parts[0].text.trim();
+          // Strip markdown fences
+          raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
           const parsed = JSON.parse(raw);
           jobTitles = parsed.recommendations || [];
           experienceLevel = parsed.experienceLevel || 'entry';
+          usedAI = jobTitles.length > 0;
+          console.log(`✅ AI Job matching returned ${jobTitles.length} recommendations`);
+        } else {
+          console.error("Gemini returned no candidates:", JSON.stringify(data).substring(0, 300));
         }
       } catch (e) {
         console.error("Gemini job matching error:", e.message);
       }
+    } else {
+      console.warn("GEMINI_API_KEY not set, using fallback job matcher");
     }
 
-    // Fallback: generate basic job titles from skills if AI failed
+    // ── Strategy 2: Dynamic Fallback (Skill-Based Matching) ──
     if (jobTitles.length === 0) {
-      const fallbackTitles = generateFallbackTitles(skills || []);
-      jobTitles = fallbackTitles.map(title => ({
-        title,
-        matchScore: 70,
-        matchedSkills: skills ? skills.slice(0, 3) : [],
-        missingSkills: [],
-        salaryRange: '₹3L - ₹10L',
-        demandLevel: 'Medium',
-        description: `Based on your skill profile in ${skillsList.substring(0, 50)}`
-      }));
+      jobTitles = generateDynamicFallback(skills || [], resumeText || '');
+      experienceLevel = detectExperienceLevel(resumeText || '');
     }
 
     // Build direct apply/search URLs for each recommendation
     const recommendations = jobTitles.map(job => {
       const query = encodeURIComponent(job.title);
-      const queryPlus = job.title.replace(/\s+/g, '+');
-
       return {
         ...job,
+        source: usedAI ? 'ai' : 'engine',
         applyLinks: {
           indeed: `https://www.indeed.com/jobs?q=${query}&fromage=14`,
           linkedin: `https://www.linkedin.com/jobs/search/?keywords=${query}&f_E=1%2C2%2C3`,
@@ -377,11 +373,15 @@ Generate exactly 6 diverse job recommendations. Sort by matchScore descending. U
       };
     });
 
+    // Sort by matchScore descending
+    recommendations.sort((a, b) => b.matchScore - a.matchScore);
+
     res.json({
       experienceLevel,
       totalRecommendations: recommendations.length,
       recommendations,
       searchedSkills: skills || [],
+      source: usedAI ? 'gemini_ai' : 'rule_engine',
     });
 
   } catch (error) {
@@ -390,38 +390,147 @@ Generate exactly 6 diverse job recommendations. Sort by matchScore descending. U
   }
 });
 
-// Fallback title generator when AI is unavailable
-function generateFallbackTitles(skills) {
-  const skillsLower = skills.map(s => s.toLowerCase());
-  const titles = new Set();
+// ========================================
+// Dynamic Fallback: Real skill-intersection matching
+// ========================================
+const JOB_PROFILES = [
+  {
+    title: 'Frontend Developer',
+    requiredSkills: ['react', 'javascript', 'html', 'css', 'typescript', 'vue', 'angular', 'tailwind', 'redux', 'next.js'],
+    salaryRange: '₹4L - ₹12L',
+    demandLevel: 'High',
+  },
+  {
+    title: 'Backend Developer',
+    requiredSkills: ['node.js', 'express', 'python', 'django', 'flask', 'java', 'spring', 'rest api', 'sql', 'mongodb'],
+    salaryRange: '₹5L - ₹15L',
+    demandLevel: 'High',
+  },
+  {
+    title: 'Full Stack Developer',
+    requiredSkills: ['react', 'node.js', 'javascript', 'mongodb', 'express', 'html', 'css', 'git', 'rest api', 'typescript'],
+    salaryRange: '₹6L - ₹18L',
+    demandLevel: 'High',
+  },
+  {
+    title: 'Data Scientist',
+    requiredSkills: ['python', 'machine learning', 'tensorflow', 'pandas', 'numpy', 'sql', 'data', 'statistics', 'deep learning', 'scikit-learn'],
+    salaryRange: '₹8L - ₹25L',
+    demandLevel: 'High',
+  },
+  {
+    title: 'DevOps Engineer',
+    requiredSkills: ['docker', 'kubernetes', 'aws', 'ci/cd', 'linux', 'jenkins', 'terraform', 'git', 'cloud', 'monitoring'],
+    salaryRange: '₹8L - ₹22L',
+    demandLevel: 'High',
+  },
+  {
+    title: 'Mobile App Developer',
+    requiredSkills: ['react native', 'flutter', 'swift', 'kotlin', 'javascript', 'android', 'ios', 'firebase', 'dart', 'java'],
+    salaryRange: '₹5L - ₹16L',
+    demandLevel: 'Medium',
+  },
+  {
+    title: 'Machine Learning Engineer',
+    requiredSkills: ['python', 'tensorflow', 'pytorch', 'machine learning', 'deep learning', 'nlp', 'computer vision', 'data structures', 'algorithms', 'gpu'],
+    salaryRange: '₹10L - ₹30L',
+    demandLevel: 'High',
+  },
+  {
+    title: 'Java Developer',
+    requiredSkills: ['java', 'spring', 'hibernate', 'microservices', 'sql', 'rest api', 'maven', 'junit', 'design patterns', 'multithreading'],
+    salaryRange: '₹5L - ₹18L',
+    demandLevel: 'Medium',
+  },
+  {
+    title: 'Python Developer',
+    requiredSkills: ['python', 'django', 'flask', 'fastapi', 'sql', 'rest api', 'celery', 'redis', 'testing', 'docker'],
+    salaryRange: '₹5L - ₹16L',
+    demandLevel: 'High',
+  },
+  {
+    title: 'Cloud Solutions Architect',
+    requiredSkills: ['aws', 'azure', 'gcp', 'cloud', 'docker', 'kubernetes', 'microservices', 'networking', 'security', 'terraform'],
+    salaryRange: '₹15L - ₹40L',
+    demandLevel: 'High',
+  },
+  {
+    title: 'QA / Test Engineer',
+    requiredSkills: ['testing', 'selenium', 'jest', 'cypress', 'unit test', 'integration', 'automation', 'javascript', 'python', 'ci/cd'],
+    salaryRange: '₹4L - ₹12L',
+    demandLevel: 'Medium',
+  },
+  {
+    title: 'UI/UX Designer',
+    requiredSkills: ['figma', 'design', 'user research', 'wireframe', 'prototype', 'css', 'html', 'accessibility', 'responsive', 'adobe'],
+    salaryRange: '₹4L - ₹14L',
+    demandLevel: 'Medium',
+  },
+  {
+    title: 'Database Administrator',
+    requiredSkills: ['sql', 'mongodb', 'postgresql', 'mysql', 'nosql', 'redis', 'database', 'optimization', 'backup', 'replication'],
+    salaryRange: '₹6L - ₹18L',
+    demandLevel: 'Medium',
+  },
+  {
+    title: 'Cybersecurity Analyst',
+    requiredSkills: ['security', 'networking', 'linux', 'firewall', 'penetration testing', 'encryption', 'siem', 'vulnerability', 'compliance', 'python'],
+    salaryRange: '₹6L - ₹20L',
+    demandLevel: 'High',
+  },
+  {
+    title: 'Software Engineer Intern',
+    requiredSkills: ['data structures', 'algorithms', 'javascript', 'python', 'java', 'c++', 'git', 'sql', 'html', 'problem solving'],
+    salaryRange: '₹10K - ₹40K/mo',
+    demandLevel: 'High',
+  },
+];
 
-  if (skillsLower.some(s => ['react', 'vue', 'angular', 'frontend', 'html', 'css'].includes(s))) {
-    titles.add('Frontend Developer');
-  }
-  if (skillsLower.some(s => ['node.js', 'express', 'django', 'flask', 'spring'].includes(s))) {
-    titles.add('Backend Developer');
-  }
-  if (skillsLower.some(s => ['react', 'node.js', 'mongodb', 'express'].includes(s))) {
-    titles.add('Full Stack Developer');
-  }
-  if (skillsLower.some(s => ['python', 'machine learning', 'tensorflow', 'data'].includes(s))) {
-    titles.add('Data Scientist');
-    titles.add('ML Engineer');
-  }
-  if (skillsLower.some(s => ['java', 'spring', 'microservices'].includes(s))) {
-    titles.add('Java Developer');
-  }
-  if (skillsLower.some(s => ['aws', 'docker', 'kubernetes', 'devops', 'ci/cd'].includes(s))) {
-    titles.add('DevOps Engineer');
-  }
+function generateDynamicFallback(skills, resumeText) {
+  const userSkills = new Set(skills.map(s => s.toLowerCase()));
+  // Also extract skills from resume text
+  const textLower = resumeText.toLowerCase();
 
-  if (titles.size === 0) {
-    titles.add('Software Developer');
-    titles.add('Software Engineer Intern');
-    titles.add('Junior Developer');
-  }
+  const scored = JOB_PROFILES.map(profile => {
+    let matched = [];
+    let missing = [];
 
-  return [...titles].slice(0, 6);
+    profile.requiredSkills.forEach(req => {
+      if (userSkills.has(req) || textLower.includes(req)) {
+        matched.push(req);
+      } else {
+        missing.push(req);
+      }
+    });
+
+    const overlap = matched.length / profile.requiredSkills.length;
+    // Score: 40-95 range mapped from overlap ratio (0.0-1.0)
+    const matchScore = Math.round(40 + overlap * 55);
+
+    return {
+      title: profile.title,
+      matchScore,
+      matchedSkills: matched.slice(0, 5),
+      missingSkills: missing.slice(0, 3),
+      salaryRange: profile.salaryRange,
+      demandLevel: profile.demandLevel,
+      description: matched.length > 0 
+        ? `You have ${matched.length}/${profile.requiredSkills.length} key skills for this role.`
+        : `A stretch role to explore — build skills in ${missing.slice(0, 2).join(' and ')}.`,
+    };
+  });
+
+  // Sort by matchScore desc, take top 6
+  scored.sort((a, b) => b.matchScore - a.matchScore);
+  return scored.slice(0, 6);
+}
+
+function detectExperienceLevel(text) {
+  const lower = text.toLowerCase();
+  if (/\b(senior|lead|principal|staff|architect|director|manager|8\+?\s*years|10\+?\s*years)\b/.test(lower)) return 'senior';
+  if (/\b(mid[\s-]?level|3\+?\s*years|4\+?\s*years|5\+?\s*years)\b/.test(lower)) return 'mid';
+  if (/\b(intern|internship|trainee|fresher|student|pursuing|semester)\b/.test(lower)) return 'intern';
+  return 'entry';
 }
 
 module.exports = router;

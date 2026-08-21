@@ -750,7 +750,9 @@ export default function ResumeScreener() {
             <div className="brutal-card bg-surface p-5">
               <h3 className="text-sm font-bold uppercase tracking-wider mb-1 flex items-center gap-2">
                 <Briefcase size={16} className="text-primary" /> Matching Job Opportunities
-                <span className="text-[10px] font-bold bg-primary px-2 py-0.5 rounded uppercase">AI Matched</span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${jobResults?.source === 'gemini_ai' ? 'bg-primary' : 'bg-surface-alt border border-border'}`}>
+                  {jobResults?.source === 'gemini_ai' ? '✦ AI Matched' : '⚙ Skill Engine'}
+                </span>
               </h3>
               <p className="text-xs font-medium opacity-50 mb-4">Based on your resume skills — click any platform to apply directly</p>
 
