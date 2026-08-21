@@ -277,4 +277,151 @@ Return ONLY the raw JSON object, no markdown formatting.` }] }],
   }
 });
 
+
+// ========================================
+// POST /api/resume/jobs
+// Matches resume skills → job recommendations
+// with direct apply links
+// ========================================
+router.post('/jobs', protect, async (req, res) => {
+  try {
+    const { skills, resumeText } = req.body;
+
+    if ((!skills || skills.length === 0) && (!resumeText || resumeText.length < 30)) {
+      return res.status(400).json({ error: 'Resume skills or text is required.' });
+    }
+
+    const skillsList = skills && skills.length > 0
+      ? skills.join(', ')
+      : 'general software engineering';
+
+    // Use Gemini AI to generate smart job title suggestions
+    let jobTitles = [];
+    let experienceLevel = 'entry';
+
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const prompt = `You are a career advisor. Based on these resume skills: ${skillsList}
+
+${resumeText ? `Resume snippet:\n"${resumeText.substring(0, 1500)}"` : ''}
+
+Generate job recommendations in this EXACT JSON format (no markdown, no code fences):
+{
+  "experienceLevel": "intern" or "entry" or "mid" or "senior",
+  "recommendations": [
+    {
+      "title": "Exact job title to search for (e.g. React Developer)",
+      "matchScore": 85,
+      "matchedSkills": ["skill1", "skill2", "skill3"],
+      "missingSkills": ["skill1"],
+      "salaryRange": "$50K - $80K or ₹4L - ₹8L",
+      "demandLevel": "High" or "Medium" or "Low",
+      "description": "One sentence about why this role fits the candidate"
+    }
+  ]
+}
+
+Generate exactly 6 diverse job recommendations. Sort by matchScore descending. Use Indian salary ranges (₹) if the resume seems India-based, otherwise use USD. Return ONLY the raw JSON.`;
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.4, maxOutputTokens: 1200 }
+          })
+        });
+
+        const data = await response.json();
+        if (data.candidates && data.candidates[0]) {
+          const raw = data.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
+          const parsed = JSON.parse(raw);
+          jobTitles = parsed.recommendations || [];
+          experienceLevel = parsed.experienceLevel || 'entry';
+        }
+      } catch (e) {
+        console.error("Gemini job matching error:", e.message);
+      }
+    }
+
+    // Fallback: generate basic job titles from skills if AI failed
+    if (jobTitles.length === 0) {
+      const fallbackTitles = generateFallbackTitles(skills || []);
+      jobTitles = fallbackTitles.map(title => ({
+        title,
+        matchScore: 70,
+        matchedSkills: skills ? skills.slice(0, 3) : [],
+        missingSkills: [],
+        salaryRange: '₹3L - ₹10L',
+        demandLevel: 'Medium',
+        description: `Based on your skill profile in ${skillsList.substring(0, 50)}`
+      }));
+    }
+
+    // Build direct apply/search URLs for each recommendation
+    const recommendations = jobTitles.map(job => {
+      const query = encodeURIComponent(job.title);
+      const queryPlus = job.title.replace(/\s+/g, '+');
+
+      return {
+        ...job,
+        applyLinks: {
+          indeed: `https://www.indeed.com/jobs?q=${query}&fromage=14`,
+          linkedin: `https://www.linkedin.com/jobs/search/?keywords=${query}&f_E=1%2C2%2C3`,
+          glassdoor: `https://www.glassdoor.co.in/Job/jobs.htm?sc.keyword=${query}`,
+          naukri: `https://www.naukri.com/${job.title.toLowerCase().replace(/\s+/g, '-')}-jobs`,
+          internshala: `https://internshala.com/internships/${job.title.toLowerCase().replace(/\s+/g, '-')}-internship`,
+          aicte: `https://internship.aicte-india.org/`,
+        }
+      };
+    });
+
+    res.json({
+      experienceLevel,
+      totalRecommendations: recommendations.length,
+      recommendations,
+      searchedSkills: skills || [],
+    });
+
+  } catch (error) {
+    console.error("Job Matching Error:", error);
+    res.status(500).json({ error: "Failed to generate job recommendations." });
+  }
+});
+
+// Fallback title generator when AI is unavailable
+function generateFallbackTitles(skills) {
+  const skillsLower = skills.map(s => s.toLowerCase());
+  const titles = new Set();
+
+  if (skillsLower.some(s => ['react', 'vue', 'angular', 'frontend', 'html', 'css'].includes(s))) {
+    titles.add('Frontend Developer');
+  }
+  if (skillsLower.some(s => ['node.js', 'express', 'django', 'flask', 'spring'].includes(s))) {
+    titles.add('Backend Developer');
+  }
+  if (skillsLower.some(s => ['react', 'node.js', 'mongodb', 'express'].includes(s))) {
+    titles.add('Full Stack Developer');
+  }
+  if (skillsLower.some(s => ['python', 'machine learning', 'tensorflow', 'data'].includes(s))) {
+    titles.add('Data Scientist');
+    titles.add('ML Engineer');
+  }
+  if (skillsLower.some(s => ['java', 'spring', 'microservices'].includes(s))) {
+    titles.add('Java Developer');
+  }
+  if (skillsLower.some(s => ['aws', 'docker', 'kubernetes', 'devops', 'ci/cd'].includes(s))) {
+    titles.add('DevOps Engineer');
+  }
+
+  if (titles.size === 0) {
+    titles.add('Software Developer');
+    titles.add('Software Engineer Intern');
+    titles.add('Junior Developer');
+  }
+
+  return [...titles].slice(0, 6);
+}
+
 module.exports = router;

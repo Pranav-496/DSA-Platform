@@ -4,7 +4,7 @@ import {
   AlertTriangle, TrendingUp, Award, BarChart3, ArrowRight,
   Sparkles, RefreshCw, ChevronRight, ExternalLink, Lightbulb,
   User, Mail, Link, Code2, Globe, Hash, FileSearch,
-  Star, Loader2,
+  Star, Loader2, Briefcase, MapPin,
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import API_BASE from '../config/api';
@@ -137,6 +137,29 @@ export default function ResumeScreener() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [loadingStage, setLoadingStage] = useState('');
+  const [jobResults, setJobResults] = useState(null);
+  const [jobLoading, setJobLoading] = useState(false);
+
+  /* ── Fetch Job Recommendations ── */
+  const fetchJobs = useCallback(async (skills, text) => {
+    setJobLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/resume/jobs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ skills, resumeText: text }),
+      });
+      const data = await res.json();
+      if (res.ok) setJobResults(data);
+    } catch (e) {
+      console.warn('Job matching failed:', e.message);
+    } finally {
+      setJobLoading(false);
+    }
+  }, [token]);
 
   /* ── File Handling ── */
   const handleFile = useCallback(async (file) => {
@@ -250,6 +273,13 @@ export default function ResumeScreener() {
       setLoadingStage('');
       setResult(data);
 
+      // Trigger job matching in background
+      const allSkills = [
+        ...(data.keywords?.technical || []),
+        ...(data.keywords?.general || []),
+      ];
+      fetchJobs(allSkills, resumeText.trim());
+
       // Track progress & earn XP
       try {
         await fetch(`${API_BASE}/api/progress/update`, {
@@ -281,6 +311,7 @@ export default function ResumeScreener() {
     setResumeText('');
     setFileName('');
     setResult(null);
+    setJobResults(null);
     setError('');
     setLoadingStage('');
     setAnalyzing(false);
@@ -713,6 +744,124 @@ export default function ResumeScreener() {
                   <span>Avoid tables, graphics, and columns — most ATS cannot parse them correctly.</span>
                 </li>
               </ul>
+            </div>
+
+            {/* ── Row 7: Job Opportunities ── */}
+            <div className="brutal-card bg-surface p-5">
+              <h3 className="text-sm font-bold uppercase tracking-wider mb-1 flex items-center gap-2">
+                <Briefcase size={16} className="text-primary" /> Matching Job Opportunities
+                <span className="text-[10px] font-bold bg-primary px-2 py-0.5 rounded uppercase">AI Matched</span>
+              </h3>
+              <p className="text-xs font-medium opacity-50 mb-4">Based on your resume skills — click any platform to apply directly</p>
+
+              {jobLoading && (
+                <div className="flex items-center justify-center gap-3 py-8">
+                  <Loader2 size={24} className="animate-spin text-primary" />
+                  <span className="text-sm font-bold uppercase tracking-wider animate-pulse">Finding matching jobs...</span>
+                </div>
+              )}
+
+              {jobResults && jobResults.recommendations && (
+                <div className="space-y-4">
+                  {/* Experience Level Badge */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-50">Detected Level:</span>
+                    <span className="text-[11px] font-bold uppercase bg-primary/20 border border-primary px-2 py-0.5 rounded">
+                      {jobResults.experienceLevel}
+                    </span>
+                  </div>
+
+                  {/* Job Cards Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {jobResults.recommendations.map((job, i) => {
+                      const scoreColor = job.matchScore >= 80 ? 'text-success' : job.matchScore >= 60 ? 'text-warning' : 'text-danger';
+                      const scoreBg = job.matchScore >= 80 ? 'bg-success/10 border-success/30' : job.matchScore >= 60 ? 'bg-warning/10 border-warning/30' : 'bg-danger/10 border-danger/30';
+                      const demandColor = job.demandLevel === 'High' ? 'bg-success/20 text-success' : job.demandLevel === 'Medium' ? 'bg-warning/20 text-warning' : 'bg-danger/20 text-danger';
+
+                      return (
+                        <div key={i} className={`border-2 rounded-xl p-4 transition-all hover:scale-[1.01] ${scoreBg}`}>
+                          {/* Header */}
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex-1">
+                              <h4 className="text-sm font-bold uppercase tracking-tight">{job.title}</h4>
+                              <p className="text-[11px] font-medium opacity-60 mt-0.5">{job.description}</p>
+                            </div>
+                            <div className="flex flex-col items-end gap-1">
+                              <span className={`text-lg font-bold ${scoreColor}`}>{job.matchScore}%</span>
+                              <span className="text-[9px] font-bold uppercase opacity-40">Match</span>
+                            </div>
+                          </div>
+
+                          {/* Meta Row */}
+                          <div className="flex flex-wrap items-center gap-2 mb-3">
+                            <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${demandColor}`}>
+                              {job.demandLevel} Demand
+                            </span>
+                            {job.salaryRange && (
+                              <span className="text-[10px] font-bold uppercase opacity-50 flex items-center gap-1">
+                                <TrendingUp size={10} /> {job.salaryRange}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Matched Skills */}
+                          {job.matchedSkills && job.matchedSkills.length > 0 && (
+                            <div className="mb-2">
+                              <span className="text-[9px] font-bold uppercase tracking-wider opacity-40 block mb-1">Your Skills That Match</span>
+                              <div className="flex flex-wrap gap-1">
+                                {job.matchedSkills.map((s, j) => (
+                                  <span key={j} className="text-[10px] font-bold uppercase bg-success/15 border border-success/30 px-1.5 py-0.5 rounded">{s}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Missing Skills */}
+                          {job.missingSkills && job.missingSkills.length > 0 && (
+                            <div className="mb-3">
+                              <span className="text-[9px] font-bold uppercase tracking-wider opacity-40 block mb-1">Skills to Learn</span>
+                              <div className="flex flex-wrap gap-1">
+                                {job.missingSkills.map((s, j) => (
+                                  <span key={j} className="text-[10px] font-bold uppercase bg-danger/15 border border-danger/30 px-1.5 py-0.5 rounded line-through opacity-70">{s}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Apply Links */}
+                          <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/30">
+                            {[
+                              { name: 'Indeed', url: job.applyLinks.indeed, color: 'bg-[#2164f3]/15 border-[#2164f3]/40 hover:bg-[#2164f3]/30' },
+                              { name: 'LinkedIn', url: job.applyLinks.linkedin, color: 'bg-[#0a66c2]/15 border-[#0a66c2]/40 hover:bg-[#0a66c2]/30' },
+                              { name: 'Naukri', url: job.applyLinks.naukri, color: 'bg-[#4a90d9]/15 border-[#4a90d9]/40 hover:bg-[#4a90d9]/30' },
+                              { name: 'Glassdoor', url: job.applyLinks.glassdoor, color: 'bg-[#0caa41]/15 border-[#0caa41]/40 hover:bg-[#0caa41]/30' },
+                              { name: 'Internshala', url: job.applyLinks.internshala, color: 'bg-[#00a5ec]/15 border-[#00a5ec]/40 hover:bg-[#00a5ec]/30' },
+                              { name: 'AICTE', url: job.applyLinks.aicte, color: 'bg-[#e65100]/15 border-[#e65100]/40 hover:bg-[#e65100]/30' },
+                            ].map(({ name, url, color }) => (
+                              <a
+                                key={name}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2 py-1 rounded border transition-all ${color}`}
+                              >
+                                <ExternalLink size={9} /> {name}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {!jobLoading && !jobResults && (
+                <div className="text-center py-6 opacity-50">
+                  <Briefcase size={32} className="mx-auto mb-2 opacity-30" />
+                  <p className="text-xs font-bold uppercase">Job recommendations will appear after analysis</p>
+                </div>
+              )}
             </div>
 
           </div>
