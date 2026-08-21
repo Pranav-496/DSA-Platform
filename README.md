@@ -25,6 +25,14 @@
 
 The platform is designed to be a "One-Stop Solution" for aspiring software engineers, seamlessly combining **learning, practice, evaluation, and career readiness**.
 
+**Core Capabilities at a Glance:**
+- 🤖 **Strict AI Mock Interviews** — Full-screen proctoring, 3-strike disqualification, and real-time face tracking.
+- 📐 **System Design Sandbox** — Excalidraw whiteboard with instant AI architecture critiques.
+- 📄 **ATS Resume Screener & Job Matcher** — Deep linguistic critique, ATS scoring, and AI-powered job matching with direct apply links.
+- 👁️ **Graphical Code Visualizer** — Real-time animated bar charts and execution tracing for custom algorithms.
+- 💻 **Practice HQ** — Safe code execution with AI-driven time/space complexity optimization.
+- 🏆 **Gamified Progress** — XP tracking, global leaderboards, and streak monitoring.
+
 ---
 
 ## 🏗️ Comprehensive Feature Breakdown
@@ -34,8 +42,8 @@ A fully immersive mock interview environment that simulates real-world technical
 * **Workflow:**
   1. The user must accept strict rules (No Tab Switching, No Split Screen, No Copy/Paste, No DevTools).
   2. The system forces Fullscreen Mode and dynamically assigns 3 randomized questions (Easy, Medium, Hard) with a 45-minute countdown timer.
-  3. Real-time Proctoring initializes instantly in the background via `face-api.js` (tracking face presence, multiple faces, etc.).
-  4. Security triggers monitor for Window Blur (split-screen), Tab Switches, and Escaping Fullscreen, utilizing a strict "3 Strikes" disqualification logic.
+  3. Real-time Proctoring initializes instantly in the background via `face-api.js` (tracking face presence, multiple faces, etc.) with automatic camera activation.
+  4. Security triggers monitor for Window Blur (split-screen), Tab Switches, and Escaping Fullscreen. It enforces an unforgiving **3 Strikes Disqualification Logic** — instantly terminating the interview and barring resumption if the integrity score hits 0%.
   5. The user writes their solution and records their explanation.
   6. The AI Engine evaluates time/space complexity, edge cases, and communication clarity, and asks follow-up questions.
 * **APIs & Integration:** Google Gemini API, `face-api.js`.
@@ -60,7 +68,8 @@ A professional-grade Applicant Tracking System (ATS) simulator to optimize resum
   3. A robust Backend Rule Engine scans for keywords, section structures, contact info, and quantification metrics ($, %).
   4. Google Gemini performs a deep linguistic critique and suggests specific bullet-point rewrites.
   5. The dashboard presents an animated gauge score, keyword chips, and improvement suggestions.
-* **APIs & Integration:** Google Gemini API (for linguistic critique).
+  6. **Dynamic Job Matcher:** An AI-powered (with fallback rule-engine) job matching system calculates skill overlap against real-world roles, generating direct, customized apply links for **Indeed, LinkedIn, Naukri, Glassdoor, Internshala, and AICTE**.
+* **APIs & Integration:** Google Gemini API (for linguistic critique & job matching).
 * **Tools & Libraries:** `pdfjs-dist` (local worker-based extraction), custom Regex-based ATS Rule Engine.
 
 ### 4. 👁️ Interactive DSA Visualizer & "Bring Your Own Code"
@@ -69,8 +78,9 @@ Step-by-step state visualization for complex algorithms to build intuition, feat
   1. The user selects pre-built algorithms or uses the **"Bring Your Own Code"** feature to paste custom Javascript, Python, Java, or C++ code.
   2. The custom backend trace engine executes the code (using `sys.settrace` for Python, VM inspection for JS, and Gemini-assisted simulation for C++/Java) to extract line-by-line execution states.
   3. The React state engine maps the executed algorithm states to animated DOM elements in real-time.
-  4. The simulation control panel allows the user to step forward, step backward, or auto-play.
-* **Tools & Libraries:** Custom React state machines, Framer Motion, Node `child_process`.
+  4. A **Graphical Visualizer** panel dynamically detects numerical arrays in execution memory and renders them as animated bar charts (ideal for tracing sorting algorithms).
+  5. The simulation control panel allows the user to step forward, step backward, or auto-play.
+* **Tools & Libraries:** Custom React state machines, Framer Motion, Node `child_process`, Recharts/Custom SVG graphics.
 
 ### 5. 💻 Practice HQ (Code Execution & Judging)
 A robust coding environment with immediate feedback.
