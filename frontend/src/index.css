@@ -71,42 +71,44 @@
 }
 
 /* ========== Card System ========== */
-.card {
-  background: var(--surface-color);
-  border: 1px solid var(--border-color);
-  border-radius: 0.875rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
+@layer components {
+  .card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.875rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
 
-.card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-}
+  .card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
 
-.dark .card {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
+  .dark .card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
 
-.dark .card:hover {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-}
+  .dark .card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
 
-/* Legacy class mapping so existing components don't break */
-.brutal-card {
-  background: var(--surface-color);
-  border: 1px solid var(--border-color);
-  border-radius: 0.875rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  transition: box-shadow 0.2s ease, transform 0.15s ease;
-}
+  /* Legacy class mapping so existing components don't break */
+  .brutal-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.875rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s ease, transform 0.15s ease;
+  }
 
-.brutal-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-}
+  .brutal-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
 
-.dark .brutal-card {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  .dark .brutal-card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
 }
 
 /* ========== Button System ========== */
