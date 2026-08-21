@@ -1,6 +1,5 @@
 <div align="center">
-  <img src="https://algonova-by-pranav.vercel.app/logo.png" alt="AlgoNova Logo" width="100" />
-  <h1 align="center">🚀 AlgoNova</h1>
+  <h1 align="center">AlgoNova</h1>
   <p align="center">
     <strong>The Next-Generation AI-Powered DSA & System Design Mastering Platform</strong>
     <br />
